@@ -1,0 +1,4 @@
+GET http://localhost:9000/api/meals
+Accept: application/json
+
+###
