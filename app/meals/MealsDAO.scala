@@ -10,15 +10,18 @@ import slick.jdbc.JdbcProfile
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class MealsDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
-                         cc: ControllerComponents)(implicit executionContext: ExecutionContext)
-  extends AbstractController(cc) with HasDatabaseConfigProvider[JdbcProfile] {
+class MealsDAO @Inject() (protected val dbConfigProvider: DatabaseConfigProvider, cc: ControllerComponents)(
+    implicit executionContext: ExecutionContext
+) extends AbstractController(cc)
+    with HasDatabaseConfigProvider[JdbcProfile] {
 
   import profile.api._
 
   private val meals = TableQuery[MealsTable]
 
-  def insert(meal: MealRow): Future[Unit] = db.run(meals += meal).map { _ => () }
+  def insert(meal: MealRow): Future[Unit] = db.run(meals += meal).map { _ =>
+    ()
+  }
 
   class MealsTable(tag: Tag) extends Table[MealRow](tag, "meals") {
 
@@ -42,7 +45,9 @@ class MealsDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
 
   def allMeals(): Future[Seq[Meal]] = db.run(meals_by_time.sortBy(_.time).withMeal.result).map(_.map((toMeal _).tupled))
 
-  def insert(mealByTime: MealsByTimeRow): Future[Unit] = db.run(meals_by_time += mealByTime).map { _ => () }
+  def insert(mealByTime: MealsByTimeRow): Future[Unit] = db.run(meals_by_time += mealByTime).map { _ =>
+    ()
+  }
 
   class MealsByTimeTable(tag: Tag) extends Table[MealsByTimeRow](tag, "meals_by_time") {
 

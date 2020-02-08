@@ -7,7 +7,7 @@ import play.api.mvc._
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class MealsController @Inject()(mealsDAO: MealsDAO, cc: ControllerComponents) extends AbstractController(cc) {
+class MealsController @Inject() (mealsDAO: MealsDAO, cc: ControllerComponents) extends AbstractController(cc) {
 
   implicit val mealFormat: Format[Meal] = Json.format[Meal]
 

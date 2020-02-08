@@ -18,12 +18,16 @@ import scala.concurrent.{ExecutionContext, Future}
 class MealsDAOSpec extends PlaySpec with GuiceOneAppPerTest {
 
   override def newAppForTest(testData: TestData): Application = {
-    new GuiceApplicationBuilder().configure(Map(
-      "slick.dbs.default.profile" -> "slick.jdbc.H2Profile$",
-      "slick.dbs.default.db.driver" -> "org.h2.Driver",
-      "slick.dbs.default.db.url" -> "jdbc:h2:mem:meals;DATABASE_TO_UPPER=FALSE",
-      "slick.dbs.default.db.numThreads" -> "5",
-    )).build()
+    new GuiceApplicationBuilder()
+      .configure(
+        Map(
+          "slick.dbs.default.profile" -> "slick.jdbc.H2Profile$",
+          "slick.dbs.default.db.driver" -> "org.h2.Driver",
+          "slick.dbs.default.db.url" -> "jdbc:h2:mem:meals;DATABASE_TO_UPPER=FALSE",
+          "slick.dbs.default.db.numThreads" -> "5"
+        )
+      )
+      .build()
   }
 
   "MealsDAO" must {
@@ -34,10 +38,14 @@ class MealsDAOSpec extends PlaySpec with GuiceOneAppPerTest {
       implicit val patienceConfig: PatienceConfig = PatienceConfig(Span(30, Seconds), Span(1, Seconds))
       implicit val executionContext: ExecutionContext = app.actorSystem.dispatcher
 
-      val inserts = eventually(Future.sequence(Iterable(
-        mealsDAO.insert(row),
-        mealsDAO.insert(MealsByTimeRow(LocalDateTime.parse("2020-01-05T12:00:00"), row.id))
-      )))
+      val inserts = eventually(
+        Future.sequence(
+          Iterable(
+            mealsDAO.insert(row),
+            mealsDAO.insert(MealsByTimeRow(LocalDateTime.parse("2020-01-05T12:00:00"), row.id))
+          )
+        )
+      )
 
       inserts mustBe Symbol("success")
       val allMeals = eventually(mealsDAO.allMeals())
