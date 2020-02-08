@@ -43,7 +43,8 @@ class MealsDAO @Inject() (protected val dbConfigProvider: DatabaseConfigProvider
   private def toMeal(mealsByTime: MealsByTimeRow, meal: MealRow): Meal =
     Meal(mealsByTime.time.toString, meal.description)
 
-  def allMeals(): Future[Seq[Meal]] = db.run(meals_by_time.sortBy(_.time).withMeal.result).map(_.map((toMeal _).tupled))
+  def allMeals(): Future[Seq[Meal]] =
+    db.run(meals_by_time.sortBy(_.time.reverse).withMeal.result).map(_.map((toMeal _).tupled))
 
   def insert(mealByTime: MealsByTimeRow): Future[Unit] = db.run(meals_by_time += mealByTime).map { _ =>
     ()

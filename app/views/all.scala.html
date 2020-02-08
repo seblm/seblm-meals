@@ -1,0 +1,20 @@
+@import meals.Meal
+@import views.All
+@(meals: Seq[Meal])
+
+@main("Meals", All) {
+    <section class="section">
+        <div class="container">
+
+            <h1 class="title">All</h1>
+            @for(meal <- meals) {
+                <div class="card">
+                    <div class="card-content">@meal.meal</div>
+                    <div class="card-footer">
+                        <div class="card-footer-item">@meal.day</div>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+}
