@@ -1,5 +1,6 @@
 package meals
 
+import java.time.DayOfWeek.SUNDAY
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -49,7 +50,7 @@ class MealsDAOSpec extends PlaySpec with GuiceOneAppPerTest {
       }
 
       whenReady(mealsDAO.allMeals()) { allMeals =>
-        allMeals must contain only Meal("2020-01-05T12:00", "some meal")
+        allMeals must contain only Meal(SUNDAY, "some meal")
       }
     }
   }

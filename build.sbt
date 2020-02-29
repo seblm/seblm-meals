@@ -14,6 +14,7 @@ libraryDependencies ++= Seq(
 )
 libraryDependencies += "org.postgresql" % "postgresql" % "42.2.9"
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test
+libraryDependencies += "org.mockito" %% "mockito-scala-scalatest" % "1.11.3" % Test
 libraryDependencies += "com.h2database" % "h2" % "1.4.200" % Test
 
 // Adds additional packages into Twirl

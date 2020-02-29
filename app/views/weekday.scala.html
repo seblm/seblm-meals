@@ -1,0 +1,10 @@
+@(weekDay: String, meal: Option[String])
+
+<div class="card">
+    <div class="card-content">
+        <div class="has-text-weight-bold">@weekDay</div>
+        @if(meal.isDefined) {
+            <div>@meal.get</div>
+        }
+    </div>
+</div>

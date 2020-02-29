@@ -1,22 +1,18 @@
-@import meals.domain.Meal
 @import views.Week
-@(meals: Seq[Meal])
+@import meals.domain.WeekMeals
+@(weekMeals: WeekMeals)
 
-@main("Week", Week) {
+@main("Semaine actuelle", Week) {
     <section class="section">
         <div class="container">
-
             <h1 class="title">Semaine actuelle</h1>
-            @for(day <- Iterator.iterate(java.time.Instant.now().atZone(java.time.ZoneId.of("Europe/Paris")).toLocalDate.atStartOfDay().`with`(java.time.DayOfWeek.MONDAY), 7)(time => time.plusDays(1))) {
-                <div class="card">
-                    <div class="card-content">
-                        <div class="has-text-weight-bold">@(day.getDayOfWeek.getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.FRANCE))</div>
-                        @for(meal <- meals.filter(meal => meal.day.startsWith(s"${day.format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE)}")).map(_.meal)) {
-                            <div>@meal</div>
-                        }
-                    </div>
-                </div>
-            }
+            @weekday("lundi", weekMeals.monday)
+            @weekday("mardi", weekMeals.tuesday)
+            @weekday("mercredi", weekMeals.wednesday)
+            @weekday("jeudi", weekMeals.thursday)
+            @weekday("vendredi", weekMeals.friday)
+            @weekday("samedi", weekMeals.saturday)
+            @weekday("dimanche", weekMeals.sunday)
         </div>
     </section>
 }

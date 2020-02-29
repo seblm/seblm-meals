@@ -4,8 +4,8 @@ import scala.concurrent.Future
 
 trait MealsService {
 
-  def currentWeekMeals(): Future[Seq[Meal]]
+  def currentWeekMeals(): Future[WeekMeals]
 
-  def nextWeekMeals(): Future[Seq[Meal]]
+  def nextWeekMeals(): Future[WeekMeals]
 
 }

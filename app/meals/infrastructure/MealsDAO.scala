@@ -41,7 +41,7 @@ class MealsDAO @Inject() (protected val dbConfigProvider: DatabaseConfigProvider
   }
 
   private def toMeal(mealsByTime: MealsByTimeRow, meal: MealRow): Meal =
-    Meal(mealsByTime.time.toString, meal.description)
+    Meal(mealsByTime.time.getDayOfWeek, meal.description)
 
   override def meals(from: LocalDateTime, to: LocalDateTime): Future[Seq[Meal]] =
     db.run(meals_by_time.filter(meal => meal.time > from && meal.time < to).withMeal.sortBy(_._1.time.asc).result)

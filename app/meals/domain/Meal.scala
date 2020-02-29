@@ -1,3 +1,5 @@
 package meals.domain
 
-case class Meal(day: String, meal: String)
+import java.time.DayOfWeek
+
+case class Meal(day: DayOfWeek, meal: String)

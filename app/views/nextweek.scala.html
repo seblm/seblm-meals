@@ -1,19 +1,18 @@
-@import meals.domain.Meal
 @import views.NextWeek
-@(meals: Seq[Meal])
+@import meals.domain.WeekMeals
+@(weekMeals: WeekMeals)
 
-@main("Meals", NextWeek) {
+@main("Semaine prochaine", NextWeek) {
     <section class="section">
         <div class="container">
             <h1 class="title">Semaine prochaine</h1>
-            @for(meal <- meals) {
-                <div class="card">
-                    <div class="card-content">@meal.meal</div>
-                    <div class="card-footer">
-                        <div class="card-footer-item">@meal.day</div>
-                    </div>
-                </div>
-            }
+            @weekday("lundi", weekMeals.monday)
+            @weekday("mardi", weekMeals.tuesday)
+            @weekday("mercredi", weekMeals.wednesday)
+            @weekday("jeudi", weekMeals.thursday)
+            @weekday("vendredi", weekMeals.friday)
+            @weekday("samedi", weekMeals.saturday)
+            @weekday("dimanche", weekMeals.sunday)
         </div>
     </section>
 }
