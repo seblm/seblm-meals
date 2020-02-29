@@ -1,4 +1,4 @@
-package meals
+package meals.infrastructure
 
 import java.util.UUID
 

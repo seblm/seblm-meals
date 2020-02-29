@@ -1,4 +1,4 @@
-package meals
+package meals.infrastructure
 
 import java.time.LocalDateTime
 import java.util.UUID

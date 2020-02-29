@@ -1,9 +1,10 @@
-package meals
+package meals.infrastructure
 
 import java.time.LocalDateTime
 import java.util.UUID
 
 import javax.inject.Inject
+import meals.domain.{Meal, MealRepository}
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import play.api.mvc.{AbstractController, ControllerComponents}
 import slick.jdbc.JdbcProfile
@@ -13,15 +14,14 @@ import scala.concurrent.{ExecutionContext, Future}
 class MealsDAO @Inject() (protected val dbConfigProvider: DatabaseConfigProvider, cc: ControllerComponents)(
     implicit executionContext: ExecutionContext
 ) extends AbstractController(cc)
-    with HasDatabaseConfigProvider[JdbcProfile] {
+    with HasDatabaseConfigProvider[JdbcProfile]
+    with MealRepository {
 
   import profile.api._
 
   private val meals = TableQuery[MealsTable]
 
-  def insert(meal: MealRow): Future[Unit] = db.run(meals += meal).map { _ =>
-    ()
-  }
+  def insert(meal: MealRow): Future[Unit] = db.run(meals += meal).map(ignore)
 
   class MealsTable(tag: Tag) extends Table[MealRow](tag, "meals") {
 
@@ -43,12 +43,13 @@ class MealsDAO @Inject() (protected val dbConfigProvider: DatabaseConfigProvider
   private def toMeal(mealsByTime: MealsByTimeRow, meal: MealRow): Meal =
     Meal(mealsByTime.time.toString, meal.description)
 
-  def allMeals(): Future[Seq[Meal]] =
-    db.run(meals_by_time.sortBy(_.time.reverse).withMeal.result).map(_.map((toMeal _).tupled))
+  override def meals(from: LocalDateTime, to: LocalDateTime): Future[Seq[Meal]] =
+    db.run(meals_by_time.filter(meal => meal.time > from && meal.time < to).withMeal.sortBy(_._1.time.asc).result)
+      .map(_.map((toMeal _).tupled))
 
-  def insert(mealByTime: MealsByTimeRow): Future[Unit] = db.run(meals_by_time += mealByTime).map { _ =>
-    ()
-  }
+  def allMeals(): Future[Seq[Meal]] = db.run(meals_by_time.withMeal.result).map(_.map((toMeal _).tupled))
+
+  def insert(mealByTime: MealsByTimeRow): Future[Unit] = db.run(meals_by_time += mealByTime).map(ignore)
 
   class MealsByTimeTable(tag: Tag) extends Table[MealsByTimeRow](tag, "meals_by_time") {
 
@@ -61,4 +62,7 @@ class MealsDAO @Inject() (protected val dbConfigProvider: DatabaseConfigProvider
     def meal = foreignKey("meal_fk", mealId, meals)(_.id)
 
   }
+
+  private def ignore(a: Any): Unit = ()
+
 }

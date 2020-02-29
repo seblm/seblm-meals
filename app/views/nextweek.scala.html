@@ -1,12 +1,11 @@
-@import meals.Meal
-@import views.All
+@import meals.domain.Meal
+@import views.NextWeek
 @(meals: Seq[Meal])
 
-@main("Meals", All) {
+@main("Meals", NextWeek) {
     <section class="section">
         <div class="container">
-
-            <h1 class="title">All</h1>
+            <h1 class="title">Semaine prochaine</h1>
             @for(meal <- meals) {
                 <div class="card">
                     <div class="card-content">@meal.meal</div>

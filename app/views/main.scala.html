@@ -1,23 +1,19 @@
-@import views.{All, View, Week}
+@import views.{View, NextWeek, Week}
 @(title: String, view: View)(content: Html)
 
 <!DOCTYPE html>
 <html lang="en" class="has-navbar-fixed-bottom">
     <head>
-        @* Here's where we render the page title `String`. *@
         <title>@title</title>
         <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/bulma.min.css")">
-
     </head>
     <body>
-        @* And here's where we render the `Html` object containing
-        * the page content. *@
         @content
         <footer class="footer">
             <div class="tabs is-toggle is-fullwidth">
                 <ul>
-                    <li@if(view == Week) { class="is-active"}><a href="/"><span>Week</span></a></li>
-                    <li@if(view == All) { class="is-active"}><a href="/all"><span>All</span></a></li>
+                    <li@if(view == Week) { class="is-active"}><a href="/"><span>Actuelle</span></a></li>
+                    <li@if(view == NextWeek) { class="is-active"}><a href="/next"><span>Prochaine</span></a></li>
                 </ul>
             </div>
         </footer>
