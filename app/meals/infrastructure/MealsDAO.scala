@@ -1,6 +1,6 @@
 package meals.infrastructure
 
-import java.time.LocalDateTime
+import java.time.{DayOfWeek, LocalDateTime}
 import java.util.UUID
 
 import javax.inject.Inject
@@ -21,7 +21,7 @@ class MealsDAO @Inject() (protected val dbConfigProvider: DatabaseConfigProvider
 
   private val meals = TableQuery[MealsTable]
 
-  def insert(meal: MealRow): Future[Unit] = db.run(meals += meal).map(ignore)
+  override def insert(meal: MealRow): Future[Unit] = db.run(meals += meal).map(ignore)
 
   class MealsTable(tag: Tag) extends Table[MealRow](tag, "meals") {
 
@@ -47,7 +47,18 @@ class MealsDAO @Inject() (protected val dbConfigProvider: DatabaseConfigProvider
     db.run(meals_by_time.filter(meal => meal.time > from && meal.time < to).withMeal.sortBy(_._1.time.asc).result)
       .map(_.map((toMeal _).tupled))
 
-  def allMeals(): Future[Seq[Meal]] = db.run(meals_by_time.withMeal.result).map(_.map((toMeal _).tupled))
+  override def all(): Future[Map[MealRow, Seq[LocalDateTime]]] = // TODO to test
+    db.run(meals_by_time.withMeal.result)
+      .map(_.foldLeft(Map.empty[MealRow, Seq[LocalDateTime]]) {
+        case (acc, (mealsByType, mealRow)) =>
+          acc.updated(mealRow, acc.getOrElse(mealRow, Seq.empty[LocalDateTime]) :+ mealsByType.time)
+      })
+
+  override def link(meal: MealRow, at: LocalDateTime): Future[Meal] =
+    db.run(meals_by_time += MealsByTimeRow(at, meal.id)).flatMap {
+      case 1 => Future.successful(Meal(DayOfWeek.MONDAY, meal.description))
+      case _ => Future.failed(new Exception("Error when link meal"))
+    }
 
   def insert(mealByTime: MealsByTimeRow): Future[Unit] = db.run(meals_by_time += mealByTime).map(ignore)
 

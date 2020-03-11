@@ -1,9 +1,11 @@
 package meals
 
-import java.time.{Clock, Instant, LocalDateTime, ZoneId}
 import java.time.DayOfWeek._
+import java.time._
+import java.util.UUID
 
 import meals.domain.{Meal, MealRepository, MealsService, MealsServiceImpl}
+import meals.infrastructure.MealRow
 import org.mockito.scalatest.IdiomaticMockito
 import org.scalatest.OptionValues._
 import org.scalatest.concurrent.ScalaFutures.whenReady
@@ -29,13 +31,13 @@ class MealsServiceSpec extends FlatSpec with Matchers with IdiomaticMockito {
       )
 
       whenReady(mealsService.currentWeekMeals()) { weekMeals =>
-        weekMeals.monday should not be defined
-        weekMeals.tuesday should not be defined
-        weekMeals.wednesday should not be defined
-        weekMeals.thursday.value shouldBe "saucisson brioché salade"
-        weekMeals.friday.value shouldBe "chou-fleur pomme de terre lardons"
-        weekMeals.saturday should not be defined
-        weekMeals.sunday should not be defined
+        weekMeals.monday.meal should not be defined
+        weekMeals.tuesday.meal should not be defined
+        weekMeals.wednesday.meal should not be defined
+        weekMeals.thursday.meal.value shouldBe "saucisson brioché salade"
+        weekMeals.friday.meal.value shouldBe "chou-fleur pomme de terre lardons"
+        weekMeals.saturday.meal should not be defined
+        weekMeals.sunday.meal should not be defined
       }
   }
 
@@ -56,13 +58,36 @@ class MealsServiceSpec extends FlatSpec with Matchers with IdiomaticMockito {
         )
 
       whenReady(mealsService.nextWeekMeals()) { weekMeals =>
-        weekMeals.monday.value shouldBe "galettes de blé noir"
-        weekMeals.tuesday.value shouldBe "chipolatas pâtes"
-        weekMeals.wednesday.value shouldBe "ratatouille riz"
-        weekMeals.thursday should not be defined
-        weekMeals.friday should not be defined
-        weekMeals.saturday.value shouldBe "lentilles saucisses (Morteau, Montbelliard) carottes"
-        weekMeals.sunday.value shouldBe "quenelles riz sauce tomate"
+        weekMeals.monday.meal.value shouldBe "galettes de blé noir"
+        weekMeals.tuesday.meal.value shouldBe "chipolatas pâtes"
+        weekMeals.wednesday.meal.value shouldBe "ratatouille riz"
+        weekMeals.thursday.meal should not be defined
+        weekMeals.friday.meal should not be defined
+        weekMeals.saturday.meal.value shouldBe "lentilles saucisses (Morteau, Montbelliard) carottes"
+        weekMeals.sunday.meal.value shouldBe "quenelles riz sauce tomate"
+      }
+  }
+
+  it should "randomly choose a meal" in withRepositoryAndService {
+    (mealRepository: MealRepository, mealsService: MealsService) =>
+      val day = LocalDateTime.parse("2020-03-02T20:00")
+      mealRepository.all() returns Future.successful(
+        Map(
+          MealRow(UUID.randomUUID(), "monday next week") -> Seq(LocalDateTime.parse("2020-03-02T20:00")),
+          MealRow(UUID.randomUUID(), "monday current week and tuesday next week") -> Seq(
+            LocalDateTime.parse("2020-02-24T20:00"),
+            LocalDateTime.parse("2020-03-03T20:00")
+          ),
+          MealRow(UUID.randomUUID(), "tuesday current week") -> Seq(LocalDateTime.parse("2020-02-25T20:00")),
+          MealRow(UUID.randomUUID(), "wednesday current week") -> Seq(LocalDateTime.parse("2020-02-26T20:00"))
+        )
+      )
+      mealRepository.link(*, eqTo(day)) answers { (mealRow: MealRow, _: LocalDateTime) =>
+        Future.successful(Meal(DayOfWeek.TUESDAY, mealRow.description))
+      }
+
+      whenReady(mealsService.shuffle(day)) { meal =>
+        meal.meal should (be("tuesday current week") or be("wednesday current week"))
       }
   }
 

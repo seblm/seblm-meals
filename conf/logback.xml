@@ -11,7 +11,7 @@
   </appender>
 
   <logger name="play" level="INFO" />
-  <logger name="meals" level="INFO" />
+  <logger name="meals" level="DEBUG" />
 
   <root level="WARN">
     <appender-ref ref="ASYNCSTDOUT" />

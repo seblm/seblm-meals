@@ -36,12 +36,13 @@ class MealsDAOSpec extends PlaySpec with GuiceOneAppPerTest {
       val app2dao = Application.instanceCache[MealsDAO]
       val mealsDAO: MealsDAO = app2dao(app)
       val row = MealRow(UUID.randomUUID(), "some meal")
+      val time = LocalDateTime.parse("2020-01-05T12:00:00")
       implicit val executionContext: ExecutionContext = app.actorSystem.dispatcher
 
       val inserts = Future.sequence(
         Iterable(
           mealsDAO.insert(row),
-          mealsDAO.insert(MealsByTimeRow(LocalDateTime.parse("2020-01-05T12:00:00"), row.id))
+          mealsDAO.insert(MealsByTimeRow(time, row.id))
         )
       )
 
@@ -49,8 +50,8 @@ class MealsDAOSpec extends PlaySpec with GuiceOneAppPerTest {
         inserts.value.value mustBe Symbol("Success")
       }
 
-      whenReady(mealsDAO.allMeals()) { allMeals =>
-        allMeals must contain only Meal(SUNDAY, "some meal")
+      whenReady(mealsDAO.all()) { allMeals =>
+        allMeals must contain only (row -> Seq(time))
       }
     }
   }

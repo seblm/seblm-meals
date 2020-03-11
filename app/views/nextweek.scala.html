@@ -1,18 +1,18 @@
 @import views.NextWeek
 @import meals.domain.WeekMeals
-@(weekMeals: WeekMeals)
+@(weekMeals: WeekMeals)(implicit requestHeader: RequestHeader)
 
 @main("Semaine prochaine", NextWeek) {
     <section class="section">
         <div class="container">
             <h1 class="title">Semaine prochaine</h1>
-            @weekday("lundi", weekMeals.monday)
-            @weekday("mardi", weekMeals.tuesday)
-            @weekday("mercredi", weekMeals.wednesday)
-            @weekday("jeudi", weekMeals.thursday)
-            @weekday("vendredi", weekMeals.friday)
-            @weekday("samedi", weekMeals.saturday)
-            @weekday("dimanche", weekMeals.sunday)
+            @weekday("lundi", weekMeals.monday, nextWeek = true)
+            @weekday("mardi", weekMeals.tuesday, nextWeek = true)
+            @weekday("mercredi", weekMeals.wednesday, nextWeek = true)
+            @weekday("jeudi", weekMeals.thursday, nextWeek = true)
+            @weekday("vendredi", weekMeals.friday, nextWeek = true)
+            @weekday("samedi", weekMeals.saturday, nextWeek = true)
+            @weekday("dimanche", weekMeals.sunday, nextWeek = true)
         </div>
     </section>
 }
