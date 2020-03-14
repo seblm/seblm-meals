@@ -1,10 +1,20 @@
-@(weekDay: String, meal: Option[String])
+@import helper._
+@import meals.application.routes
+@import meals.domain.WeekMeal
+@(weekDay: String, weekMeal: WeekMeal, nextWeek: Boolean)(implicit requestHeader: RequestHeader)
 
 <div class="card">
     <div class="card-content">
         <div class="has-text-weight-bold">@weekDay</div>
-        @if(meal.isDefined) {
-            <div>@meal.get</div>
+        @if(weekMeal.meal.isDefined) {
+            <div>@weekMeal.meal.get</div>
+        } else {
+            <div>@helper.form(action = routes.MealsController.shuffle()) {
+                @CSRF.formField
+                <input type="hidden" name="mealTime" value="@{play.api.data.format.Formats.localDateTimeFormat.unbind("key", weekMeal.time)("key")}" />
+                <input type="hidden" name="nextWeek" value="@nextWeek" />
+                <button>shuffle</button>
+            }</div>
         }
     </div>
 </div>
