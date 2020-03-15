@@ -71,15 +71,12 @@ class MealsServiceSpec extends FlatSpec with Matchers with IdiomaticMockito {
   it should "randomly choose a meal" in withRepositoryAndService {
     (mealRepository: MealRepository, mealsService: MealsService) =>
       val day = LocalDateTime.parse("2020-03-02T20:00")
-      mealRepository.all() returns Future.successful(
-        Map(
-          MealRow(UUID.randomUUID(), "monday next week") -> Seq(LocalDateTime.parse("2020-03-02T20:00")),
-          MealRow(UUID.randomUUID(), "monday current week and tuesday next week") -> Seq(
-            LocalDateTime.parse("2020-02-24T20:00"),
-            LocalDateTime.parse("2020-03-03T20:00")
-          ),
-          MealRow(UUID.randomUUID(), "tuesday current week") -> Seq(LocalDateTime.parse("2020-02-25T20:00")),
-          MealRow(UUID.randomUUID(), "wednesday current week") -> Seq(LocalDateTime.parse("2020-02-26T20:00"))
+      mealRepository.all() returns MealsServiceSpec.AllResponse(
+        Seq(
+          "monday next week                          ->                   2020-03-02T20:00",
+          "monday current week and tuesday next week -> 2020-02-24T20:00, 2020-03-03T20:00",
+          "tuesday current week                      -> 2020-02-25T20:00",
+          "wednesday current week                    -> 2020-02-26T20:00"
         )
       )
       mealRepository.link(*, eqTo(day)) answers { (mealRow: MealRow, _: LocalDateTime) =>
@@ -99,6 +96,26 @@ class MealsServiceSpec extends FlatSpec with Matchers with IdiomaticMockito {
     )
 
     testCode(mealRepository, mealsService)
+  }
+
+}
+
+object MealsServiceSpec {
+
+  case class AllResponse(all: Seq[String])
+
+  private implicit def toAllResponse(allResponse: AllResponse): Future[Map[MealRow, Seq[LocalDateTime]]] =
+    Future.successful(toAllResponseMap(allResponse))
+
+  private def toAllResponseMap(allResponse: AllResponse): Map[MealRow, Seq[LocalDateTime]] = allResponse.all match {
+    case Nil          => Map.empty
+    case last :: Nil  => Map(toAllResponseMap(last))
+    case head :: tail => Map(toAllResponseMap(head)) ++ toAllResponseMap(AllResponse(tail))
+  }
+
+  private def toAllResponseMap(line: String): (MealRow, Seq[LocalDateTime]) = line.split("->") match {
+    case Array(description, dates) =>
+      MealRow(UUID.randomUUID(), description.trim()) -> dates.split(",").map(x => LocalDateTime.parse(x.trim))
   }
 
 }
