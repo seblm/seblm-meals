@@ -28,4 +28,16 @@ object WeekMeals {
     )
   }
 
+  def canShuffleAll(weekMeals: WeekMeals): Boolean = allWeekMeals(weekMeals).exists(_.meal.isEmpty)
+
+  def allWeekMeals(weekMeals: WeekMeals): Seq[WeekMeal] = Seq(
+    weekMeals.monday,
+    weekMeals.tuesday,
+    weekMeals.wednesday,
+    weekMeals.thursday,
+    weekMeals.friday,
+    weekMeals.saturday,
+    weekMeals.sunday
+  )
+
 }
