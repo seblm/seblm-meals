@@ -1,43 +1,51 @@
 package meals.domain
 
-import java.time.DayOfWeek.MONDAY
-import java.time.LocalDateTime
+import java.time.DayOfWeek._
+import java.time.LocalDate
 
 case class WeekMeals(
-    monday: WeekMeal,
-    tuesday: WeekMeal,
-    wednesday: WeekMeal,
-    thursday: WeekMeal,
-    friday: WeekMeal,
-    saturday: WeekMeal,
-    sunday: WeekMeal
+    monday: WeekDay,
+    tuesday: WeekDay,
+    wednesday: WeekDay,
+    thursday: WeekDay,
+    friday: WeekDay,
+    saturday: WeekDay,
+    sunday: WeekDay
 )
+
+case class WeekDay(reference: LocalDate, lunch: Option[Meal], dinner: Option[Meal])
 
 object WeekMeals {
 
-  def apply(reference: LocalDateTime): WeekMeals = {
-    val monday = reference.toLocalDate.atStartOfDay().`with`(MONDAY).withHour(20)
+  def apply(reference: LocalDate): WeekMeals =
     WeekMeals(
-      monday = WeekMeal(monday, None),
-      tuesday = WeekMeal(monday.plusDays(1), None),
-      wednesday = WeekMeal(monday.plusDays(2), None),
-      thursday = WeekMeal(monday.plusDays(3), None),
-      friday = WeekMeal(monday.plusDays(4), None),
-      saturday = WeekMeal(monday.plusDays(5), None),
-      sunday = WeekMeal(monday.plusDays(6), None)
+      monday = WeekDay(reference.`with`(MONDAY), None, None),
+      tuesday = WeekDay(reference.`with`(TUESDAY), None, None),
+      wednesday = WeekDay(reference.`with`(WEDNESDAY), None, None),
+      thursday = WeekDay(reference.`with`(THURSDAY), None, None),
+      friday = WeekDay(reference.`with`(FRIDAY), None, None),
+      saturday = WeekDay(reference.`with`(SATURDAY), None, None),
+      sunday = WeekDay(reference.`with`(SUNDAY), None, None)
     )
-  }
 
-  def canShuffleAll(weekMeals: WeekMeals): Boolean = allWeekMeals(weekMeals).exists(_.meal.isEmpty)
+  def canShuffleAll(weekMeals: WeekMeals): Boolean = allWeekMeals(weekMeals).isEmpty
 
-  def allWeekMeals(weekMeals: WeekMeals): Seq[WeekMeal] = Seq(
-    weekMeals.monday,
-    weekMeals.tuesday,
-    weekMeals.wednesday,
-    weekMeals.thursday,
-    weekMeals.friday,
-    weekMeals.saturday,
-    weekMeals.sunday
-  )
+  def allWeekMeals(weekMeals: WeekMeals): Seq[Meal] =
+    Seq(
+      weekMeals.monday.lunch,
+      weekMeals.monday.dinner,
+      weekMeals.tuesday.lunch,
+      weekMeals.tuesday.dinner,
+      weekMeals.wednesday.lunch,
+      weekMeals.wednesday.dinner,
+      weekMeals.thursday.lunch,
+      weekMeals.thursday.dinner,
+      weekMeals.friday.lunch,
+      weekMeals.friday.dinner,
+      weekMeals.saturday.lunch,
+      weekMeals.saturday.dinner,
+      weekMeals.sunday.lunch,
+      weekMeals.sunday.dinner
+    ).flatten
 
 }

@@ -1,5 +1,5 @@
 package meals.domain
 
-import java.time.DayOfWeek
+import java.time.LocalDateTime
 
-case class Meal(day: DayOfWeek, meal: String)
+case class Meal(time: LocalDateTime, meal: String)

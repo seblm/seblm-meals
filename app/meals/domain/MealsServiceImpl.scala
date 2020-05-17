@@ -1,7 +1,9 @@
 package meals.domain
 
 import java.time.DayOfWeek._
-import java.time.{Clock, LocalDateTime, ZoneId, ZonedDateTime}
+import java.time._
+
+import meals.infrastructure.MealRow
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Random, Try}
@@ -10,12 +12,12 @@ class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: Ex
 
   override def currentWeekMeals(): Future[WeekMeals] = {
     val now = clock.instant().atZone(ZoneId.of("Europe/Paris"))
-    meals(now)(repository).map(mealsByWeekDay(now.toLocalDateTime))
+    meals(now)(repository).map(mealsByWeekDay(now.toLocalDate))
   }
 
   override def nextWeekMeals(): Future[WeekMeals] = {
-    val now = clock.instant().atZone(ZoneId.of("Europe/Paris")).plusWeeks(1)
-    meals(now)(repository).map(mealsByWeekDay(now.toLocalDateTime))
+    val nowNextWeek = clock.instant().atZone(ZoneId.of("Europe/Paris")).plusWeeks(1)
+    meals(nowNextWeek)(repository).map(mealsByWeekDay(nowNextWeek.toLocalDate))
   }
 
   override def shuffle(day: LocalDateTime): Future[Option[Meal]] = {
@@ -31,94 +33,69 @@ class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: Ex
   override def shuffleAll(reference: ZonedDateTime): Future[WeekMeals] = {
     val (firstDayOfWeek, lastDayOfWeek) = firstAndLastDayOfWeek(reference)
     val until = firstDayOfWeek.minusWeeks(1).minusNanos(1)
+    val firstDay = firstDayOfWeek.toLocalDate
 
     for {
       all <- repository.all()
     } yield {
-      val value = all.filter(_._2.exists(date => date.isAfter(firstDayOfWeek) && date.isBefore(lastDayOfWeek)))
-      val currentMeals = value.keys.toSeq
+      val dateByCurrentMeals =
+        all.filter(_._2.exists(date => date.isAfter(firstDayOfWeek) && date.isBefore(lastDayOfWeek)))
+      val currentMeals = dateByCurrentMeals.keys.toSeq
       val previousMeals = Random.shuffle(
         all
           .filterNot(_._2.exists(_.isAfter(until)))
           .keys
           .filterNot(currentMeals.contains)
           .toSeq
-          .take(7 - currentMeals.length)
+          .take(7 * 2 - currentMeals.length)
       )
-      var index = 0
+      def weekDayWithMeals: (LocalDate, Int) => (WeekDay, Int) = weekDay(dateByCurrentMeals, previousMeals)(_, _)
+      val (mondayWeekDay, mondayIndex) = weekDayWithMeals(firstDay, 0)
+      val (tuesdayWeekDay, tuesdayIndex) = weekDayWithMeals(firstDay.plusDays(1), mondayIndex)
+      val (wednesdayWeekDay, wednesdayIndex) = weekDayWithMeals(firstDay.plusDays(2), tuesdayIndex)
+      val (thursdayWeekDay, thursdayIndex) = weekDayWithMeals(firstDay.plusDays(3), wednesdayIndex)
+      val (fridayWeekDay, fridayIndex) = weekDayWithMeals(firstDay.plusDays(4), thursdayIndex)
+      val (saturdayWeekDay, saturdayIndex) = weekDayWithMeals(firstDay.plusDays(5), fridayIndex)
+      val (sundayWeekDay, _) = weekDayWithMeals(firstDay.plusDays(6), saturdayIndex)
       WeekMeals(
-        monday = {
-          val monday = firstDayOfWeek.plusHours(20)
-          WeekMeal(
-            monday,
-            Some(value.find(_._2.exists(_ == monday)).map(_._1.description).getOrElse {
-              index += 1
-              previousMeals(index - 1).description
-            })
-          )
-        },
-        tuesday = {
-          val tuesday = firstDayOfWeek.plusHours(20).plusDays(1)
-          WeekMeal(
-            tuesday,
-            Some(value.find(_._2.exists(_ == tuesday)).map(_._1.description).getOrElse {
-              index += 1
-              previousMeals(index - 1).description
-            })
-          )
-        },
-        wednesday = {
-          val wednesday = firstDayOfWeek.plusHours(20).plusDays(2)
-          WeekMeal(
-            wednesday,
-            Some(value.find(_._2.exists(_ == wednesday)).map(_._1.description).getOrElse {
-              index += 1
-              previousMeals(index - 1).description
-            })
-          )
-        },
-        thursday = {
-          val thursday = firstDayOfWeek.plusHours(20).plusDays(3)
-          WeekMeal(
-            thursday,
-            Some(value.find(_._2.exists(_ == thursday)).map(_._1.description).getOrElse {
-              index += 1
-              previousMeals(index - 1).description
-            })
-          )
-        },
-        friday = {
-          val friday = firstDayOfWeek.plusHours(20).plusDays(4)
-          WeekMeal(
-            friday,
-            Some(value.find(_._2.exists(_ == friday)).map(_._1.description).getOrElse {
-              index += 1
-              previousMeals(index - 1).description
-            })
-          )
-        },
-        saturday = {
-          val saturday = firstDayOfWeek.plusHours(20).plusDays(5)
-          WeekMeal(
-            saturday,
-            Some(value.find(_._2.exists(_ == saturday)).map(_._1.description).getOrElse {
-              index += 1
-              previousMeals(index - 1).description
-            })
-          )
-        },
-        sunday = {
-          val sunday = firstDayOfWeek.plusHours(20).plusDays(6)
-          WeekMeal(
-            sunday,
-            Some(value.find(_._2.exists(_ == sunday)).map(_._1.description).getOrElse {
-              index += 1
-              previousMeals(index - 1).description
-            })
-          )
-        }
+        monday = mondayWeekDay,
+        tuesday = tuesdayWeekDay,
+        wednesday = wednesdayWeekDay,
+        thursday = thursdayWeekDay,
+        friday = fridayWeekDay,
+        saturday = saturdayWeekDay,
+        sunday = sundayWeekDay
       )
     }
+  }
+
+  private def weekDay(
+      dateByCurrentMeals: Map[MealRow, Seq[LocalDateTime]],
+      previousMeals: Seq[MealRow]
+  )(reference: LocalDate, index: Int): (WeekDay, Int) = {
+    val noon = reference.atTime(12, 0)
+    val evening = reference.atTime(20, 0)
+    var mutableIndex = index
+    val weekDay = WeekDay(
+      reference,
+      dateByCurrentMeals
+        .find(_._2.exists(_ == noon))
+        .map(_._1.description)
+        .orElse {
+          mutableIndex += 1
+          previousMeals.lift(mutableIndex - 1).map(_.description)
+        }
+        .map(description => Meal(noon, description)),
+      dateByCurrentMeals
+        .find(_._2.exists(_ == evening))
+        .map(_._1.description)
+        .orElse {
+          mutableIndex += 1
+          previousMeals.lift(mutableIndex - 1).map(_.description)
+        }
+        .map(description => Meal(evening, description))
+    )
+    (weekDay, mutableIndex)
   }
 
   private def meals(reference: ZonedDateTime)(implicit repository: MealRepository): Future[Seq[Meal]] = {
@@ -134,17 +111,24 @@ class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: Ex
     (firstDayOfWeek, lastDayOfWeek)
   }
 
-  private def mealsByWeekDay(reference: LocalDateTime)(meals: Seq[Meal]): WeekMeals =
+  private def mealsByWeekDay(reference: LocalDate)(meals: Seq[Meal]): WeekMeals =
     meals.foldLeft(WeekMeals(reference))((weekMeals: WeekMeals, meal: Meal) =>
-      meal.day match {
-        case MONDAY    => weekMeals.copy(monday = weekMeals.monday.copy(meal = Some(meal.meal)))
-        case TUESDAY   => weekMeals.copy(tuesday = weekMeals.tuesday.copy(meal = Some(meal.meal)))
-        case WEDNESDAY => weekMeals.copy(wednesday = weekMeals.wednesday.copy(meal = Some(meal.meal)))
-        case THURSDAY  => weekMeals.copy(thursday = weekMeals.thursday.copy(meal = Some(meal.meal)))
-        case FRIDAY    => weekMeals.copy(friday = weekMeals.friday.copy(meal = Some(meal.meal)))
-        case SATURDAY  => weekMeals.copy(saturday = weekMeals.saturday.copy(meal = Some(meal.meal)))
-        case SUNDAY    => weekMeals.copy(sunday = weekMeals.sunday.copy(meal = Some(meal.meal)))
-        case _         => weekMeals
+      (meal.time.getDayOfWeek, meal.time.getHour) match {
+        case (MONDAY, 12)    => weekMeals.copy(monday = weekMeals.monday.copy(lunch = Some(meal)))
+        case (MONDAY, 20)    => weekMeals.copy(monday = weekMeals.monday.copy(dinner = Some(meal)))
+        case (TUESDAY, 12)   => weekMeals.copy(tuesday = weekMeals.tuesday.copy(lunch = Some(meal)))
+        case (TUESDAY, 20)   => weekMeals.copy(tuesday = weekMeals.tuesday.copy(dinner = Some(meal)))
+        case (WEDNESDAY, 12) => weekMeals.copy(wednesday = weekMeals.wednesday.copy(lunch = Some(meal)))
+        case (WEDNESDAY, 20) => weekMeals.copy(wednesday = weekMeals.wednesday.copy(dinner = Some(meal)))
+        case (THURSDAY, 12)  => weekMeals.copy(thursday = weekMeals.thursday.copy(lunch = Some(meal)))
+        case (THURSDAY, 20)  => weekMeals.copy(thursday = weekMeals.thursday.copy(dinner = Some(meal)))
+        case (FRIDAY, 12)    => weekMeals.copy(friday = weekMeals.friday.copy(lunch = Some(meal)))
+        case (FRIDAY, 20)    => weekMeals.copy(friday = weekMeals.friday.copy(dinner = Some(meal)))
+        case (SATURDAY, 12)  => weekMeals.copy(saturday = weekMeals.saturday.copy(lunch = Some(meal)))
+        case (SATURDAY, 20)  => weekMeals.copy(saturday = weekMeals.saturday.copy(dinner = Some(meal)))
+        case (SUNDAY, 12)    => weekMeals.copy(sunday = weekMeals.sunday.copy(lunch = Some(meal)))
+        case (SUNDAY, 20)    => weekMeals.copy(sunday = weekMeals.sunday.copy(dinner = Some(meal)))
+        case _               => weekMeals
       }
     )
 

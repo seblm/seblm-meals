@@ -1,6 +1,6 @@
 package meals.infrastructure
 
-import java.time.{DayOfWeek, LocalDateTime}
+import java.time.LocalDateTime
 import java.util.UUID
 
 import javax.inject.Inject
@@ -41,7 +41,7 @@ class MealsDAO @Inject() (protected val dbConfigProvider: DatabaseConfigProvider
   }
 
   private def toMeal(mealsByTime: MealsByTimeRow, meal: MealRow): Meal =
-    Meal(mealsByTime.time.getDayOfWeek, meal.description)
+    Meal(mealsByTime.time, meal.description)
 
   override def meals(from: LocalDateTime, to: LocalDateTime): Future[Seq[Meal]] =
     db.run(meals_by_time.filter(meal => meal.time > from && meal.time < to).withMeal.sortBy(_._1.time.asc).result)
@@ -55,7 +55,7 @@ class MealsDAO @Inject() (protected val dbConfigProvider: DatabaseConfigProvider
 
   override def link(meal: MealRow, at: LocalDateTime): Future[Meal] =
     db.run(meals_by_time += MealsByTimeRow(at, meal.id)).flatMap {
-      case 1 => Future.successful(Meal(DayOfWeek.MONDAY, meal.description))
+      case 1 => Future.successful(Meal(at, meal.description))
       case _ => Future.failed(new Exception("Error when link meal"))
     }
 
