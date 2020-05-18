@@ -116,8 +116,11 @@ class MealsServiceSpec extends AnyFlatSpec with IdiomaticMockito {
           "previous week -> 2020-02-24T20:00, 2020-02-25T20:00, 2020-02-26T20:00, 2020-02-27T20:00, 2020-02-28T20:00, 2020-02-29T20:00, 2020-03-01T20:00"
         )
       )
+      mealRepository.link(*, *) answers { (mealRow: MealRow, time: LocalDateTime) =>
+        Future.successful(Meal(time, mealRow.description))
+      }
 
-      whenReady(mealsService.shuffleAll(ZonedDateTime.parse("2020-03-02T20:00:00+01:00[Europe/Paris]"))) { weekMeals =>
+      whenReady(mealsService.shuffleAll()) { weekMeals =>
         WeekMeals
           .allWeekMeals(weekMeals)
           .map(

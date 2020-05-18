@@ -30,8 +30,9 @@ class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: Ex
     } yield result
   }
 
-  override def shuffleAll(reference: ZonedDateTime): Future[WeekMeals] = {
-    val (firstDayOfWeek, lastDayOfWeek) = firstAndLastDayOfWeek(reference)
+  override def shuffleAll(): Future[WeekMeals] = {
+    val nowNextWeek = clock.instant().atZone(ZoneId.of("Europe/Paris")).plusWeeks(1)
+    val (firstDayOfWeek, lastDayOfWeek) = firstAndLastDayOfWeek(nowNextWeek)
     val until = firstDayOfWeek.minusWeeks(1).minusNanos(1)
     val firstDay = firstDayOfWeek.toLocalDate
 
@@ -66,6 +67,7 @@ class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: Ex
         saturday = saturdayWeekDay,
         sunday = sundayWeekDay
       )
+
     }
   }
 
@@ -83,7 +85,9 @@ class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: Ex
         .map(_._1.description)
         .orElse {
           mutableIndex += 1
-          previousMeals.lift(mutableIndex - 1).map(_.description)
+          val meal = previousMeals.lift(mutableIndex - 1)
+          meal.foreach(meal => repository.link(meal, noon))
+          meal.map(_.description)
         }
         .map(description => Meal(noon, description)),
       dateByCurrentMeals
@@ -91,7 +95,9 @@ class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: Ex
         .map(_._1.description)
         .orElse {
           mutableIndex += 1
-          previousMeals.lift(mutableIndex - 1).map(_.description)
+          val meal = previousMeals.lift(mutableIndex - 1)
+          meal.foreach(meal => repository.link(meal, evening))
+          meal.map(_.description)
         }
         .map(description => Meal(evening, description))
     )

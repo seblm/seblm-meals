@@ -41,4 +41,9 @@ class MealsController @Inject() (cc: ControllerComponents, mealsService: MealsSe
     mealsService.shuffle(request.body.mealTime).map(_ => Redirect(target))
   }
 
+  def shuffleAll(): Action[AnyContent] = Action.async { implicit request =>
+    logger.debug(s"shuffleAll(${request.body})")
+    mealsService.shuffleAll().map(_ => Redirect(routes.MealsController.nextWeek()))
+  }
+
 }

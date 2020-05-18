@@ -1,3 +1,5 @@
+@import helper._
+@import meals.application.routes
 @import meals.domain.WeekMeals
 @import views.NextWeek
 @(weekMeals: WeekMeals)(implicit requestHeader: RequestHeader)
@@ -7,7 +9,10 @@
         <div class="container">
             <h1 class="title">Semaine prochaine</h1>
             @if(WeekMeals.canShuffleAll(weekMeals)) {
-                <button class="button is-link">Shuffle All</button>
+                @helper.form(action = routes.MealsController.shuffleAll()) {
+                    @CSRF.formField
+                    <button class="button is-link">Shuffle All</button>
+                }
             }
             @weekday("lundi", weekMeals.monday, nextWeek = true)
             @weekday("mardi", weekMeals.tuesday, nextWeek = true)

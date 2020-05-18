@@ -12,6 +12,6 @@ trait MealsService {
 
   def shuffle(day: LocalDateTime): Future[Option[Meal]]
 
-  def shuffleAll(reference: ZonedDateTime): Future[WeekMeals]
+  def shuffleAll(): Future[WeekMeals]
 
 }
