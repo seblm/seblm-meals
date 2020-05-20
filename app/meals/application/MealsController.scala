@@ -46,4 +46,19 @@ class MealsController @Inject() (cc: ControllerComponents, mealsService: MealsSe
     mealsService.shuffleAll().map(_ => Redirect(routes.MealsController.nextWeek()))
   }
 
+  case class UnlinkData(mealTime: LocalDateTime, nextWeek: Boolean)
+
+  val unlinkForm: Form[UnlinkData] = Form(
+    mapping(
+      "mealTime" -> localDateTime,
+      "nextWeek" -> boolean
+    )(UnlinkData.apply)(UnlinkData.unapply)
+  )
+
+  def unlink(): Action[UnlinkData] = Action.async(parse.form(unlinkForm)) { implicit request =>
+    logger.debug(s"unlink(${request.body})")
+    val target = if (request.body.nextWeek) routes.MealsController.nextWeek() else routes.MealsController.week()
+    mealsService.delete(request.body.mealTime).map(_ => Redirect(target))
+  }
+
 }

@@ -59,6 +59,12 @@ class MealsDAO @Inject() (protected val dbConfigProvider: DatabaseConfigProvider
       case _ => Future.failed(new Exception("Error when link meal"))
     }
 
+  override def unlink(at: LocalDateTime): Future[Unit] =
+    db.run(meals_by_time.filter(meal => meal.time === at).delete).flatMap {
+      case 1 => Future.successful(())
+      case _ => Future.failed(new Exception("Error when unlink meal"))
+    }
+
   class MealsByTimeTable(tag: Tag) extends Table[MealsByTimeRow](tag, "meals_by_time") {
 
     def time = column[LocalDateTime]("time", O.PrimaryKey)

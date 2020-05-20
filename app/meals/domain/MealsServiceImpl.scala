@@ -71,6 +71,8 @@ class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: Ex
     }
   }
 
+  override def delete(mealTime: LocalDateTime): Future[Unit] = repository.unlink(mealTime)
+
   private def weekDay(
       dateByCurrentMeals: Map[MealRow, Seq[LocalDateTime]],
       previousMeals: Seq[MealRow]

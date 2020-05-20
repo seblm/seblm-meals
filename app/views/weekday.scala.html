@@ -11,6 +11,12 @@
     <div class="media-content level">
         <div class="level-left">@if(weekDayMeals.lunch.isDefined) {
             @weekDayMeals.lunch.map(_.meal).getOrElse("")
+            @helper.form(action = routes.MealsController.unlink()) {
+                @CSRF.formField
+                <input type="hidden" name="mealTime" value="@{localDateTimeFormat.unbind("", weekDayMeals.reference.atTime(12, 0))("")}" />
+                <input type="hidden" name="nextWeek" value="@nextWeek" />
+                <button class="delete">delete</button>
+            }
         } else {
             @helper.form(action = routes.MealsController.shuffle()) {
                 @CSRF.formField
@@ -22,6 +28,12 @@
         </div>
         <div class="level-right">@if(weekDayMeals.dinner.isDefined) {
             @weekDayMeals.dinner.map(_.meal).getOrElse("")
+            @helper.form(action = routes.MealsController.unlink()) {
+                @CSRF.formField
+                <input type="hidden" name="mealTime" value="@{localDateTimeFormat.unbind("", weekDayMeals.reference.atTime(20, 0))("")}" />
+                <input type="hidden" name="nextWeek" value="@nextWeek" />
+                <button class="delete">delete</button>
+            }
         } else {
             @helper.form(action = routes.MealsController.shuffle()) {
                 @CSRF.formField
