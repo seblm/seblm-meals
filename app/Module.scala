@@ -12,7 +12,9 @@ class Module extends AbstractModule {
     bind(classOf[MealRepository]).to(classOf[MealsDAO]).asEagerSingleton()
     bind(classOf[Clock]).toInstance(Clock.systemUTC())
     bind(classOf[MealsService])
-      .toConstructor(classOf[MealsServiceImpl].getConstructor(classOf[Clock], classOf[MealRepository], classOf[ExecutionContext]))
+      .toConstructor(
+        classOf[MealsServiceImpl].getConstructor(classOf[Clock], classOf[MealRepository], classOf[ExecutionContext])
+      )
       .asEagerSingleton()
     ()
   }

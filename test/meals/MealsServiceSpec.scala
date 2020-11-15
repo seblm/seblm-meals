@@ -90,19 +90,25 @@ class MealsServiceSpec extends FlatSpec with Matchers with IdiomaticMockito {
 
   it should "randomly choose all empty meals for a week" in withRepositoryAndService {
     (mealRepository: MealRepository, mealsService: MealsService) =>
-      mealRepository.all() returns MealsServiceSpec.AllResponse(Seq(
-        "monday        -> 2020-02-17T20:00",
-        "tuesday       -> 2020-02-18T20:00",
-        "wednesday     -> 2020-02-19T20:00",
-        "thursday      -> 2020-02-20T20:00",
-        "friday        -> 2020-02-21T20:00",
-        "saturday      -> 2020-02-22T20:00",
-        "sunday        -> 2020-02-23T20:00",
-        "previous week -> 2020-02-24T20:00, 2020-02-25T20:00, 2020-02-26T20:00, 2020-02-27T20:00, 2020-02-28T20:00, 2020-02-29T20:00, 2020-03-01T20:00",
-      ))
+      mealRepository.all() returns MealsServiceSpec.AllResponse(
+        Seq(
+          "monday        -> 2020-02-17T20:00",
+          "tuesday       -> 2020-02-18T20:00",
+          "wednesday     -> 2020-02-19T20:00",
+          "thursday      -> 2020-02-20T20:00",
+          "friday        -> 2020-02-21T20:00",
+          "saturday      -> 2020-02-22T20:00",
+          "sunday        -> 2020-02-23T20:00",
+          "previous week -> 2020-02-24T20:00, 2020-02-25T20:00, 2020-02-26T20:00, 2020-02-27T20:00, 2020-02-28T20:00, 2020-02-29T20:00, 2020-03-01T20:00"
+        )
+      )
 
       whenReady(mealsService.shuffleAll(ZonedDateTime.parse("2020-03-02T20:00:00+01:00[Europe/Paris]"))) { weekMeals =>
-        WeekMeals.allWeekMeals(weekMeals).flatMap(_.meal) should contain only ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
+        WeekMeals
+          .allWeekMeals(weekMeals)
+          .flatMap(
+            _.meal
+          ) should contain only ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
       }
   }
 

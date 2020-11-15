@@ -11,8 +11,8 @@ import slick.jdbc.JdbcProfile
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class MealsDAO @Inject() (protected val dbConfigProvider: DatabaseConfigProvider, cc: ControllerComponents)(
-    implicit executionContext: ExecutionContext
+class MealsDAO @Inject() (protected val dbConfigProvider: DatabaseConfigProvider, cc: ControllerComponents)(implicit
+    executionContext: ExecutionContext
 ) extends AbstractController(cc)
     with HasDatabaseConfigProvider[JdbcProfile]
     with MealRepository {
@@ -49,9 +49,8 @@ class MealsDAO @Inject() (protected val dbConfigProvider: DatabaseConfigProvider
 
   override def all(): Future[Map[MealRow, Seq[LocalDateTime]]] =
     db.run(meals_by_time.withMeal.result)
-      .map(_.foldLeft(Map.empty[MealRow, Seq[LocalDateTime]]) {
-        case (acc, (mealsByType, mealRow)) =>
-          acc.updated(mealRow, acc.getOrElse(mealRow, Seq.empty[LocalDateTime]) :+ mealsByType.time)
+      .map(_.foldLeft(Map.empty[MealRow, Seq[LocalDateTime]]) { case (acc, (mealsByType, mealRow)) =>
+        acc.updated(mealRow, acc.getOrElse(mealRow, Seq.empty[LocalDateTime]) :+ mealsByType.time)
       })
 
   override def link(meal: MealRow, at: LocalDateTime): Future[Meal] =

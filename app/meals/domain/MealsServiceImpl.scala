@@ -37,57 +37,85 @@ class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: Ex
     } yield {
       val value = all.filter(_._2.exists(date => date.isAfter(firstDayOfWeek) && date.isBefore(lastDayOfWeek)))
       val currentMeals = value.keys.toSeq
-      val previousMeals = Random.shuffle(all.filterNot(_._2.exists(_.isAfter(until))).keys.filterNot(currentMeals.contains).toSeq.take(7 - currentMeals.length))
+      val previousMeals = Random.shuffle(
+        all
+          .filterNot(_._2.exists(_.isAfter(until)))
+          .keys
+          .filterNot(currentMeals.contains)
+          .toSeq
+          .take(7 - currentMeals.length)
+      )
       var index = 0
       WeekMeals(
         monday = {
           val monday = firstDayOfWeek.plusHours(20)
-          WeekMeal(monday, Some(value.find(_._2.exists(_ == monday)).map(_._1.description).getOrElse {
-            index += 1
-            previousMeals(index - 1).description
-          }))
+          WeekMeal(
+            monday,
+            Some(value.find(_._2.exists(_ == monday)).map(_._1.description).getOrElse {
+              index += 1
+              previousMeals(index - 1).description
+            })
+          )
         },
         tuesday = {
           val tuesday = firstDayOfWeek.plusHours(20).plusDays(1)
-          WeekMeal(tuesday, Some(value.find(_._2.exists(_ == tuesday)).map(_._1.description).getOrElse {
-            index += 1
-            previousMeals(index - 1).description
-          }))
+          WeekMeal(
+            tuesday,
+            Some(value.find(_._2.exists(_ == tuesday)).map(_._1.description).getOrElse {
+              index += 1
+              previousMeals(index - 1).description
+            })
+          )
         },
         wednesday = {
           val wednesday = firstDayOfWeek.plusHours(20).plusDays(2)
-          WeekMeal(wednesday, Some(value.find(_._2.exists(_ == wednesday)).map(_._1.description).getOrElse {
-            index += 1
-            previousMeals(index - 1).description
-          }))
+          WeekMeal(
+            wednesday,
+            Some(value.find(_._2.exists(_ == wednesday)).map(_._1.description).getOrElse {
+              index += 1
+              previousMeals(index - 1).description
+            })
+          )
         },
         thursday = {
           val thursday = firstDayOfWeek.plusHours(20).plusDays(3)
-          WeekMeal(thursday, Some(value.find(_._2.exists(_ == thursday)).map(_._1.description).getOrElse {
-            index += 1
-            previousMeals(index - 1).description
-          }))
+          WeekMeal(
+            thursday,
+            Some(value.find(_._2.exists(_ == thursday)).map(_._1.description).getOrElse {
+              index += 1
+              previousMeals(index - 1).description
+            })
+          )
         },
         friday = {
           val friday = firstDayOfWeek.plusHours(20).plusDays(4)
-          WeekMeal(friday, Some(value.find(_._2.exists(_ == friday)).map(_._1.description).getOrElse {
-            index += 1
-            previousMeals(index - 1).description
-          }))
+          WeekMeal(
+            friday,
+            Some(value.find(_._2.exists(_ == friday)).map(_._1.description).getOrElse {
+              index += 1
+              previousMeals(index - 1).description
+            })
+          )
         },
         saturday = {
           val saturday = firstDayOfWeek.plusHours(20).plusDays(5)
-          WeekMeal(saturday, Some(value.find(_._2.exists(_ == saturday)).map(_._1.description).getOrElse {
-            index += 1
-            previousMeals(index - 1).description
-          }))
+          WeekMeal(
+            saturday,
+            Some(value.find(_._2.exists(_ == saturday)).map(_._1.description).getOrElse {
+              index += 1
+              previousMeals(index - 1).description
+            })
+          )
         },
         sunday = {
           val sunday = firstDayOfWeek.plusHours(20).plusDays(6)
-          WeekMeal(sunday, Some(value.find(_._2.exists(_ == sunday)).map(_._1.description).getOrElse {
-            index += 1
-            previousMeals(index - 1).description
-          }))
+          WeekMeal(
+            sunday,
+            Some(value.find(_._2.exists(_ == sunday)).map(_._1.description).getOrElse {
+              index += 1
+              previousMeals(index - 1).description
+            })
+          )
         }
       )
     }
