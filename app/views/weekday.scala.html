@@ -5,16 +5,23 @@
 
 <div class="card">
     <div class="card-content">
-        <div class="has-text-weight-bold">@weekDay</div>
-        @if(weekMeal.meal.isDefined) {
-            <div>@weekMeal.meal.get</div>
-        } else {
-            <div>@helper.form(action = routes.MealsController.shuffle()) {
-                @CSRF.formField
-                <input type="hidden" name="mealTime" value="@{play.api.data.format.Formats.localDateTimeFormat.unbind("key", weekMeal.time)("key")}" />
-                <input type="hidden" name="nextWeek" value="@nextWeek" />
-                <button>shuffle</button>
-            }</div>
-        }
+        <div class="media">
+            <div class="media-content">
+                <div class="has-text-weight-bold">@weekDay</div>
+                @if(weekMeal.meal.isDefined) {
+                    <div>@weekMeal.meal.get</div>
+                }
+            </div>
+            <div class="media-right">
+                <div>@helper.form(action = routes.MealsController.shuffle()) {
+                    @CSRF.formField
+                    <input type="hidden" name="mealTime" value="@{
+                        play.api.data.format.Formats.localDateTimeFormat.unbind("key", weekMeal.time)("key")
+                    }" />
+                    <input type="hidden" name="nextWeek" value="@nextWeek" />
+                    <button class="button@if(weekMeal.meal.isEmpty) { is-primary}">shuffle</button>
+                }</div>
+            </div>
+        </div>
     </div>
 </div>
