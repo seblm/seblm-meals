@@ -1,11 +1,42 @@
+@import helper._
+@import meals.application.routes
 @import meals.domain.WeekMeals
+@import play.api.data.format.Formats.localDateTimeFormat
 @import views.Week
+@import meals.domain.MealTimeConverter
 @(weekMeals: WeekMeals)(implicit requestHeader: RequestHeader)
 
 @main("Semaine actuelle", Week) {
     <section class="section">
         <div class="container">
             <h1 class="title">Semaine actuelle</h1>
+            @if(weekMeals.allByDate.exists(_._2.isEmpty)) {
+                @helper.form(action = routes.MealsController.linkOrInsert()) {
+                    @CSRF.formField
+                    <input type="hidden" name="nextWeek" value="false" />
+                    <div class="columns is-mobile is-vcentered">
+                    <div class="column is-4">
+                        <div class="select">
+                            <select name="mealTime">
+                            @for(weekMeal <- weekMeals.allByDate.filter(_._2.isEmpty)) {
+                                <option value="@localDateTimeFormat.unbind("", weekMeal._1)("")">@MealTimeConverter.displayTime(weekMeal._1)</option>
+                            }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="column is-6">
+                        <input class="input" name="mealDescription" type="text" style="width: 100%"/>
+                    </div>
+                    <div class="column is-1">
+                        <button class="button is-primary">
+                            <span class="icon is-small">
+                                <i class="fas fa-utensils"></i>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            }
+            }
             @weekday("lundi", weekMeals.monday, nextWeek = false)
             @weekday("mardi", weekMeals.tuesday, nextWeek = false)
             @weekday("mercredi", weekMeals.wednesday, nextWeek = false)

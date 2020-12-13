@@ -15,6 +15,9 @@ class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: Ex
     meals(now)(repository).map(mealsByWeekDay(now.toLocalDate))
   }
 
+  override def linkOrInsert(mealTime: LocalDateTime, mealDescription: String): Future[Meal] =
+    repository.linkOrInsert(mealTime, mealDescription)
+
   override def nextWeekMeals(): Future[WeekMeals] = {
     val nowNextWeek = clock.instant().atZone(ZoneId.of("Europe/Paris")).plusWeeks(1)
     meals(nowNextWeek)(repository).map(mealsByWeekDay(nowNextWeek.toLocalDate))

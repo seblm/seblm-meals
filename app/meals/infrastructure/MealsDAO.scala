@@ -59,6 +59,16 @@ class MealsDAO @Inject() (protected val dbConfigProvider: DatabaseConfigProvider
       case _ => Future.failed(new Exception("Error when link meal"))
     }
 
+  override def linkOrInsert(mealTime: LocalDateTime, mealDescription: String): Future[Meal] =
+    for {
+      existingMealRow <- db.run(meals.filter(_.description === mealDescription).take(1).result.headOption)
+      mealRow <- existingMealRow.fold {
+        val newMealRow = MealRow(UUID.randomUUID(), mealDescription)
+        insert(newMealRow).map(_ => newMealRow)
+      }(Future.successful)
+      newMeal <- link(mealRow, mealTime)
+    } yield newMeal
+
   override def unlink(at: LocalDateTime): Future[Unit] =
     db.run(meals_by_time.filter(meal => meal.time === at).delete).flatMap {
       case 1 => Future.successful(())

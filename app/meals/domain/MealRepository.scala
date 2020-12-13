@@ -14,6 +14,8 @@ trait MealRepository {
 
   def link(meal: MealRow, at: LocalDateTime): Future[Meal]
 
+  def linkOrInsert(mealTime: LocalDateTime, mealDescription: String): Future[Meal]
+
   def unlink(at: LocalDateTime): Future[Unit]
 
   def all(): Future[Map[MealRow, Seq[LocalDateTime]]]

@@ -8,6 +8,8 @@ trait MealsService {
 
   def currentWeekMeals(): Future[WeekMeals]
 
+  def linkOrInsert(mealTime: LocalDateTime, mealDescription: String): Future[Meal]
+
   def nextWeekMeals(): Future[WeekMeals]
 
   def shuffle(day: LocalDateTime): Future[Option[Meal]]

@@ -1,4 +1,5 @@
 GET     /                           meals.application.MealsController.week()
+POST    /link-or-insert             meals.application.MealsController.linkOrInsert()
 GET     /next                       meals.application.MealsController.nextWeek()
 POST    /shuffle                    meals.application.MealsController.shuffle()
 POST    /shuffleAll                 meals.application.MealsController.shuffleAll()

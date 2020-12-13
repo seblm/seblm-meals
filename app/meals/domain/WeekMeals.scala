@@ -1,7 +1,8 @@
 package meals.domain
 
 import java.time.DayOfWeek._
-import java.time.LocalDate
+import java.time.{LocalDate, LocalDateTime}
+import scala.collection.immutable.ListMap
 
 case class WeekMeals(
     monday: WeekDay,
@@ -11,7 +12,26 @@ case class WeekMeals(
     friday: WeekDay,
     saturday: WeekDay,
     sunday: WeekDay
-)
+) {
+
+  def allByDate: Map[LocalDateTime, Option[Meal]] = ListMap(
+    monday.reference.atTime(12, 0) -> monday.lunch,
+    monday.reference.atTime(20, 0) -> monday.dinner,
+    tuesday.reference.atTime(12, 0) -> tuesday.lunch,
+    tuesday.reference.atTime(20, 0) -> tuesday.dinner,
+    wednesday.reference.atTime(12, 0) -> wednesday.lunch,
+    wednesday.reference.atTime(20, 0) -> wednesday.dinner,
+    thursday.reference.atTime(12, 0) -> thursday.lunch,
+    thursday.reference.atTime(20, 0) -> thursday.dinner,
+    friday.reference.atTime(12, 0) -> friday.lunch,
+    friday.reference.atTime(20, 0) -> friday.dinner,
+    saturday.reference.atTime(12, 0) -> saturday.lunch,
+    saturday.reference.atTime(20, 0) -> saturday.dinner,
+    sunday.reference.atTime(12, 0) -> sunday.lunch,
+    sunday.reference.atTime(20, 0) -> sunday.dinner
+  )
+
+}
 
 case class WeekDay(reference: LocalDate, lunch: Option[Meal], dinner: Option[Meal])
 

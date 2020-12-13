@@ -46,6 +46,22 @@ class MealsController @Inject() (cc: ControllerComponents, mealsService: MealsSe
     mealsService.shuffleAll().map(_ => Redirect(routes.MealsController.nextWeek()))
   }
 
+  case class LinkOrInsertData(mealDescription: String, mealTime: LocalDateTime, nextWeek: Boolean)
+
+  val linkOrInsertForm: Form[LinkOrInsertData] = Form(
+    mapping(
+      "mealDescription" -> text,
+      "mealTime" -> localDateTime,
+      "nextWeek" -> boolean
+    )(LinkOrInsertData.apply)(LinkOrInsertData.unapply)
+  )
+
+  def linkOrInsert(): Action[LinkOrInsertData] = Action.async(parse.form(linkOrInsertForm)) { implicit request =>
+    logger.debug(s"link(${request.body})")
+    val target = if (request.body.nextWeek) routes.MealsController.nextWeek() else routes.MealsController.week()
+    mealsService.linkOrInsert(request.body.mealTime, request.body.mealDescription).map(_ => Redirect(target))
+  }
+
   case class UnlinkData(mealTime: LocalDateTime, nextWeek: Boolean)
 
   val unlinkForm: Form[UnlinkData] = Form(

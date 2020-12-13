@@ -16,4 +16,3 @@ $ psql
 
  - next week screen should be able to shuffle all empty meals
  - next week screen should be able to re-shuffle an already planed meal
- - should be able to input leftovers
