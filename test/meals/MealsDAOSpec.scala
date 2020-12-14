@@ -39,12 +39,10 @@ class MealsDAOSpec extends PlaySpec with GuiceOneAppPerTest {
       val time = LocalDateTime.parse("2020-01-05T12:00:00")
       implicit val executionContext: ExecutionContext = app.actorSystem.dispatcher
 
-      val inserts = Future.sequence(
-        Iterable(
-          mealsDAO.insert(row),
-          mealsDAO.link(row, time)
-        )
-      )
+      val inserts = for {
+        _ <- mealsDAO.insert(row)
+        insertedMeal <- mealsDAO.link(row, time)
+      } yield insertedMeal
 
       eventually {
         inserts.value.value mustBe Symbol("Success")
