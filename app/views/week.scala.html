@@ -15,27 +15,90 @@
                     @CSRF.formField
                     <input type="hidden" name="nextWeek" value="false" />
                     <div class="columns is-mobile is-vcentered">
-                    <div class="column is-4">
-                        <div class="select">
-                            <select name="mealTime">
-                            @for(weekMeal <- weekMeals.allByDate.filter(_._2.isEmpty)) {
-                                <option value="@localDateTimeFormat.unbind("", weekMeal._1)("")">@MealTimeConverter.displayTime(weekMeal._1)</option>
-                            }
-                            </select>
+                        <div class="column is-4">
+                            <div class="select">
+                                <select name="mealTime">
+                                @for(weekMeal <- weekMeals.allByDate.filter(_._2.isEmpty)) {
+                                    <option value="@localDateTimeFormat.unbind("", weekMeal._1)("")">@MealTimeConverter.displayTime(weekMeal._1)</option>
+                                }
+                                </select>
+                            </div>
+                        </div>
+                        <script>
+                                function createMeal(meal) {
+                                    const a = document.createElement('a')
+                                    a.setAttribute('class', 'dropdown-item level');
+                                    const levelleft = document.createElement('div');
+                                    levelleft.setAttribute('class', 'level-left');
+                                    const levelleftitem = document.createElement('div');
+                                    levelleftitem.setAttribute('class', 'level-item')
+                                    levelleftitem.appendChild(document.createTextNode(`${meal.description} (${meal.count})`));
+                                    levelleft.appendChild(levelleftitem);
+                                    a.appendChild(levelleft);
+                                    const levelright = document.createElement('div');
+                                    levelright.setAttribute('class', 'level-right');
+                                    const levelrightitem = document.createElement('div');
+                                    levelrightitem.setAttribute('class', 'level-item');
+                                    levelrightitem.appendChild(document.createTextNode(`${meal.lastused} jours`));
+                                    levelright.appendChild(levelrightitem);
+                                    a.appendChild(levelright);
+                                    return a;
+                                }
+
+                                function onLoadSuggestListener() {
+                                    let meals = JSON.parse(this.responseText);
+                                    for (const meal of meals) {
+                                        document.getElementById('dropdown-content').appendChild(createMeal(meal));
+                                    }
+                                    document.getElementById('dropdown').setAttribute('class', `dropdown is-active`);
+                                }
+
+                                function focusin() {
+                                    const request = new XMLHttpRequest();
+                                    request.addEventListener('load', onLoadSuggestListener);
+                                    request.open('GET', 'suggest');
+                                    request.send();
+                                }
+
+                                function focusout() {
+                                    document.getElementById('dropdown').setAttribute('class', 'dropdown');
+                                    document.getElementById('dropdown-content').remove();
+                                    const dropdownmenu = document.getElementById('dropdown-menu');
+                                    const dropdowncontent = dropdownmenu.appendChild(document.createElement('div'))
+                                    dropdowncontent.setAttribute('class', 'dropdown-content');
+                                    dropdowncontent.setAttribute('id', 'dropdown-content');
+                                }
+                        </script>
+                        <style>
+                                .dropdown,
+                                .dropdown-menu,
+                                .dropdown-trigger {
+                                    width: 100%;
+                                }
+
+                                #dropdown-content > .level {
+                                    margin-bottom: 0;
+                                }
+                        </style>
+                        <div class="column is-6">
+                            <div class="dropdown" id="dropdown">
+                                <div class="dropdown-trigger">
+                                    <input class="input" name="mealDescription" type="text" aria-haspopup="true" aria-controls="dropdown-menu" onfocusin="focusin(this);" onfocusout="focusout(this);"/>
+                                </div>
+                                <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                                    <div class="dropdown-content" id="dropdown-content"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-1">
+                            <button class="button is-primary">
+                                <span class="icon is-small">
+                                    <i class="fas fa-utensils"></i>
+                                </span>
+                            </button>
                         </div>
                     </div>
-                    <div class="column is-6">
-                        <input class="input" name="mealDescription" type="text" style="width: 100%"/>
-                    </div>
-                    <div class="column is-1">
-                        <button class="button is-primary">
-                            <span class="icon is-small">
-                                <i class="fas fa-utensils"></i>
-                            </span>
-                        </button>
-                    </div>
-                </div>
-            }
+                }
             }
             @weekday("lundi", weekMeals.monday, nextWeek = false)
             @weekday("mardi", weekMeals.tuesday, nextWeek = false)

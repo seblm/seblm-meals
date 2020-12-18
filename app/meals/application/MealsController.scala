@@ -1,14 +1,14 @@
 package meals.application
 
-import java.time.LocalDateTime
-
-import javax.inject.{Inject, Singleton}
-import meals.domain.MealsService
+import meals.domain.{MealSuggest, MealsService}
 import play.api.Logging
 import play.api.data.Forms._
 import play.api.data._
+import play.api.libs.json.{Json, Writes}
 import play.api.mvc._
 
+import java.time.LocalDateTime
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
@@ -75,6 +75,12 @@ class MealsController @Inject() (cc: ControllerComponents, mealsService: MealsSe
     logger.debug(s"unlink(${request.body})")
     val target = if (request.body.nextWeek) routes.MealsController.nextWeek() else routes.MealsController.week()
     mealsService.delete(request.body.mealTime).map(_ => Redirect(target))
+  }
+
+  private implicit val mealSuggestWrites: Writes[MealSuggest] = Json.writes[MealSuggest]
+
+  def suggest(): Action[AnyContent] = Action.async {
+    mealsService.suggest().map(meals => Ok(Json.toJson(meals)))
   }
 
 }

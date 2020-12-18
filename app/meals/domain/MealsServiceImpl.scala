@@ -1,10 +1,9 @@
 package meals.domain
 
-import java.time.DayOfWeek._
-import java.time._
-
 import meals.infrastructure.MealRow
 
+import java.time.DayOfWeek._
+import java.time._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Random, Try}
 
@@ -73,6 +72,20 @@ class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: Ex
 
     }
   }
+
+  private def moreUsedThenMoreRecent(
+      first: (MealRow, Seq[LocalDateTime]),
+      second: (MealRow, Seq[LocalDateTime])
+  ): Boolean =
+    if (first._2.length != second._2.length) first._2.length > second._2.length
+    else first._2.max.isAfter(second._2.max)
+
+  override def suggest(): Future[Seq[MealSuggest]] =
+    repository.all().map { mealsByDate =>
+      mealsByDate.toSeq.sortWith(moreUsedThenMoreRecent).take(10).map { case (meal, dates) =>
+        MealSuggest(dates.length, meal.description, Duration.between(dates.max, LocalDateTime.now()).toDays.toInt)
+      }
+    }
 
   override def delete(mealTime: LocalDateTime): Future[Unit] = repository.unlink(mealTime)
 
