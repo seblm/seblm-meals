@@ -25,30 +25,40 @@
                             </div>
                         </div>
                         <script>
+                                let cancelFocusOut = false;
+
+                                function selectMeal(element) {
+                                    document.getElementById('dropdown-input').setAttribute('value', element.currentTarget.getAttribute('data-meal'))
+                                    cancelFocusOut = false;
+                                    focusout();
+                                }
+
                                 function createMeal(meal) {
-                                    const a = document.createElement('a')
-                                    a.setAttribute('class', 'dropdown-item level');
-                                    const levelleft = document.createElement('div');
-                                    levelleft.setAttribute('class', 'level-left');
-                                    const levelleftitem = document.createElement('div');
-                                    levelleftitem.setAttribute('class', 'level-item')
-                                    levelleftitem.appendChild(document.createTextNode(`${meal.description} (${meal.count})`));
-                                    levelleft.appendChild(levelleftitem);
-                                    a.appendChild(levelleft);
-                                    const levelright = document.createElement('div');
-                                    levelright.setAttribute('class', 'level-right');
-                                    const levelrightitem = document.createElement('div');
-                                    levelrightitem.setAttribute('class', 'level-item');
-                                    levelrightitem.appendChild(document.createTextNode(`${meal.lastused} jours`));
-                                    levelright.appendChild(levelrightitem);
-                                    a.appendChild(levelright);
-                                    return a;
+                                    let template = '';
+                                    template += `<a class="dropdown-item level" data-meal="${meal.description}">`;
+                                    template += ' <div class="level-left">';
+                                    template += `  <div class="level-item">${meal.description} (${meal.count})</div>`;
+                                    template += ' </div><div class="level-right">';
+                                    template += `  <div class="level-item">${meal.lastused} jours</div>`;
+                                    template += '</div></div>';
+                                    return template;
                                 }
 
                                 function onLoadSuggestListener() {
-                                    let meals = JSON.parse(this.responseText);
+                                    const meals = JSON.parse(this.responseText);
+                                    const dropdowncontent = document.getElementById('dropdown-content');
+                                    if (dropdowncontent) {
+                                        dropdowncontent.remove();
+                                    }
+                                    const dropdownmenu = document.getElementById('dropdown-menu');
+                                    const newdropdowncontent = dropdownmenu.appendChild(document.createElement('div'))
+                                    newdropdowncontent.setAttribute('class', 'dropdown-content');
+                                    newdropdowncontent.setAttribute('id', 'dropdown-content');
                                     for (const meal of meals) {
-                                        document.getElementById('dropdown-content').appendChild(createMeal(meal));
+                                        newdropdowncontent.innerHTML += createMeal(meal);
+                                    }
+                                    for (const dropdownitem of newdropdowncontent.getElementsByClassName("dropdown-item")) {
+                                        dropdownitem.addEventListener('click', selectMeal);
                                     }
                                     document.getElementById('dropdown').setAttribute('class', `dropdown is-active`);
                                 }
@@ -61,12 +71,9 @@
                                 }
 
                                 function focusout() {
-                                    document.getElementById('dropdown').setAttribute('class', 'dropdown');
-                                    document.getElementById('dropdown-content').remove();
-                                    const dropdownmenu = document.getElementById('dropdown-menu');
-                                    const dropdowncontent = dropdownmenu.appendChild(document.createElement('div'))
-                                    dropdowncontent.setAttribute('class', 'dropdown-content');
-                                    dropdowncontent.setAttribute('id', 'dropdown-content');
+                                    if (!cancelFocusOut) {
+                                        document.getElementById('dropdown').setAttribute('class', 'dropdown');
+                                    }
                                 }
                         </script>
                         <style>
@@ -83,11 +90,9 @@
                         <div class="column is-6">
                             <div class="dropdown" id="dropdown">
                                 <div class="dropdown-trigger">
-                                    <input class="input" name="mealDescription" type="text" aria-haspopup="true" aria-controls="dropdown-menu" onfocusin="focusin(this);" onfocusout="focusout(this);"/>
+                                    <input class="input" id="dropdown-input" name="mealDescription" type="text" aria-haspopup="true" aria-controls="dropdown-menu"/>
                                 </div>
-                                <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                                    <div class="dropdown-content" id="dropdown-content"></div>
-                                </div>
+                                <div class="dropdown-menu" id="dropdown-menu" role="menu" onmouseover="cancelFocusOut = true;" onmouseout="cancelFocusOut = false;"></div>
                             </div>
                         </div>
                         <div class="column is-1">
@@ -97,6 +102,11 @@
                                 </span>
                             </button>
                         </div>
+                        <script>
+                                const dropdowninput = document.getElementById('dropdown-input');
+                                dropdowninput.addEventListener('focusin', focusin);
+                                dropdowninput.addEventListener('focusout', focusout);
+                        </script>
                     </div>
                 }
             }
