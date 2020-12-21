@@ -79,8 +79,8 @@ class MealsController @Inject() (cc: ControllerComponents, mealsService: MealsSe
 
   private implicit val mealSuggestWrites: Writes[MealSuggest] = Json.writes[MealSuggest]
 
-  def suggest(): Action[AnyContent] = Action.async {
-    mealsService.suggest().map(meals => Ok(Json.toJson(meals)))
+  def suggest(search: Option[String]): Action[AnyContent] = Action.async {
+    mealsService.suggest(search).map(meals => Ok(Json.toJson(meals)))
   }
 
 }

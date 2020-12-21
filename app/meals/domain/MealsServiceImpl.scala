@@ -80,10 +80,21 @@ class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: Ex
     if (first._2.length != second._2.length) first._2.length > second._2.length
     else first._2.max.isAfter(second._2.max)
 
-  override def suggest(): Future[Seq[MealSuggest]] =
+  override def suggest(search: Option[String]): Future[Seq[MealSuggest]] =
     repository.all().map { mealsByDate =>
-      mealsByDate.toSeq.sortWith(moreUsedThenMoreRecent).take(10).map { case (meal, dates) =>
-        MealSuggest(dates.length, meal.description, Duration.between(dates.max, LocalDateTime.now()).toDays.toInt)
+      val all = mealsByDate.toSeq
+      val filtered = all.filter { case (meal, _) =>
+        search.fold(true)(token => meal.description.contains(token))
+      }
+      filtered.sortWith(moreUsedThenMoreRecent).take(10).map { case (meal, dates) =>
+        MealSuggest(
+          count = dates.length,
+          description = meal.description,
+          descriptionLabel = search.fold(meal.description) { token =>
+            meal.description.split(token).mkString(s"<strong>$token</strong>")
+          },
+          lastused = Duration.between(dates.max, LocalDateTime.now()).toDays.toInt
+        )
       }
     }
 

@@ -1,9 +1,8 @@
 @import helper._
 @import meals.application.routes
-@import meals.domain.WeekMeals
+@import meals.domain.{MealTimeConverter, WeekMeals}
 @import play.api.data.format.Formats.localDateTimeFormat
 @import views.Week
-@import meals.domain.MealTimeConverter
 @(weekMeals: WeekMeals)(implicit requestHeader: RequestHeader)
 
 @main("Semaine actuelle", Week) {
@@ -27,8 +26,8 @@
                         <script>
                                 let cancelFocusOut = false;
 
-                                function selectMeal(element) {
-                                    document.getElementById('dropdown-input').setAttribute('value', element.currentTarget.getAttribute('data-meal'))
+                                function selectMeal(clickEvent) {
+                                    document.getElementById('dropdown-input').setAttribute('value', clickEvent.currentTarget.getAttribute('data-meal'))
                                     cancelFocusOut = false;
                                     focusout();
                                 }
@@ -37,7 +36,9 @@
                                     let template = '';
                                     template += `<a class="dropdown-item level" data-meal="${meal.description}">`;
                                     template += ' <div class="level-left">';
-                                    template += `  <div class="level-item">${meal.description} (${meal.count})</div>`;
+                                    template += `  <div class="level-item"><span>${meal.descriptionLabel}`;
+                                    if (meal.count > 1) template += ` (${meal.count})`;
+                                    template += '</span></div>';
                                     template += ' </div><div class="level-right">';
                                     template += `  <div class="level-item">${meal.lastused} jours</div>`;
                                     template += '</div></div>';
@@ -60,20 +61,26 @@
                                     for (const dropdownitem of newdropdowncontent.getElementsByClassName("dropdown-item")) {
                                         dropdownitem.addEventListener('click', selectMeal);
                                     }
-                                    document.getElementById('dropdown').setAttribute('class', `dropdown is-active`);
+                                    showDropdown(true);
                                 }
 
-                                function focusin() {
+                                function suggest(event) {
+                                    let query = 'suggest';
+                                    if (event.target.value) query += `?search=${event.target.value}`;
                                     const request = new XMLHttpRequest();
                                     request.addEventListener('load', onLoadSuggestListener);
-                                    request.open('GET', 'suggest');
+                                    request.open('GET', query);
                                     request.send();
                                 }
 
                                 function focusout() {
-                                    if (!cancelFocusOut) {
-                                        document.getElementById('dropdown').setAttribute('class', 'dropdown');
-                                    }
+                                    if (!cancelFocusOut) showDropdown(false);
+                                }
+
+                                function showDropdown(show) {
+                                    let cssclass = 'dropdown'
+                                    if (show) cssclass += ' is-active';
+                                    document.getElementById('dropdown').setAttribute('class', cssclass);
                                 }
                         </script>
                         <style>
@@ -104,8 +111,9 @@
                         </div>
                         <script>
                                 const dropdowninput = document.getElementById('dropdown-input');
-                                dropdowninput.addEventListener('focusin', focusin);
+                                dropdowninput.addEventListener('focusin', suggest);
                                 dropdowninput.addEventListener('focusout', focusout);
+                                dropdowninput.addEventListener('input', suggest);
                         </script>
                     </div>
                 }
