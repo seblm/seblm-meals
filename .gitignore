@@ -3,4 +3,5 @@ target
 /.bsp
 /.idea
 /.idea_modules
+/run.sh
 /RUNNING_PID
