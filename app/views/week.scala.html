@@ -27,7 +27,7 @@
                                 let cancelFocusOut = false;
 
                                 function selectMeal(clickEvent) {
-                                    document.getElementById('dropdown-input').setAttribute('value', clickEvent.currentTarget.getAttribute('data-meal'))
+                                    document.getElementById('dropdown-input').value = clickEvent.currentTarget.getAttribute('data-meal');
                                     cancelFocusOut = false;
                                     focusout();
                                 }
