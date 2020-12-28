@@ -10,7 +10,7 @@ import scala.util.{Random, Try}
 class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: ExecutionContext) extends MealsService {
 
   override def currentWeekMeals(): Future[WeekMeals] = {
-    val now = clock.instant().atZone(ZoneId.of("Europe/Paris"))
+    val now = ZonedDateTime.now(clock)
     meals(now)(repository).map(mealsByWeekDay(now.toLocalDate))
   }
 
@@ -18,7 +18,7 @@ class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: Ex
     repository.linkOrInsert(mealTime, mealDescription)
 
   override def nextWeekMeals(): Future[WeekMeals] = {
-    val nowNextWeek = clock.instant().atZone(ZoneId.of("Europe/Paris")).plusWeeks(1)
+    val nowNextWeek = ZonedDateTime.now(clock).plusWeeks(1)
     meals(nowNextWeek)(repository).map(mealsByWeekDay(nowNextWeek.toLocalDate))
   }
 
@@ -33,7 +33,7 @@ class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: Ex
   }
 
   override def shuffleAll(): Future[WeekMeals] = {
-    val nowNextWeek = clock.instant().atZone(ZoneId.of("Europe/Paris")).plusWeeks(1)
+    val nowNextWeek = ZonedDateTime.now(clock).plusWeeks(1)
     val (firstDayOfWeek, lastDayOfWeek) = firstAndLastDayOfWeek(nowNextWeek)
     val until = firstDayOfWeek.minusWeeks(1).minusNanos(1)
     val firstDay = firstDayOfWeek.toLocalDate
@@ -80,7 +80,8 @@ class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: Ex
     if (first._2.length != second._2.length) first._2.length > second._2.length
     else first._2.max.isAfter(second._2.max)
 
-  override def suggest(search: Option[String]): Future[Seq[MealSuggest]] =
+  override def suggest(search: Option[String]): Future[Seq[MealSuggest]] = {
+    val now = LocalDateTime.now(clock)
     repository.all().map { mealsByDate =>
       val all = mealsByDate.toSeq
       val filtered = all.filter { case (meal, _) =>
@@ -91,12 +92,15 @@ class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: Ex
           count = dates.length,
           description = meal.description,
           descriptionLabel = search.fold(meal.description) { token =>
-            meal.description.split(token).mkString(s"<strong>$token</strong>")
+            val highlighted = s"<strong>$token</strong>"
+            meal.description.split(token).mkString(highlighted) + (if (meal.description.endsWith(token)) highlighted
+                                                                   else "")
           },
-          lastused = Duration.between(dates.max, LocalDateTime.now()).toDays.toInt
+          lastused = Duration.between(dates.max, now).toDays.toInt
         )
       }
     }
+  }
 
   override def delete(mealTime: LocalDateTime): Future[Unit] = repository.unlink(mealTime)
 

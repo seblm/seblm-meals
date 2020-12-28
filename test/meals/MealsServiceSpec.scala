@@ -6,6 +6,7 @@ import org.mockito.scalatest.IdiomaticMockito
 import org.scalatest.OptionValues._
 import org.scalatest.concurrent.ScalaFutures.whenReady
 import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.must.Matchers.contain
 import org.scalatest.matchers.should.Matchers._
 
 import java.time._
@@ -130,6 +131,70 @@ class MealsServiceSpec extends AnyFlatSpec with IdiomaticMockito {
             _.meal
           ) should contain only ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
       }
+  }
+
+  it should "suggest meals ordered by most used then by date" in withRepositoryAndService {
+    (mealRepository, mealsService) =>
+      mealRepository.all() returns MealsServiceSpec
+        .AllResponse(
+          Seq(
+            "salade tomates concombres -> 2020-02-17T12:00, 2020-02-18T20:00",
+            "tomates farcies           -> 2020-02-17T20:00",
+            "pâtes sauce tomate        -> 2020-02-18T12:00",
+            "ratatouille               -> 2020-02-19T12:00"
+          )
+        )
+        .toFuture
+
+      whenReady(mealsService.suggest(None)) { suggests =>
+        suggests should contain inOrderOnly (
+          MealSuggest(2, "salade tomates concombres", "salade tomates concombres", 10),
+          MealSuggest(1, "ratatouille", "ratatouille", 9),
+          MealSuggest(1, "pâtes sauce tomate", "pâtes sauce tomate", 10),
+          MealSuggest(1, "tomates farcies", "tomates farcies", 11),
+        )
+      }
+  }
+
+  it should "suggest meals filtered by a search" in withRepositoryAndService { (mealRepository, mealsService) =>
+    mealRepository.all() returns MealsServiceSpec
+      .AllResponse(
+        Seq(
+          "salade tomates concombres -> 2020-02-17T12:00, 2020-02-18T20:00",
+          "tomates farcies           -> 2020-02-17T20:00",
+          "pâtes sauce tomate        -> 2020-02-18T12:00",
+          "ratatouille               -> 2020-02-19T12:00"
+        )
+      )
+      .toFuture
+
+    whenReady(mealsService.suggest(Some("omat"))) { suggests =>
+      suggests should contain inOrderOnly (
+        MealSuggest(2, "salade tomates concombres", "salade t<strong>omat</strong>es concombres", 10),
+        MealSuggest(1, "pâtes sauce tomate", "pâtes sauce t<strong>omat</strong>e", 10),
+        MealSuggest(1, "tomates farcies", "t<strong>omat</strong>es farcies", 11),
+      )
+    }
+  }
+
+  it should "highlight search" in withRepositoryAndService { (mealRepository, mealsService) =>
+    mealRepository.all() returns MealsServiceSpec
+      .AllResponse(
+        Seq(
+          "salade tomates concombres -> 2020-02-17T12:00",
+          "concombres maïs -> 2020-02-18T12:00",
+          "salade concombres tomates -> 2020-02-19T12:00"
+        )
+      )
+      .toFuture
+
+    whenReady(mealsService.suggest(Some("concombres"))) { suggests =>
+      suggests.map(_.descriptionLabel) should contain only (
+        "salade tomates <strong>concombres</strong>",
+        "<strong>concombres</strong> maïs",
+        "salade <strong>concombres</strong> tomates",
+      )
+    }
   }
 
   private def withRepositoryAndService(testCode: (MealRepository, MealsService) => Any): Any = {
