@@ -1,5 +1,6 @@
 package meals.application
 
+import meals.domain.DatesTransformations.yearWeek
 import meals.domain.{MealSuggest, MealsService}
 import play.api.Logging
 import play.api.data.Forms._
@@ -7,7 +8,7 @@ import play.api.data._
 import play.api.libs.json.{Json, Writes}
 import play.api.mvc._
 
-import java.time.LocalDateTime
+import java.time.{Clock, LocalDateTime, Year}
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
@@ -18,32 +19,27 @@ class MealsController @Inject() (cc: ControllerComponents, mealsService: MealsSe
 
   implicit val ec: ExecutionContext = cc.executionContext
 
-  def week(): Action[AnyContent] = Action.async { implicit requestHeader: RequestHeader =>
-    mealsService.currentWeekMeals().map(meals => Ok(views.html.week(meals)))
+  private val clock = Clock.systemDefaultZone()
+
+  def week(): Action[AnyContent] = Action {
+    Redirect((routes.MealsController.meals _).tupled(yearWeek(clock)));
   }
 
-  def nextWeek(): Action[AnyContent] = Action.async { implicit requestHeader: RequestHeader =>
-    mealsService.nextWeekMeals().map(meals => Ok(views.html.nextweek(meals)))
+  def meals(year: Year, week: Int): Action[AnyContent] = Action.async { implicit requestHeader: RequestHeader =>
+    mealsService.meals(year, week).map(meals => Ok(views.html.week(meals)))
   }
 
-  case class ShuffleData(mealTime: LocalDateTime, nextWeek: Boolean)
+  case class ShuffleData(mealTime: LocalDateTime)
 
   val shuffleForm: Form[ShuffleData] = Form(
     mapping(
-      "mealTime" -> localDateTime,
-      "nextWeek" -> boolean
+      "mealTime" -> localDateTime
     )(ShuffleData.apply)(ShuffleData.unapply)
   )
 
   def shuffle(): Action[ShuffleData] = Action.async(parse.form(shuffleForm)) { implicit request =>
     logger.debug(s"shuffle(${request.body})")
-    val target = if (request.body.nextWeek) routes.MealsController.nextWeek() else routes.MealsController.week()
-    mealsService.shuffle(request.body.mealTime).map(_ => Redirect(target))
-  }
-
-  def shuffleAll(): Action[AnyContent] = Action.async { implicit request =>
-    logger.debug(s"shuffleAll(${request.body})")
-    mealsService.shuffleAll().map(_ => Redirect(routes.MealsController.nextWeek()))
+    mealsService.shuffle(request.body.mealTime).map(_ => Redirect(routes.MealsController.week()))
   }
 
   case class LinkOrInsertData(mealDescription: String, mealTime: LocalDateTime, nextWeek: Boolean)
@@ -58,8 +54,9 @@ class MealsController @Inject() (cc: ControllerComponents, mealsService: MealsSe
 
   def linkOrInsert(): Action[LinkOrInsertData] = Action.async(parse.form(linkOrInsertForm)) { implicit request =>
     logger.debug(s"link(${request.body})")
-    val target = if (request.body.nextWeek) routes.MealsController.nextWeek() else routes.MealsController.week()
-    mealsService.linkOrInsert(request.body.mealTime, request.body.mealDescription).map(_ => Redirect(target))
+    mealsService
+      .linkOrInsert(request.body.mealTime, request.body.mealDescription)
+      .map(_ => Redirect(routes.MealsController.week()))
   }
 
   case class UnlinkData(mealTime: LocalDateTime, nextWeek: Boolean)
@@ -73,8 +70,7 @@ class MealsController @Inject() (cc: ControllerComponents, mealsService: MealsSe
 
   def unlink(): Action[UnlinkData] = Action.async(parse.form(unlinkForm)) { implicit request =>
     logger.debug(s"unlink(${request.body})")
-    val target = if (request.body.nextWeek) routes.MealsController.nextWeek() else routes.MealsController.week()
-    mealsService.delete(request.body.mealTime).map(_ => Redirect(target))
+    mealsService.delete(request.body.mealTime).map(_ => Redirect(routes.MealsController.week()))
   }
 
   private implicit val mealSuggestWrites: Writes[MealSuggest] = Json.writes[MealSuggest]

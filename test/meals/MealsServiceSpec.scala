@@ -30,7 +30,18 @@ class MealsServiceSpec extends AnyFlatSpec with IdiomaticMockito {
         )
       )
 
-      whenReady(mealsService.currentWeekMeals()) { weekMeals =>
+      whenReady(mealsService.meals(Year.of(2020), 9)) { weekMeals =>
+        weekMeals.titles.short shouldBe "2020 semaine n°09"
+        weekMeals.titles.long shouldBe "Semaine n°09 - du lundi 24 février au dimanche 1 mars 2020"
+        weekMeals.previous.year shouldBe Year.of(2020)
+        weekMeals.previous.week shouldBe 8
+        weekMeals.previous.isActive shouldBe false
+        weekMeals.now.year shouldBe Year.of(2020)
+        weekMeals.now.week shouldBe 9
+        weekMeals.now.isActive shouldBe true
+        weekMeals.next.year shouldBe Year.of(2020)
+        weekMeals.next.week shouldBe 10
+        weekMeals.next.isActive shouldBe false
         weekMeals.monday.lunch should not be defined
         weekMeals.monday.dinner should not be defined
         weekMeals.tuesday.lunch should not be defined
@@ -64,7 +75,18 @@ class MealsServiceSpec extends AnyFlatSpec with IdiomaticMockito {
           )
         )
 
-      whenReady(mealsService.nextWeekMeals()) { weekMeals =>
+      whenReady(mealsService.meals(Year.of(2020), 10)) { weekMeals =>
+        weekMeals.titles.short shouldBe "2020 semaine n°10"
+        weekMeals.titles.long shouldBe "Semaine n°10 - du lundi 2 au dimanche 8 mars 2020"
+        weekMeals.previous.year shouldBe Year.of(2020)
+        weekMeals.previous.week shouldBe 8
+        weekMeals.previous.isActive shouldBe false
+        weekMeals.now.year shouldBe Year.of(2020)
+        weekMeals.now.week shouldBe 9
+        weekMeals.now.isActive shouldBe false
+        weekMeals.next.year shouldBe Year.of(2020)
+        weekMeals.next.week shouldBe 10
+        weekMeals.next.isActive shouldBe true
         weekMeals.monday.lunch.value.meal shouldBe "galettes de blé noir"
         weekMeals.monday.dinner should not be defined
         weekMeals.tuesday.lunch should not be defined
@@ -101,35 +123,6 @@ class MealsServiceSpec extends AnyFlatSpec with IdiomaticMockito {
 
       whenReady(mealsService.shuffle(day)) { meal =>
         meal.value.meal should (be("tuesday current week") or be("wednesday current week"))
-      }
-  }
-
-  it should "randomly choose all empty meals for a week" in withRepositoryAndService {
-    (mealRepository: MealRepository, mealsService: MealsService) =>
-      mealRepository.all() returns MealsServiceSpec
-        .AllResponse(
-          Seq(
-            "monday        -> 2020-02-17T20:00",
-            "tuesday       -> 2020-02-18T20:00",
-            "wednesday     -> 2020-02-19T20:00",
-            "thursday      -> 2020-02-20T20:00",
-            "friday        -> 2020-02-21T20:00",
-            "saturday      -> 2020-02-22T20:00",
-            "sunday        -> 2020-02-23T20:00",
-            "previous week -> 2020-02-24T20:00, 2020-02-25T20:00, 2020-02-26T20:00, 2020-02-27T20:00, 2020-02-28T20:00, 2020-02-29T20:00, 2020-03-01T20:00"
-          )
-        )
-        .toFuture
-      mealRepository.link(*, *) answers { (mealRow: MealRow, time: LocalDateTime) =>
-        Future.successful(Meal(time, mealRow.description))
-      }
-
-      whenReady(mealsService.shuffleAll()) { weekMeals =>
-        WeekMeals
-          .allWeekMeals(weekMeals)
-          .map(
-            _.meal
-          ) should contain only ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
       }
   }
 

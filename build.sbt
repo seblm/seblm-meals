@@ -3,7 +3,10 @@ organization := "name.lemerdy.sebastian"
 
 version := "1.0-SNAPSHOT"
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
+lazy val root = (project in file(".")).enablePlugins(PlayScala).settings(
+  routesImport += "java.time.Year",
+  routesImport += "meals.application.YearBinder.yearBinder",
+)
 
 scalaVersion := "2.13.4"
 
