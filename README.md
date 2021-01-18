@@ -14,5 +14,5 @@ $ psql
 
 ## backlog
 
- - next week screen should be able to shuffle all empty meals
- - next week screen should be able to re-shuffle an already planed meal
+ - do not suggest meals from 7 days before current meal suggestion
+ - prefer suggest meals by lunch/dinner time
