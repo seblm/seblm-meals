@@ -1,7 +1,7 @@
 package meals.application
 
 import meals.domain.DatesTransformations.yearWeek
-import meals.domain.{DatesTransformations, MealSuggest, MealsService}
+import meals.domain.{DatesTransformations, MealSuggest, MealTime, MealsService}
 import play.api.Logging
 import play.api.data.Forms._
 import play.api.data._
@@ -62,8 +62,8 @@ class MealsController @Inject() (cc: ControllerComponents, mealsService: MealsSe
 
   private implicit val mealSuggestWrites: Writes[MealSuggest] = Json.writes[MealSuggest]
 
-  def suggest(search: Option[String]): Action[AnyContent] = Action.async {
-    mealsService.suggest(search).map(meals => Ok(Json.toJson(meals)))
+  def suggest(mealTime: MealTime, search: Option[String]): Action[AnyContent] = Action.async {
+    mealsService.suggest(mealTime, search).map(meals => Ok(Json.toJson(meals)))
   }
 
 }

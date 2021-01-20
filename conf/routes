@@ -2,6 +2,6 @@ GET     /                                  meals.application.MealsController.wee
 GET     /meals/$year<[0-9]+>/$week<[0-9]+> meals.application.MealsController.meals(year: Year, week: Int)
 POST    /link-or-insert                    meals.application.MealsController.linkOrInsert()
 POST    /shuffle                           meals.application.MealsController.shuffle()
-GET     /suggest                           meals.application.MealsController.suggest(search: Option[String])
+GET     /suggest                           meals.application.MealsController.suggest(time: MealTime, search: Option[String])
 POST    /unlink                            meals.application.MealsController.unlink()
 GET     /assets/*file                      controllers.Assets.versioned(path="/public", file: Asset)

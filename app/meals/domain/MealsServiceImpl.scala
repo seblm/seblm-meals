@@ -37,13 +37,18 @@ class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: Ex
     if (first._2.length != second._2.length) first._2.length > second._2.length
     else first._2.max.isAfter(second._2.max)
 
-  override def suggest(search: Option[String]): Future[Seq[MealSuggest]] = {
+  override def suggest(mealTime: MealTime, search: Option[String]): Future[Seq[MealSuggest]] = {
     val now = LocalDateTime.now(clock)
     repository.all().map { mealsByDate =>
       val all = mealsByDate.toSeq
-      val filtered = all.filter { case (meal, _) =>
-        search.fold(true)(token => meal.description.contains(token))
-      }
+      val filtered = all
+        .filter { case (meal, _) =>
+          search.fold(true)(token => meal.description.contains(token))
+        }
+        .flatMap { case (meal, dates) =>
+          val mealTimeDates = dates.filter(_.getHour == mealTime.time)
+          Option.when(mealTimeDates.nonEmpty)((meal, mealTimeDates))
+        }
       filtered.sortWith(moreUsedThenMoreRecent).take(10).map { case (meal, dates) =>
         MealSuggest(
           count = dates.length,

@@ -1,5 +1,6 @@
 package meals
 
+import meals.domain.MealTime.Lunch
 import meals.domain._
 import meals.infrastructure.MealRow
 import org.mockito.scalatest.IdiomaticMockito
@@ -135,20 +136,19 @@ class MealsServiceSpec extends AnyFlatSpec with IdiomaticMockito {
       mealRepository.all() returns MealsServiceSpec
         .AllResponse(
           Seq(
-            "salade tomates concombres -> 2020-02-17T12:00, 2020-02-18T20:00",
+            "salade tomates concombres -> 2020-02-17T12:00, 2020-02-18T12:00",
             "tomates farcies           -> 2020-02-17T20:00",
-            "pâtes sauce tomate        -> 2020-02-18T12:00",
-            "ratatouille               -> 2020-02-19T12:00"
+            "pâtes sauce tomate        -> 2020-02-19T12:00",
+            "ratatouille               -> 2020-02-20T12:00"
           )
         )
         .toFuture
 
-      whenReady(mealsService.suggest(None)) { suggests =>
+      whenReady(mealsService.suggest(Lunch, None)) { suggests =>
         suggests should contain inOrderOnly (
           MealSuggest(2, "salade tomates concombres", "salade tomates concombres", 10),
-          MealSuggest(1, "ratatouille", "ratatouille", 9),
-          MealSuggest(1, "pâtes sauce tomate", "pâtes sauce tomate", 10),
-          MealSuggest(1, "tomates farcies", "tomates farcies", 11),
+          MealSuggest(1, "ratatouille", "ratatouille", 8),
+          MealSuggest(1, "pâtes sauce tomate", "pâtes sauce tomate", 9),
         )
       }
   }
@@ -157,19 +157,18 @@ class MealsServiceSpec extends AnyFlatSpec with IdiomaticMockito {
     mealRepository.all() returns MealsServiceSpec
       .AllResponse(
         Seq(
-          "salade tomates concombres -> 2020-02-17T12:00, 2020-02-18T20:00",
+          "salade tomates concombres -> 2020-02-17T12:00, 2020-02-18T12:00",
           "tomates farcies           -> 2020-02-17T20:00",
-          "pâtes sauce tomate        -> 2020-02-18T12:00",
-          "ratatouille               -> 2020-02-19T12:00"
+          "pâtes sauce tomate        -> 2020-02-19T12:00",
+          "ratatouille               -> 2020-02-20T12:00"
         )
       )
       .toFuture
 
-    whenReady(mealsService.suggest(Some("omat"))) { suggests =>
+    whenReady(mealsService.suggest(Lunch, Some("omat"))) { suggests =>
       suggests should contain inOrderOnly (
         MealSuggest(2, "salade tomates concombres", "salade t<strong>omat</strong>es concombres", 10),
-        MealSuggest(1, "pâtes sauce tomate", "pâtes sauce t<strong>omat</strong>e", 10),
-        MealSuggest(1, "tomates farcies", "t<strong>omat</strong>es farcies", 11),
+        MealSuggest(1, "pâtes sauce tomate", "pâtes sauce t<strong>omat</strong>e", 9),
       )
     }
   }
@@ -185,7 +184,7 @@ class MealsServiceSpec extends AnyFlatSpec with IdiomaticMockito {
       )
       .toFuture
 
-    whenReady(mealsService.suggest(Some("concombres"))) { suggests =>
+    whenReady(mealsService.suggest(Lunch, Some("concombres"))) { suggests =>
       suggests.map(_.descriptionLabel) should contain only (
         "salade tomates <strong>concombres</strong>",
         "<strong>concombres</strong> maïs",

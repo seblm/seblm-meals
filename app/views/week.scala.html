@@ -73,7 +73,9 @@
 
                                 function suggest(event) {
                                     let query = '/suggest';
-                                    if (event.target.value) query += `?search=${event.target.value}`;
+                                    const mealTime = document.querySelector('select[name="mealTime"]').value.substr(11, 2)
+                                    query += `?time=${mealTime}`
+                                    if (event.target.value) query += `&search=${event.target.value}`;
                                     const request = new XMLHttpRequest();
                                     request.addEventListener('load', onLoadSuggestListener);
                                     request.open('GET', query);

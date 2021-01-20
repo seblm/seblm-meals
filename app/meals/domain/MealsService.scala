@@ -11,7 +11,7 @@ trait MealsService {
 
   def shuffle(day: LocalDateTime): Future[Option[Meal]]
 
-  def suggest(search: Option[String]): Future[Seq[MealSuggest]]
+  def suggest(mealTime: MealTime, search: Option[String]): Future[Seq[MealSuggest]]
 
   def delete(mealTime: LocalDateTime): Future[Unit]
 
