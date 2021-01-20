@@ -29,18 +29,12 @@ class MealsController @Inject() (cc: ControllerComponents, mealsService: MealsSe
     mealsService.meals(year, week).map(meals => Ok(views.html.week(meals)))
   }
 
-  case class ShuffleData(mealTime: LocalDateTime)
+  val mealTimeForm: Form[LocalDateTime] = Form(single("mealTime" -> localDateTime))
 
-  val shuffleForm: Form[ShuffleData] = Form(
-    mapping(
-      "mealTime" -> localDateTime
-    )(ShuffleData.apply)(ShuffleData.unapply)
-  )
-
-  def shuffle(): Action[ShuffleData] = Action.async(parse.form(shuffleForm)) { implicit request =>
+  def shuffle(): Action[LocalDateTime] = Action.async(parse.form(mealTimeForm)) { implicit request =>
     logger.debug(s"shuffle(${request.body})")
-    val (year, week) = DatesTransformations.yearWeek(request.body.mealTime)
-    mealsService.shuffle(request.body.mealTime).map(_ => Redirect(routes.MealsController.meals(year, week)))
+    val (year, week) = DatesTransformations.yearWeek(request.body)
+    mealsService.shuffle(request.body).map(_ => Redirect(routes.MealsController.meals(year, week)))
   }
 
   case class LinkOrInsertData(mealDescription: String, mealTime: LocalDateTime)
@@ -60,18 +54,10 @@ class MealsController @Inject() (cc: ControllerComponents, mealsService: MealsSe
       .map(_ => Redirect(routes.MealsController.meals(year, week)))
   }
 
-  case class UnlinkData(mealTime: LocalDateTime)
-
-  val unlinkForm: Form[UnlinkData] = Form(
-    mapping(
-      "mealTime" -> localDateTime
-    )(UnlinkData.apply)(UnlinkData.unapply)
-  )
-
-  def unlink(): Action[UnlinkData] = Action.async(parse.form(unlinkForm)) { implicit request =>
+  def unlink(): Action[LocalDateTime] = Action.async(parse.form(mealTimeForm)) { implicit request =>
     logger.debug(s"unlink(${request.body})")
-    val (year, week) = DatesTransformations.yearWeek(request.body.mealTime)
-    mealsService.delete(request.body.mealTime).map(_ => Redirect(routes.MealsController.meals(year, week)))
+    val (year, week) = DatesTransformations.yearWeek(request.body)
+    mealsService.delete(request.body).map(_ => Redirect(routes.MealsController.meals(year, week)))
   }
 
   private implicit val mealSuggestWrites: Writes[MealSuggest] = Json.writes[MealSuggest]
