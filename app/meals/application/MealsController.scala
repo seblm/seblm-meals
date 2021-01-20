@@ -1,7 +1,7 @@
 package meals.application
 
 import meals.domain.DatesTransformations.yearWeek
-import meals.domain.{MealSuggest, MealsService}
+import meals.domain.{DatesTransformations, MealSuggest, MealsService}
 import play.api.Logging
 import play.api.data.Forms._
 import play.api.data._
@@ -22,7 +22,7 @@ class MealsController @Inject() (cc: ControllerComponents, mealsService: MealsSe
   private val clock = Clock.systemDefaultZone()
 
   def week(): Action[AnyContent] = Action {
-    Redirect((routes.MealsController.meals _).tupled(yearWeek(clock)));
+    Redirect((routes.MealsController.meals _).tupled(yearWeek(LocalDateTime.now(clock))))
   }
 
   def meals(year: Year, week: Int): Action[AnyContent] = Action.async { implicit requestHeader: RequestHeader =>
@@ -39,38 +39,39 @@ class MealsController @Inject() (cc: ControllerComponents, mealsService: MealsSe
 
   def shuffle(): Action[ShuffleData] = Action.async(parse.form(shuffleForm)) { implicit request =>
     logger.debug(s"shuffle(${request.body})")
-    mealsService.shuffle(request.body.mealTime).map(_ => Redirect(routes.MealsController.week()))
+    val (year, week) = DatesTransformations.yearWeek(request.body.mealTime)
+    mealsService.shuffle(request.body.mealTime).map(_ => Redirect(routes.MealsController.meals(year, week)))
   }
 
-  case class LinkOrInsertData(mealDescription: String, mealTime: LocalDateTime, nextWeek: Boolean)
+  case class LinkOrInsertData(mealDescription: String, mealTime: LocalDateTime)
 
   val linkOrInsertForm: Form[LinkOrInsertData] = Form(
     mapping(
       "mealDescription" -> text,
-      "mealTime" -> localDateTime,
-      "nextWeek" -> boolean
+      "mealTime" -> localDateTime
     )(LinkOrInsertData.apply)(LinkOrInsertData.unapply)
   )
 
   def linkOrInsert(): Action[LinkOrInsertData] = Action.async(parse.form(linkOrInsertForm)) { implicit request =>
     logger.debug(s"link(${request.body})")
+    val (year, week) = DatesTransformations.yearWeek(request.body.mealTime)
     mealsService
       .linkOrInsert(request.body.mealTime, request.body.mealDescription)
-      .map(_ => Redirect(routes.MealsController.week()))
+      .map(_ => Redirect(routes.MealsController.meals(year, week)))
   }
 
-  case class UnlinkData(mealTime: LocalDateTime, nextWeek: Boolean)
+  case class UnlinkData(mealTime: LocalDateTime)
 
   val unlinkForm: Form[UnlinkData] = Form(
     mapping(
-      "mealTime" -> localDateTime,
-      "nextWeek" -> boolean
+      "mealTime" -> localDateTime
     )(UnlinkData.apply)(UnlinkData.unapply)
   )
 
   def unlink(): Action[UnlinkData] = Action.async(parse.form(unlinkForm)) { implicit request =>
     logger.debug(s"unlink(${request.body})")
-    mealsService.delete(request.body.mealTime).map(_ => Redirect(routes.MealsController.week()))
+    val (year, week) = DatesTransformations.yearWeek(request.body.mealTime)
+    mealsService.delete(request.body.mealTime).map(_ => Redirect(routes.MealsController.meals(year, week)))
   }
 
   private implicit val mealSuggestWrites: Writes[MealSuggest] = Json.writes[MealSuggest]

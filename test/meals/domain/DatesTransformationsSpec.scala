@@ -3,7 +3,7 @@ package meals.domain
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers._
 
-import java.time.{Clock, Instant, LocalDateTime, Year, ZoneId}
+import java.time.{LocalDateTime, Year}
 
 class DatesTransformationsSpec extends AnyFlatSpec {
 
@@ -29,18 +29,14 @@ class DatesTransformationsSpec extends AnyFlatSpec {
   }
 
   it should "get year and week of January 1st 2021" in {
-    val clock = Clock.fixed(Instant.parse("2021-01-01T00:00:00Z"), ZoneId.of("Europe/Paris"))
-
-    val (year, week) = DatesTransformations.yearWeek(clock)
+    val (year, week) = DatesTransformations.yearWeek(LocalDateTime.parse("2021-01-01T00:00:00"))
 
     year shouldBe Year.of(2020)
     week shouldBe 53
   }
 
   it should "get year and week of Saturday, January 16th 2021" in {
-    val clock = Clock.fixed(Instant.parse("2021-01-16T15:08:21Z"), ZoneId.of("Europe/Paris"))
-
-    val (year, week) = DatesTransformations.yearWeek(clock)
+    val (year, week) = DatesTransformations.yearWeek(LocalDateTime.parse("2021-01-16T16:08:21"))
 
     year shouldBe Year.of(2021)
     week shouldBe 2
