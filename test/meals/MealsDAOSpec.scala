@@ -1,11 +1,6 @@
 package meals
 
-import java.time.DayOfWeek.SUNDAY
-import java.time.LocalDateTime
-import java.util.UUID
-
-import meals.domain.Meal
-import meals.infrastructure.{MealRow, MealsByTimeRow, MealsDAO}
+import meals.infrastructure.{MealRow, MealsDAO}
 import org.scalatest.TestData
 import org.scalatest.concurrent.Eventually.eventually
 import org.scalatest.concurrent.ScalaFutures.whenReady
@@ -14,7 +9,9 @@ import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 
-import scala.concurrent.{ExecutionContext, Future}
+import java.time.LocalDateTime
+import java.util.UUID
+import scala.concurrent.ExecutionContext
 
 class MealsDAOSpec extends PlaySpec with GuiceOneAppPerTest {
 

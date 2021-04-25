@@ -11,8 +11,3 @@ $ psql
 # grant all privileges on database johndoe to johndoe;
 # \q
 ```
-
-## backlog
-
- - do not suggest meals from 7 days before current meal suggestion
- - prefer suggest meals by lunch/dinner time

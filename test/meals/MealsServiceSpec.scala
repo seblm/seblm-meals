@@ -1,6 +1,5 @@
 package meals
 
-import meals.domain.MealTime.Lunch
 import meals.domain._
 import meals.infrastructure.MealRow
 import org.mockito.scalatest.IdiomaticMockito
@@ -23,7 +22,7 @@ class MealsServiceSpec extends AnyFlatSpec with IdiomaticMockito {
   private val monthFormatter = DateTimeFormatter.ofPattern("MMMM")
 
   "Meals" should "be displayed for each day of current week" in withRepositoryAndService {
-    (mealRepository: MealRepository, mealsService: MealsService) =>
+    (mealRepository: MealRepository, mealsService: MealsService, _) =>
       val from = LocalDateTime.parse("2020-02-24T00:00")
       val to = LocalDateTime.parse("2020-03-01T23:59:59.999999999")
       mealRepository.meals(from, to) returns Future.successful(
@@ -65,7 +64,7 @@ class MealsServiceSpec extends AnyFlatSpec with IdiomaticMockito {
   }
 
   it should "be displayed for each day of next week" in withRepositoryAndService {
-    (mealRepository: MealRepository, mealsService: MealsService) =>
+    (mealRepository: MealRepository, mealsService: MealsService, _) =>
       val from = LocalDateTime.parse("2020-03-02T00:00")
       val to = LocalDateTime.parse("2020-03-08T23:59:59.999999999")
       mealRepository.meals(from, to) returns Future
@@ -110,7 +109,7 @@ class MealsServiceSpec extends AnyFlatSpec with IdiomaticMockito {
   }
 
   it should "randomly choose a meal" in withRepositoryAndService {
-    (mealRepository: MealRepository, mealsService: MealsService) =>
+    (mealRepository: MealRepository, mealsService: MealsService, _) =>
       val day = LocalDateTime.parse("2020-03-02T20:00")
       mealRepository.all() returns MealsServiceSpec
         .AllResponse(
@@ -131,8 +130,8 @@ class MealsServiceSpec extends AnyFlatSpec with IdiomaticMockito {
       }
   }
 
-  it should "suggest meals ordered by most used then by date" in withRepositoryAndService {
-    (mealRepository, mealsService) =>
+  it should "suggest meals ordered by most recent" in withRepositoryAndService {
+    (mealRepository, mealsService, reference) =>
       mealRepository.all() returns MealsServiceSpec
         .AllResponse(
           Seq(
@@ -144,36 +143,37 @@ class MealsServiceSpec extends AnyFlatSpec with IdiomaticMockito {
         )
         .toFuture
 
-      whenReady(mealsService.suggest(Lunch, None)) { suggests =>
+      whenReady(mealsService.suggest(reference, None)) { suggests =>
         suggests should contain inOrderOnly (
-          MealSuggest(2, "salade tomates concombres", "salade tomates concombres", 10),
-          MealSuggest(1, "ratatouille", "ratatouille", 8),
-          MealSuggest(1, "pâtes sauce tomate", "pâtes sauce tomate", 9),
+          MealSuggest(2, "salade tomates concombres", "salade tomates concombres", 11),
+          MealSuggest(1, "ratatouille", "ratatouille", 9),
+          MealSuggest(1, "pâtes sauce tomate", "pâtes sauce tomate", 10),
         )
       }
   }
 
-  it should "suggest meals filtered by a search" in withRepositoryAndService { (mealRepository, mealsService) =>
-    mealRepository.all() returns MealsServiceSpec
-      .AllResponse(
-        Seq(
-          "salade tomates concombres -> 2020-02-17T12:00, 2020-02-18T12:00",
-          "tomates farcies           -> 2020-02-17T20:00",
-          "pâtes sauce tomate        -> 2020-02-19T12:00",
-          "ratatouille               -> 2020-02-20T12:00"
+  it should "suggest meals filtered by a search" in withRepositoryAndService {
+    (mealRepository, mealsService, reference) =>
+      mealRepository.all() returns MealsServiceSpec
+        .AllResponse(
+          Seq(
+            "salade tomates concombres -> 2020-02-17T12:00, 2020-02-18T12:00",
+            "tomates farcies           -> 2020-02-17T20:00",
+            "pâtes sauce tomate        -> 2020-02-19T12:00",
+            "ratatouille               -> 2020-02-20T12:00"
+          )
         )
-      )
-      .toFuture
+        .toFuture
 
-    whenReady(mealsService.suggest(Lunch, Some("omat"))) { suggests =>
-      suggests should contain inOrderOnly (
-        MealSuggest(2, "salade tomates concombres", "salade t<strong>omat</strong>es concombres", 10),
-        MealSuggest(1, "pâtes sauce tomate", "pâtes sauce t<strong>omat</strong>e", 9),
-      )
-    }
+      whenReady(mealsService.suggest(reference, Some("omat"))) { suggests =>
+        suggests should contain inOrderOnly (
+          MealSuggest(2, "salade tomates concombres", "salade t<strong>omat</strong>es concombres", 11),
+          MealSuggest(1, "pâtes sauce tomate", "pâtes sauce t<strong>omat</strong>e", 10),
+        )
+      }
   }
 
-  it should "highlight search" in withRepositoryAndService { (mealRepository, mealsService) =>
+  it should "highlight search" in withRepositoryAndService { (mealRepository, mealsService, reference) =>
     mealRepository.all() returns MealsServiceSpec
       .AllResponse(
         Seq(
@@ -184,7 +184,7 @@ class MealsServiceSpec extends AnyFlatSpec with IdiomaticMockito {
       )
       .toFuture
 
-    whenReady(mealsService.suggest(Lunch, Some("concombres"))) { suggests =>
+    whenReady(mealsService.suggest(reference, Some("concombres"))) { suggests =>
       suggests.map(_.descriptionLabel) should contain only (
         "salade tomates <strong>concombres</strong>",
         "<strong>concombres</strong> maïs",
@@ -193,14 +193,12 @@ class MealsServiceSpec extends AnyFlatSpec with IdiomaticMockito {
     }
   }
 
-  private def withRepositoryAndService(testCode: (MealRepository, MealsService) => Any): Any = {
+  private def withRepositoryAndService(testCode: (MealRepository, MealsService, LocalDateTime) => Any): Any = {
     val mealRepository = mock[MealRepository]
-    val mealsService = new MealsServiceImpl(
-      clock = Clock.fixed(Instant.parse("2020-02-29T02:22:00Z"), ZoneId.of("Europe/Paris")),
-      repository = mealRepository
-    )
+    val clock = Clock.fixed(Instant.parse("2020-02-29T11:00:00Z"), ZoneId.of("Europe/Paris"))
+    val mealsService = new MealsServiceImpl(clock = clock, repository = mealRepository)
 
-    testCode(mealRepository, mealsService)
+    testCode(mealRepository, mealsService, clock.instant().atZone(clock.getZone).toLocalDateTime)
   }
 
 }

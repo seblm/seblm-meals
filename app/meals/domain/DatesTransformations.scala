@@ -18,4 +18,11 @@ object DatesTransformations {
     (monday, monday.plusWeeks(1).minusNanos(1))
   }
 
+  def score(reference: LocalDateTime, date: LocalDateTime): Long = {
+    val daysUntilSameYear =
+      Math.abs(date.withYear(reference.getYear).toLocalDate.toEpochDay - reference.toLocalDate.toEpochDay)
+    val daysUntil = Math.abs(date.toLocalDate.toEpochDay - reference.toLocalDate.toEpochDay)
+    if (daysUntil < 7) 0 else Math.abs(183 - daysUntilSameYear)
+  }
+
 }

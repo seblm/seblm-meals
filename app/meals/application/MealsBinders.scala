@@ -1,26 +1,24 @@
 package meals.application
 
-import meals.domain.MealTime
-import meals.domain.MealTime.{Dinner, Lunch}
 import play.api.mvc.{PathBindable, QueryStringBindable}
 
-import java.time.Year
+import java.time.{LocalDateTime, Year}
+import scala.util.Try
 
 object MealsBinders {
 
-  implicit def mealTimeBinder(implicit intBinder: QueryStringBindable[Int]): QueryStringBindable[MealTime] =
-    new QueryStringBindable[MealTime] {
+  implicit def localDateTimeBinder(implicit binder: QueryStringBindable[String]): QueryStringBindable[LocalDateTime] =
+    new QueryStringBindable[LocalDateTime] {
 
-      override def bind(key: String, params: Map[String, Seq[String]]): Option[Either[String, MealTime]] =
-        intBinder
+      override def bind(key: String, params: Map[String, Seq[String]]): Option[Either[String, LocalDateTime]] =
+        binder
           .bind(key, params)
-          .map(_.flatMap {
-            case 12    => Right(Lunch)
-            case 20    => Right(Dinner)
-            case other => Left(s"Parameter $key '$other' is not either 12 nor 20")
+          .map(_.flatMap { localDateTime =>
+            Try(LocalDateTime.parse(localDateTime.replace(' ', 'T'))).toEither.left
+              .map(_ => s"Parameter $key '$localDateTime' is not valid")
           })
 
-      override def unbind(key: String, mealTime: MealTime): String = mealTime.time.toString
+      override def unbind(key: String, localDateTime: LocalDateTime): String = localDateTime.toString.replace('T', ' ')
 
     }
 

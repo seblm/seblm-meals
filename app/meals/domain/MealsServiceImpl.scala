@@ -30,15 +30,17 @@ class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: Ex
     } yield result
   }
 
-  private def moreUsedThenMoreRecent(
-      first: (MealRow, Seq[LocalDateTime]),
-      second: (MealRow, Seq[LocalDateTime])
-  ): Boolean =
-    if (first._2.length != second._2.length) first._2.length > second._2.length
-    else first._2.max.isAfter(second._2.max)
+  private def moreRecent(
+      reference: LocalDateTime
+  )(first: (MealRow, Seq[LocalDateTime]), second: (MealRow, Seq[LocalDateTime])): Boolean =
+    sumScores(reference)(first._2) > sumScores(reference)(second._2)
 
-  override def suggest(mealTime: MealTime, search: Option[String]): Future[Seq[MealSuggest]] = {
-    val now = LocalDateTime.now(clock)
+  private def sumScores(reference: LocalDateTime)(dates: Seq[LocalDateTime]) = {
+    val scores = dates.map(d => DatesTransformations.score(reference, d))
+    if (scores.contains(0)) 0 else scores.zipWithIndex.map { case (s, index) => s / (index + 1) }.sum
+  }
+
+  override def suggest(reference: LocalDateTime, search: Option[String]): Future[Seq[MealSuggest]] = {
     repository.all().map { mealsByDate =>
       val all = mealsByDate.toSeq
       val filtered = all
@@ -46,10 +48,10 @@ class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: Ex
           search.fold(true)(token => meal.description.contains(token))
         }
         .flatMap { case (meal, dates) =>
-          val mealTimeDates = dates.filter(_.getHour == mealTime.time)
+          val mealTimeDates = dates.filter(_.getHour == reference.getHour).filter(_.isBefore(reference))
           Option.when(mealTimeDates.nonEmpty)((meal, mealTimeDates))
         }
-      filtered.sortWith(moreUsedThenMoreRecent).take(10).map { case (meal, dates) =>
+      filtered.sortWith(moreRecent(reference)).take(10).map { case (meal, dates) =>
         MealSuggest(
           count = dates.length,
           description = meal.description,
@@ -58,7 +60,7 @@ class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: Ex
             meal.description.split(token).mkString(highlighted) + (if (meal.description.endsWith(token)) highlighted
                                                                    else "")
           },
-          lastused = Duration.between(dates.max, now).toDays.toInt
+          lastused = Duration.between(dates.max, reference).toDays.toInt
         )
       }
     }
