@@ -4,14 +4,14 @@
 @import play.api.data.format.Formats.localDateTimeFormat
 @(weekDay: String, weekDayMeals: WeekDay, nextWeek: Boolean)(implicit requestHeader: RequestHeader)
 
-<div class="columns is-mobile is-vcentered">
-    <div class="column is-4 has-text-weight-bold">@weekDay midi</div>
-    <div class="column is-6">
+<div class="row m-1">
+    <div class="col-3">@weekDay midi</div>
+    <div class="col-8">
     @if(weekDayMeals.lunch.isDefined) {
         @weekDayMeals.lunch.map(_.meal).getOrElse("")
     }
     </div>
-    <div class="column is-1">
+    <div class="col-1">
     @if(weekDayMeals.lunch.isDefined) {
         @helper.form(action = routes.MealsController.unlink()) {
             @CSRF.formField
@@ -19,10 +19,8 @@
                 localDateTimeFormat.unbind("", weekDayMeals.reference.atTime(12, 0))("")
             }" />
             <input type="hidden" name="nextWeek" value="@nextWeek" />
-            <button class="button is-danger is-light">
-                <span class="icon is-small">
-                    <i class="fas fa-trash-alt"></i>
-                </span>
+            <button class="btn btn-outline-danger">
+                <i class="bi bi-trash2"></i>
             </button>
         }
     } else {
@@ -32,23 +30,21 @@
                 localDateTimeFormat.unbind("", weekDayMeals.reference.atTime(12, 0))("")
             }" />
             <input type="hidden" name="nextWeek" value="@nextWeek" />
-            <button class="button is-link">
-                <span class="icon is-small">
-                    <i class="fas fa-random"></i>
-                </span>
+            <button class="btn btn-outline-secondary">
+                <i class="bi bi-shuffle"></i>
             </button>
         }
     }
     </div>
 </div>
-<div class="columns is-mobile is-vcentered">
-    <div class="column is-4 has-text-weight-bold">@weekDay soir</div>
-    <div class="column is-6">
+<div class="row m-1">
+    <div class="col-3">@weekDay soir</div>
+    <div class="col-8">
     @if(weekDayMeals.dinner.isDefined) {
         @weekDayMeals.dinner.map(_.meal).getOrElse("")
     }
     </div>
-    <div class="column is-1">
+    <div class="col-1">
     @if(weekDayMeals.dinner.isDefined) {
         @helper.form(action = routes.MealsController.unlink()) {
             @CSRF.formField
@@ -56,10 +52,8 @@
                 localDateTimeFormat.unbind("", weekDayMeals.reference.atTime(20, 0))("")
             }" />
             <input type="hidden" name="nextWeek" value="@nextWeek" />
-            <button class="button is-danger is-light">
-                <span class="icon is-small">
-                    <i class="fas fa-trash-alt"></i>
-                </span>
+            <button class="btn btn-outline-danger">
+                <i class="bi bi-trash2"></i>
             </button>
         }
     } else {
@@ -69,10 +63,8 @@
                 localDateTimeFormat.unbind("", weekDayMeals.reference.atTime(20, 0))("")
             }" />
             <input type="hidden" name="nextWeek" value="@nextWeek" />
-            <button class="button is-link">
-                <span class="icon is-small">
-                    <i class="fas fa-random"></i>
-                </span>
+            <button class="btn btn-outline-secondary">
+                <i class="bi bi-shuffle"></i>
             </button>
         }
     }

@@ -4,71 +4,58 @@
 @(weekMeals: WeekMeals)(implicit requestHeader: RequestHeader)
 
 <!DOCTYPE html>
-<html lang="en" class="has-navbar-fixed-bottom">
+<html lang="en">
     <head>
-        <title>@weekMeals.titles.short</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="@controllers.routes.Assets.versioned("favicon.png")" type="image/png">
         <link rel="shortcut icon" href="@controllers.routes.Assets.versioned("favicon.png")" type="image/png">
-        <link rel="stylesheet" media="screen" href="@controllers.routes.Assets.versioned("stylesheets/bulma.min.css")">
-        <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" media="screen" href="@controllers.routes.Assets.versioned("bootstrap-5.0.0-dist/css/bootstrap.min.css")">
+        <link rel="stylesheet" media="screen" href="@controllers.routes.Assets.versioned("bootstrap-icons-1.4.1/bootstrap-icons.css")">
+        <title>@weekMeals.titles.short</title>
     </head>
     <body>
-        <section class="section">
         <div class="container">
-            <h1 class="title">@weekMeals.titles.long</h1>
+            <h1>@weekMeals.titles.long</h1>
             @if(weekMeals.allByDate.exists(_._2.isEmpty)) {
                 @helper.form(action = meals.application.routes.MealsController.linkOrInsert()) {
                     @CSRF.formField
-                    <div class="columns is-mobile is-vcentered">
-                        <div class="column is-4">
-                            <div class="select">
-                                <select name="mealTime">
+                    <div class="row m-1">
+                        <div class="col-3">
+                                <select name="mealTime" class="form-select">
                                 @for(weekMeal <- weekMeals.allByDate.filter(_._2.isEmpty)) {
                                     <option value="@localDateTimeFormat.unbind("", weekMeal._1)("")">@MealTimeConverter.displayTime(weekMeal._1)</option>
                                 }
                                 </select>
-                            </div>
                         </div>
                         <script>
-                                let cancelFocusOut = false;
-
                                 function selectMeal(clickEvent) {
                                     document.getElementById('dropdown-input').value = clickEvent.currentTarget.getAttribute('data-meal');
-                                    cancelFocusOut = false;
-                                    focusout();
                                 }
 
                                 function createMeal(meal) {
                                     let template = '';
-                                    template += `<a class="dropdown-item level" data-meal="${meal.description}">`;
-                                    template += ' <div class="level-left">';
-                                    template += `  <div class="level-item"><span>${meal.descriptionLabel}`;
-                                    if (meal.count > 1) template += ` (${meal.count})`;
-                                    template += '</span></div>';
-                                    template += ' </div><div class="level-right">';
-                                    template += `  <div class="level-item">${meal.lastused} jours</div>`;
-                                    template += '</div></div>';
+                                    template += `<li class="dropdown-item d-flex w-100 justify-content-between" data-meal="${meal.description}">`;
+                                    template += ` <span>`;
+                                    template += `  <span>${meal.descriptionLabel}</span>`;
+                                    if (meal.count > 1) template += `  <span class="badge bg-secondary">${meal.count}</span>`;
+                                    template += ` </span>`;
+                                    template += ` <span>${meal.lastused} jours</span>`;
+                                    template += '</li>';
                                     return template;
                                 }
 
                                 function onLoadSuggestListener() {
                                     const meals = JSON.parse(this.responseText);
-                                    const dropdowncontent = document.getElementById('dropdown-content');
-                                    if (dropdowncontent) {
-                                        dropdowncontent.remove();
-                                    }
                                     const dropdownmenu = document.getElementById('dropdown-menu');
-                                    const newdropdowncontent = dropdownmenu.appendChild(document.createElement('div'))
-                                    newdropdowncontent.setAttribute('class', 'dropdown-content');
-                                    newdropdowncontent.setAttribute('id', 'dropdown-content');
+                                    let newdropdowncontent = '';
                                     for (const meal of meals) {
-                                        newdropdowncontent.innerHTML += createMeal(meal);
+                                        newdropdowncontent += createMeal(meal);
                                     }
-                                    for (const dropdownitem of newdropdowncontent.getElementsByClassName("dropdown-item")) {
+                                    dropdownmenu.innerHTML = newdropdowncontent
+                                    for (const dropdownitem of dropdownmenu.getElementsByClassName("dropdown-item")) {
                                         dropdownitem.addEventListener('click', selectMeal);
                                     }
-                                    showDropdown(true);
                                 }
 
                                 function suggest(event) {
@@ -81,47 +68,21 @@
                                     request.open('GET', query);
                                     request.send();
                                 }
-
-                                function focusout() {
-                                    if (!cancelFocusOut) showDropdown(false);
-                                }
-
-                                function showDropdown(show) {
-                                    let cssclass = 'dropdown'
-                                    if (show) cssclass += ' is-active';
-                                    document.getElementById('dropdown').setAttribute('class', cssclass);
-                                }
                         </script>
-                        <style>
-                                .dropdown,
-                                .dropdown-menu,
-                                .dropdown-trigger {
-                                    width: 100%;
-                                }
-
-                                #dropdown-content > .level {
-                                    margin-bottom: 0;
-                                }
-                        </style>
-                        <div class="column is-6">
+                        <div class="col-8">
                             <div class="dropdown" id="dropdown">
-                                <div class="dropdown-trigger">
-                                    <input class="input" id="dropdown-input" name="mealDescription" type="text" aria-haspopup="true" aria-controls="dropdown-menu" autocomplete="off"/>
-                                </div>
-                                <div class="dropdown-menu" id="dropdown-menu" role="menu" onmouseover="cancelFocusOut = true;" onmouseout="cancelFocusOut = false;"></div>
+                                <input class="form-control dropdown-toggle" id="dropdown-input" data-bs-toggle="dropdown" name="mealDescription" type="text" autocomplete="off"/>
+                                <ul class="dropdown-menu" aria-labelledby="dropdown-input" id="dropdown-menu"></ul>
                             </div>
                         </div>
-                        <div class="column is-1">
-                            <button class="button is-primary">
-                                <span class="icon is-small">
-                                    <i class="fas fa-utensils"></i>
-                                </span>
+                        <div class="col-1">
+                            <button class="btn btn-primary">
+                                <i class="bi bi-plus"></i>
                             </button>
                         </div>
                         <script>
                                 const dropdowninput = document.getElementById('dropdown-input');
-                                dropdowninput.addEventListener('focusin', suggest);
-                                dropdowninput.addEventListener('focusout', focusout);
+                                dropdowninput.addEventListener('show.bs.dropdown', suggest);
                                 dropdowninput.addEventListener('input', suggest);
                         </script>
                     </div>
@@ -134,16 +95,14 @@
             @weekday("vendredi", weekMeals.friday, nextWeek = false)
             @weekday("samedi", weekMeals.saturday, nextWeek = false)
             @weekday("dimanche", weekMeals.sunday, nextWeek = false)
-        </div>
-    </section>
-        <footer class="footer">
-            <div class="tabs is-toggle is-fullwidth">
-                <ul>
-                    <li@if(weekMeals.previous.isActive) { class="is-active"}><a@if(!weekMeals.previous.isActive) { href="/meals/@weekMeals.previous.year.getValue/@weekMeals.previous.week"}><span>Précédente</span></a></li>
-                    <li@if(weekMeals.now.isActive) { class="is-active"}><a@if(!weekMeals.now.isActive) { href="/meals/@weekMeals.now.year.getValue/@weekMeals.now.week"}><span>Actuelle</span></a></li>
-                    <li@if(weekMeals.next.isActive) { class="is-active"}><a@if(!weekMeals.next.isActive) { href="/meals/@weekMeals.next.year.getValue/@weekMeals.next.week"}><span>Prochaine</span></a></li>
+            <nav aria-label="Navigation entre les semaines">
+                <ul class="pagination  justify-content-center">
+                    <li class="page-item@if(weekMeals.previous.isActive) { active}"><a class="page-link"@if(!weekMeals.previous.isActive) { href="/meals/@weekMeals.previous.year.getValue/@weekMeals.previous.week"}>Précédente</a></li>
+                    <li class="page-item@if(weekMeals.now.isActive) { active}"><a class="page-link"@if(!weekMeals.now.isActive) { href="/meals/@weekMeals.now.year.getValue/@weekMeals.now.week"}>Actuelle</a></li>
+                    <li class="page-item@if(weekMeals.next.isActive) { active}"><a class="page-link"@if(!weekMeals.next.isActive) { href="/meals/@weekMeals.next.year.getValue/@weekMeals.next.week"}>Prochaine</a></li>
                 </ul>
-            </div>
-        </footer>
+            </nav>
+            <script src="@controllers.routes.Assets.versioned("bootstrap-5.0.0-dist/js/bootstrap.bundle.min.js")"></script>
+        </div>
     </body>
 </html>
