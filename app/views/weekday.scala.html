@@ -2,7 +2,7 @@
 @import meals.application.routes
 @import meals.domain.WeekDay
 @import play.api.data.format.Formats.localDateTimeFormat
-@(weekDay: String, weekDayMeals: WeekDay, nextWeek: Boolean)(implicit requestHeader: RequestHeader)
+@(weekDay: String, weekDayMeals: WeekDay)(implicit requestHeader: RequestHeader)
 
 <div class="row m-1">
     <div class="col-3">@weekDay midi</div>
@@ -18,7 +18,6 @@
             <input type="hidden" name="mealTime" value="@{
                 localDateTimeFormat.unbind("", weekDayMeals.reference.atTime(12, 0))("")
             }" />
-            <input type="hidden" name="nextWeek" value="@nextWeek" />
             <button class="btn btn-outline-danger">
                 <i class="bi bi-trash2"></i>
             </button>
@@ -29,7 +28,6 @@
             <input type="hidden" name="mealTime" value="@{
                 localDateTimeFormat.unbind("", weekDayMeals.reference.atTime(12, 0))("")
             }" />
-            <input type="hidden" name="nextWeek" value="@nextWeek" />
             <button class="btn btn-outline-secondary">
                 <i class="bi bi-shuffle"></i>
             </button>
@@ -51,7 +49,6 @@
             <input type="hidden" name="mealTime" value="@{
                 localDateTimeFormat.unbind("", weekDayMeals.reference.atTime(20, 0))("")
             }" />
-            <input type="hidden" name="nextWeek" value="@nextWeek" />
             <button class="btn btn-outline-danger">
                 <i class="bi bi-trash2"></i>
             </button>
@@ -62,7 +59,6 @@
             <input type="hidden" name="mealTime" value="@{
                 localDateTimeFormat.unbind("", weekDayMeals.reference.atTime(20, 0))("")
             }" />
-            <input type="hidden" name="nextWeek" value="@nextWeek" />
             <button class="btn btn-outline-secondary">
                 <i class="bi bi-shuffle"></i>
             </button>
