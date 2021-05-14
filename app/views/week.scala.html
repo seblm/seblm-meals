@@ -88,13 +88,13 @@
                     </div>
                 }
             }
-            @weekday("lundi", weekMeals.monday)
-            @weekday("mardi", weekMeals.tuesday)
-            @weekday("mercredi", weekMeals.wednesday)
-            @weekday("jeudi", weekMeals.thursday)
-            @weekday("vendredi", weekMeals.friday)
-            @weekday("samedi", weekMeals.saturday)
-            @weekday("dimanche", weekMeals.sunday)
+            @day("lundi", weekMeals.monday)
+            @day("mardi", weekMeals.tuesday)
+            @day("mercredi", weekMeals.wednesday)
+            @day("jeudi", weekMeals.thursday)
+            @day("vendredi", weekMeals.friday)
+            @day("samedi", weekMeals.saturday)
+            @day("dimanche", weekMeals.sunday)
             <nav aria-label="Navigation entre les semaines">
                 <ul class="pagination  justify-content-center">
                     <li class="page-item@if(weekMeals.previous.isActive) { active}"><a class="page-link"@if(!weekMeals.previous.isActive) { href="/meals/@weekMeals.previous.year.getValue/@weekMeals.previous.week"}>Précédente</a></li>

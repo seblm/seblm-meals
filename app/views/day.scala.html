@@ -1,0 +1,5 @@
+@import meals.domain.WeekDay
+@(dayLabel: String, weekDayMeals: WeekDay)(implicit requestHeader: RequestHeader)
+
+@meal(dayLabel, "midi", weekDayMeals.lunch, weekDayMeals.reference.atTime(12, 0))
+@meal(dayLabel, "soir", weekDayMeals.dinner, weekDayMeals.reference.atTime(20, 0))

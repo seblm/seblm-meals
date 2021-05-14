@@ -1,0 +1,31 @@
+@import helper._
+@import meals.application.routes
+@import meals.domain.Meal
+@import play.api.data.format.Formats.localDateTimeFormat
+
+@import java.time.LocalDateTime
+@(day: String, mealLabel: String, meal: Option[Meal], mealTime: LocalDateTime)(implicit requestHeader: RequestHeader)
+
+<div class="row m-1">
+    <div class="col-3">@day @mealLabel</div>
+    <div class="col-8">@meal.map(_.meal).getOrElse("")</div>
+    <div class="col-1">
+    @if(meal.isDefined) {
+        @helper.form(action = routes.MealsController.unlink()) {
+            @CSRF.formField
+            <input type="hidden" name="mealTime" value="@{
+                localDateTimeFormat.unbind("", mealTime)("")
+            }" />
+            <button class="btn btn-outline-danger"><i class="bi bi-trash2"></i></button>
+        }
+    } else {
+        @helper.form(action = routes.MealsController.shuffle()) {
+            @CSRF.formField
+            <input type="hidden" name="mealTime" value="@{
+                localDateTimeFormat.unbind("", mealTime)("")
+            }" />
+            <button class="btn btn-outline-secondary"><i class="bi bi-shuffle"></i></button>
+        }
+    }
+    </div>
+</div>
