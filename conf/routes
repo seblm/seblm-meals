@@ -1,4 +1,5 @@
 GET     /                                  meals.application.MealsController.week()
+GET     /meal/:id                          meals.application.MealsController.meal(id: UUID)
 GET     /meals/$year<[0-9]+>/$week<[0-9]+> meals.application.MealsController.meals(year: Year, week: Int)
 POST    /link-or-insert                    meals.application.MealsController.linkOrInsert()
 POST    /shuffle                           meals.application.MealsController.shuffle()

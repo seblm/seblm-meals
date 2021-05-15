@@ -9,6 +9,7 @@ import play.api.libs.json.{Json, Writes}
 import play.api.mvc._
 
 import java.time.{Clock, LocalDateTime, Year}
+import java.util.UUID
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
@@ -23,6 +24,13 @@ class MealsController @Inject() (cc: ControllerComponents, mealsService: MealsSe
 
   def week(): Action[AnyContent] = Action {
     Redirect((routes.MealsController.meals _).tupled(yearWeek(LocalDateTime.now(clock))))
+  }
+
+  def meal(id: UUID): Action[AnyContent] = Action.async { implicit requestHeader: RequestHeader =>
+    mealsService.meal(id).map {
+      case Some(mealByTimes) => Ok(views.html.meal(mealByTimes))
+      case None              => NotFound
+    }
   }
 
   def meals(year: Year, week: Int): Action[AnyContent] = Action.async { implicit requestHeader: RequestHeader =>

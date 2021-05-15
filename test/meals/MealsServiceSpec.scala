@@ -27,8 +27,16 @@ class MealsServiceSpec extends AnyFlatSpec with IdiomaticMockito {
       val to = LocalDateTime.parse("2020-03-01T23:59:59.999999999")
       mealRepository.meals(from, to) returns Future.successful(
         Seq(
-          Meal(LocalDateTime.parse("2020-02-27T12:00"), "saucisson brioché salade"),
-          Meal(LocalDateTime.parse("2020-02-28T20:00"), "chou-fleur pomme de terre lardons")
+          Meal(
+            id = UUID.fromString("8ffaf9c5-f9a4-4d7d-8358-d65f17882a2a"),
+            time = LocalDateTime.parse("2020-02-27T12:00"),
+            meal = "saucisson brioché salade"
+          ),
+          Meal(
+            id = UUID.fromString("050aacbd-4de9-4d56-abbc-2e64d613e9f8"),
+            time = LocalDateTime.parse("2020-02-28T20:00"),
+            meal = "chou-fleur pomme de terre lardons"
+          )
         )
       )
       val february = monthFormatter.format(from)
@@ -70,11 +78,31 @@ class MealsServiceSpec extends AnyFlatSpec with IdiomaticMockito {
       mealRepository.meals(from, to) returns Future
         .successful(
           Seq(
-            Meal(LocalDateTime.parse("2020-03-02T12:00"), "galettes de blé noir"),
-            Meal(LocalDateTime.parse("2020-03-03T20:00"), "chipolatas pâtes"),
-            Meal(LocalDateTime.parse("2020-03-04T20:00"), "ratatouille riz"),
-            Meal(LocalDateTime.parse("2020-03-07T12:00"), "lentilles saucisses (Morteau, Montbelliard) carottes"),
-            Meal(LocalDateTime.parse("2020-03-08T12:00"), "quenelles riz sauce tomate")
+            Meal(
+              id = UUID.fromString("40cd80f6-bb5a-4b87-bcd9-3f475f6e3e4d"),
+              time = LocalDateTime.parse("2020-03-02T12:00"),
+              meal = "galettes de blé noir"
+            ),
+            Meal(
+              id = UUID.fromString("ca73207d-f879-4ebf-9965-70ee732d136c"),
+              time = LocalDateTime.parse("2020-03-03T20:00"),
+              meal = "chipolatas pâtes"
+            ),
+            Meal(
+              id = UUID.fromString("ca82f285-a88a-4e95-927a-a126f0de92d7"),
+              time = LocalDateTime.parse("2020-03-04T20:00"),
+              meal = "ratatouille riz"
+            ),
+            Meal(
+              id = UUID.fromString("5480e229-6a56-4eb1-8271-d00dba2e72e0"),
+              time = LocalDateTime.parse("2020-03-07T12:00"),
+              meal = "lentilles saucisses (Morteau, Montbelliard) carottes"
+            ),
+            Meal(
+              id = UUID.fromString("28389f39-3772-4ac2-b992-565af57160c2"),
+              time = LocalDateTime.parse("2020-03-08T12:00"),
+              meal = "quenelles riz sauce tomate"
+            )
           )
         )
 
@@ -122,7 +150,7 @@ class MealsServiceSpec extends AnyFlatSpec with IdiomaticMockito {
         )
         .toFuture
       mealRepository.link(*, eqTo(day)) answers { (mealRow: MealRow, _: LocalDateTime) =>
-        Future.successful(Meal(day, mealRow.description))
+        Future.successful(Meal(mealRow.id, day, mealRow.description))
       }
 
       whenReady(mealsService.shuffle(day)) { meal =>

@@ -5,12 +5,23 @@ import play.api.Logging
 
 import java.time.DayOfWeek._
 import java.time._
+import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Random, Try}
 
 class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: ExecutionContext)
     extends MealsService
     with Logging {
+
+  override def meal(id: UUID): Future[Option[MealByTimes]] =
+    repository
+      .meals(id)
+      .map(_.foldLeft[Option[MealByTimes]](None) {
+        case (Some(mealByTimes), meal) =>
+          Some(mealByTimes.copy(times = mealByTimes.times :+ (meal.time, WeekReference(meal.time))))
+        case (None, meal) =>
+          Some(MealByTimes(meal.id, meal.meal, Seq((meal.time, WeekReference(meal.time)))))
+      })
 
   override def meals(year: Year, week: Int): Future[WeekMeals] = {
     val (from, to) = DatesTransformations.range(year, week)

@@ -1,9 +1,12 @@
 package meals.domain
 
 import java.time.{LocalDateTime, Year}
+import java.util.UUID
 import scala.concurrent.Future
 
 trait MealsService {
+
+  def meal(id: UUID): Future[Option[MealByTimes]]
 
   def meals(year: Year, week: Int): Future[WeekMeals]
 

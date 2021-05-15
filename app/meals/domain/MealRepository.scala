@@ -1,12 +1,14 @@
 package meals.domain
 
-import java.time.LocalDateTime
-
 import meals.infrastructure.MealRow
 
+import java.time.LocalDateTime
+import java.util.UUID
 import scala.concurrent.Future
 
 trait MealRepository {
+
+  def meals(id: UUID): Future[Seq[Meal]]
 
   def meals(from: LocalDateTime, to: LocalDateTime): Future[Seq[Meal]]
 
