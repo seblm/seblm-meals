@@ -11,7 +11,7 @@ lazy val root = (project in file("."))
     routesImport += "java.util.UUID"
   )
 
-scalaVersion := "2.13.5"
+scalaVersion := "2.13.6"
 
 libraryDependencies ++= Seq(evolutions, guice)
 libraryDependencies ++= Seq(
