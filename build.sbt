@@ -11,7 +11,7 @@ lazy val root = (project in file("."))
     routesImport += "java.util.UUID"
   )
 
-scalaVersion := "2.13.5"
+scalaVersion := "2.13.6"
 
 libraryDependencies ++= Seq(evolutions, guice)
 libraryDependencies ++= Seq(
@@ -22,5 +22,5 @@ libraryDependencies += "org.postgresql" % "postgresql" % "42.2.20"
 
 libraryDependencies += "com.h2database" % "h2" % "1.4.200" % Test
 libraryDependencies += "org.mockito" %% "mockito-scala-scalatest" % "1.16.37" % Test
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.8" % Test
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.9" % Test
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % Test
