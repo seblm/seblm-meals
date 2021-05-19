@@ -62,7 +62,7 @@ class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: Ex
           val mealTimeDates = dates.filter(_.getHour == reference.getHour).filter(_.isBefore(reference))
           Option.when(mealTimeDates.nonEmpty)((meal, mealTimeDates))
         }
-      filtered.sortWith(moreRecent(reference)).take(10).map { case (meal, dates) =>
+      filtered.sortWith(moreRecent(reference)).take(15).map { case (meal, dates) =>
         MealSuggest(
           count = dates.length,
           description = meal.description,
