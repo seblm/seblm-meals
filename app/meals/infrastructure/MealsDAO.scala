@@ -28,7 +28,9 @@ class MealsDAO @Inject() (protected val dbConfigProvider: DatabaseConfigProvider
 
     def description = column[String]("description")
 
-    def * = (id, description) <> (MealRow.tupled, MealRow.unapply)
+    def * = (id, description) <> ({ case (id, description) => MealRow(id, description) },
+    (mealRow: MealRow) => Some((mealRow.id, mealRow.description)),
+    )
 
   }
 

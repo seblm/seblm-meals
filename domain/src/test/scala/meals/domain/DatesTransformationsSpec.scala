@@ -5,7 +5,7 @@ import org.scalatest.matchers.should.Matchers._
 
 import java.time.{LocalDateTime, Year}
 
-class DatesTransformationsSpec extends AnyFlatSpec {
+class DatesTransformationsSpec extends AnyFlatSpec:
 
   "DatesTransformations" should "get first and last day of last week of 2020" in {
     val (firstDay, lastDay) = DatesTransformations.range(Year.of(2020), 53)
@@ -93,5 +93,3 @@ class DatesTransformationsSpec extends AnyFlatSpec {
     DatesTransformations.score(reference, LocalDateTime.parse("2021-04-27T12:00")) shouldBe 174
     DatesTransformations.score(reference, LocalDateTime.parse("2021-04-28T12:00")) shouldBe 173
   }
-
-}

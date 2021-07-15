@@ -1,7 +1,6 @@
 package meals.domain
 
 import meals.infrastructure.MealRow
-import play.api.Logging
 
 import java.time.DayOfWeek._
 import java.time._
@@ -9,9 +8,7 @@ import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Random, Try}
 
-class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: ExecutionContext)
-    extends MealsService
-    with Logging {
+class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: ExecutionContext) extends MealsService:
 
   override def meal(id: UUID): Future[Option[MealByTimes]] =
     repository
@@ -23,15 +20,14 @@ class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: Ex
           Some(MealByTimes(meal.id, meal.meal, Seq((meal.time, WeekReference(meal.time)))))
       })
 
-  override def meals(year: Year, week: Int): Future[WeekMeals] = {
+  override def meals(year: Year, week: Int): Future[WeekMeals] =
     val (from, to) = DatesTransformations.range(year, week)
     repository.meals(from, to).map(mealsByWeekDay(year, week, clock))
-  }
 
   override def linkOrInsert(mealTime: LocalDateTime, mealDescription: String): Future[Meal] =
     repository.linkOrInsert(mealTime, mealDescription)
 
-  override def shuffle(day: LocalDateTime): Future[Option[Meal]] = {
+  override def shuffle(day: LocalDateTime): Future[Option[Meal]] =
     val until = day.toLocalDate.atStartOfDay().`with`(MONDAY).minusNanos(1)
     for {
       all <- repository.all()
@@ -39,19 +35,17 @@ class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: Ex
       newRandom <- Future.successful(Try(keys(random.nextInt(keys.length))).toOption)
       result <- newRandom.fold(Future.successful[Option[Meal]](None))(repository.link(_, day).map(Some(_)))
     } yield result
-  }
 
   private def moreRecent(
       reference: LocalDateTime
   )(first: (MealRow, Seq[LocalDateTime]), second: (MealRow, Seq[LocalDateTime])): Boolean =
     sumScores(reference)(first._2) > sumScores(reference)(second._2)
 
-  private def sumScores(reference: LocalDateTime)(dates: Seq[LocalDateTime]) = {
+  private def sumScores(reference: LocalDateTime)(dates: Seq[LocalDateTime]) =
     val scores = dates.map(d => DatesTransformations.score(reference, d))
     if (scores.contains(0)) 0 else scores.zipWithIndex.map { case (s, index) => s / (index + 1) }.sum
-  }
 
-  override def suggest(reference: LocalDateTime, search: Option[String]): Future[Seq[MealSuggest]] = {
+  override def suggest(reference: LocalDateTime, search: Option[String]): Future[Seq[MealSuggest]] =
     repository.all().map { mealsByDate =>
       val all = mealsByDate.toSeq
       val filtered = all
@@ -75,7 +69,6 @@ class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: Ex
         )
       }
     }
-  }
 
   override def delete(mealTime: LocalDateTime): Future[Unit] = repository.unlink(mealTime)
 
@@ -101,5 +94,3 @@ class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: Ex
     )
 
   private val random: Random = new Random
-
-}
