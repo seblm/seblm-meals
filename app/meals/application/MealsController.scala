@@ -5,7 +5,7 @@ import meals.domain.{DatesTransformations, MealSuggest, MealsService}
 import play.api.Logging
 import play.api.data.Forms._
 import play.api.data._
-import play.api.libs.json.{Json, Writes}
+import play.api.libs.json._
 import play.api.mvc._
 
 import java.time.{Clock, LocalDateTime, Year}
@@ -68,7 +68,14 @@ class MealsController @Inject() (cc: ControllerComponents, mealsService: MealsSe
     mealsService.delete(request.body).map(_ => Redirect(routes.MealsController.meals(year, week)))
   }
 
-  private implicit val mealSuggestWrites: Writes[MealSuggest] = Json.writes[MealSuggest]
+  private implicit val mealSuggestWrites: Writes[MealSuggest] = new Writes[MealSuggest] {
+    override def writes(mealSuggest: MealSuggest): JsValue = Json.obj(
+      "count" -> JsNumber(mealSuggest.count),
+      "description" -> JsString(mealSuggest.description),
+      "descriptionLabel" -> JsString(mealSuggest.descriptionLabel),
+      "lastused" -> JsNumber(mealSuggest.lastused)
+    )
+  }
 
   def suggest(reference: LocalDateTime, search: Option[String]): Action[AnyContent] = Action.async {
     mealsService.suggest(reference, search).map(meals => Ok(Json.toJson(meals)))

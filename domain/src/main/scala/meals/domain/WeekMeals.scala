@@ -17,7 +17,7 @@ case class WeekMeals(
     friday: WeekDay,
     saturday: WeekDay,
     sunday: WeekDay
-) {
+):
 
   def allByDate: Map[LocalDateTime, Option[Meal]] = ListMap(
     monday.reference.atTime(12, 0) -> monday.lunch,
@@ -36,13 +36,11 @@ case class WeekMeals(
     sunday.reference.atTime(20, 0) -> sunday.dinner
   )
 
-}
-
 case class WeekDay(reference: LocalDate, lunch: Option[Meal], dinner: Option[Meal])
 
-object WeekMeals {
+object WeekMeals:
 
-  def apply(year: Year, week: Int, clock: Clock): WeekMeals = {
+  def apply(year: Year, week: Int, clock: Clock): WeekMeals =
     val now = LocalDateTime.now(clock)
     val (yearPrevious, weekPrevious) = DatesTransformations.yearWeek(now.minusWeeks(1))
     val (yearNow, weekNow) = DatesTransformations.yearWeek(now)
@@ -67,7 +65,6 @@ object WeekMeals {
       saturday = WeekDay(reference.`with`(SATURDAY), None, None),
       sunday = WeekDay(reference.`with`(SUNDAY), None, None)
     )
-  }
 
   def allWeekMeals(weekMeals: WeekMeals): Seq[Meal] =
     Seq(
@@ -86,5 +83,3 @@ object WeekMeals {
       weekMeals.sunday.lunch,
       weekMeals.sunday.dinner
     ).flatten
-
-}

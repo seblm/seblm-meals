@@ -8,7 +8,16 @@ lazy val root = (project in file("."))
   .settings(
     routesImport += "meals.application.MealsBinders._",
     routesImport += "java.time.{LocalDateTime, Year}",
-    routesImport += "java.util.UUID"
+    routesImport += "java.util.UUID",
+    scalacOptions += "-Ytasty-reader"
+  )
+  .aggregate(domain)
+  .dependsOn(domain)
+
+lazy val domain = project
+  .settings(
+    scalaVersion := "3.0.1",
+    libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.9" % Test
   )
 
 scalaVersion := "2.13.6"

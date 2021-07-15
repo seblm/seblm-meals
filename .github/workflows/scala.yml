@@ -28,6 +28,7 @@ jobs:
           path: ~/.cache/coursier/v1
           key: ${{ runner.os }}-sbt-${{ hashFiles('build.sbt') }}
       - name: Check Scalafmt
+        continue-on-error: true
         run: sbt scalafmtCheckAll
       - name: Run tests
         run: sbt test

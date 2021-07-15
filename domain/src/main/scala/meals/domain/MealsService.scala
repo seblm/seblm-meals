@@ -4,7 +4,7 @@ import java.time.{LocalDateTime, Year}
 import java.util.UUID
 import scala.concurrent.Future
 
-trait MealsService {
+trait MealsService:
 
   def meal(id: UUID): Future[Option[MealByTimes]]
 
@@ -17,5 +17,3 @@ trait MealsService {
   def suggest(reference: LocalDateTime, search: Option[String]): Future[Seq[MealSuggest]]
 
   def delete(mealTime: LocalDateTime): Future[Unit]
-
-}

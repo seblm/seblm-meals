@@ -1,9 +1,9 @@
 package meals.domain
 
-import java.time.DayOfWeek.{FRIDAY, MONDAY, SATURDAY, SUNDAY, THURSDAY, TUESDAY, WEDNESDAY}
+import java.time.DayOfWeek._
 import java.time.LocalDateTime
 
-object MealTimeConverter {
+object MealTimeConverter:
 
   def displayTime(time: LocalDateTime): String = (time.getDayOfWeek, time.getHour) match {
     case (MONDAY, 12)    => "lundi midi"
@@ -22,5 +22,3 @@ object MealTimeConverter {
     case (SUNDAY, 20)    => "dimanche soir"
     case _               => "?"
   }
-
-}

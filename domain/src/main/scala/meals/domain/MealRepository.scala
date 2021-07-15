@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 import java.util.UUID
 import scala.concurrent.Future
 
-trait MealRepository {
+trait MealRepository:
 
   def meals(id: UUID): Future[Seq[Meal]]
 
@@ -21,5 +21,3 @@ trait MealRepository {
   def unlink(at: LocalDateTime): Future[Unit]
 
   def all(): Future[Map[MealRow, Seq[LocalDateTime]]]
-
-}
