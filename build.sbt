@@ -16,7 +16,7 @@ lazy val root = (project in file("."))
 
 lazy val domain = project
   .settings(
-    scalaVersion := "3.0.1",
+    scalaVersion := "3.0.2",
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.9" % Test
   )
 
