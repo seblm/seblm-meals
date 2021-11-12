@@ -172,7 +172,7 @@ class MealsServiceSpec extends AnyFlatSpec with IdiomaticMockito {
         .toFuture
 
       whenReady(mealsService.suggest(reference, None)) { suggests =>
-        suggests should contain inOrderOnly (
+        suggests.mostRecents should contain inOrderOnly (
           MealSuggest(2, "salade tomates concombres", "salade tomates concombres", 11),
           MealSuggest(1, "ratatouille", "ratatouille", 9),
           MealSuggest(1, "pâtes sauce tomate", "pâtes sauce tomate", 10),
@@ -180,7 +180,7 @@ class MealsServiceSpec extends AnyFlatSpec with IdiomaticMockito {
       }
   }
 
-  it should "suggest meals filtered by a search" in withRepositoryAndService {
+  it should "suggest highlighted meals filtered by a search" in withRepositoryAndService {
     (mealRepository, mealsService, reference) =>
       mealRepository.all() returns MealsServiceSpec
         .AllResponse(
@@ -194,31 +194,58 @@ class MealsServiceSpec extends AnyFlatSpec with IdiomaticMockito {
         .toFuture
 
       whenReady(mealsService.suggest(reference, Some("omat"))) { suggests =>
-        suggests should contain inOrderOnly (
+        suggests.mostRecents should contain inOrderOnly (
           MealSuggest(2, "salade tomates concombres", "salade t<strong>omat</strong>es concombres", 11),
           MealSuggest(1, "pâtes sauce tomate", "pâtes sauce t<strong>omat</strong>e", 10),
         )
       }
   }
 
-  it should "highlight search" in withRepositoryAndService { (mealRepository, mealsService, reference) =>
+  it should "suggest four weeks ago meal" in withRepositoryAndService { (mealRepository, mealsService, reference) =>
     mealRepository.all() returns MealsServiceSpec
       .AllResponse(
         Seq(
-          "salade tomates concombres -> 2020-02-17T12:00",
-          "concombres maïs -> 2020-02-18T12:00",
-          "salade concombres tomates -> 2020-02-19T12:00"
+          "salade tomates concombres -> 2020-02-01T12:00, 2020-02-18T12:00",
+          "tomates farcies           -> 2020-02-17T20:00",
+          "pâtes sauce tomate        -> 2020-02-19T12:00",
+          "ratatouille               -> 2020-02-20T12:00"
         )
       )
       .toFuture
 
-    whenReady(mealsService.suggest(reference, Some("concombres"))) { suggests =>
-      suggests.map(_.descriptionLabel) should contain only (
-        "salade tomates <strong>concombres</strong>",
-        "<strong>concombres</strong> maïs",
-        "salade <strong>concombres</strong> tomates",
+    whenReady(mealsService.suggest(reference, None)) { suggests =>
+      suggests.fourWeeksAgo.value should be(
+        MealSuggest(2, "salade tomates concombres", "salade tomates concombres", 11)
+      )
+      suggests.mostRecents should contain inOrderOnly (
+        MealSuggest(1, "ratatouille", "ratatouille", 9),
+        MealSuggest(1, "pâtes sauce tomate", "pâtes sauce tomate", 10),
       )
     }
+  }
+
+  it should "suggest fifty two weeks ago meal" in withRepositoryAndService {
+    (mealRepository, mealsService, reference) =>
+      mealRepository.all() returns MealsServiceSpec
+        .AllResponse(
+          Seq(
+            "salade tomates concombres -> 2019-03-02T12:00, 2020-02-18T12:00",
+            "tomates farcies           -> 2020-02-17T20:00",
+            "pâtes sauce tomate        -> 2020-02-19T12:00",
+            "ratatouille               -> 2020-02-20T12:00"
+          )
+        )
+        .toFuture
+
+      whenReady(mealsService.suggest(reference, None)) { suggests =>
+        suggests.fiftyTwoWeeksAgo.value should be(
+          MealSuggest(2, "salade tomates concombres", "salade tomates concombres", 11)
+        )
+        suggests.mostRecents should contain inOrderOnly (
+          MealSuggest(1, "ratatouille", "ratatouille", 9),
+          MealSuggest(1, "pâtes sauce tomate", "pâtes sauce tomate", 10),
+        )
+      }
   }
 
   private def withRepositoryAndService(testCode: (MealRepository, MealsService, LocalDateTime) => Any): Any = {

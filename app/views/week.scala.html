@@ -49,7 +49,18 @@
                                     const meals = JSON.parse(this.responseText);
                                     const dropdownmenu = document.getElementById('dropdown-menu');
                                     let newdropdowncontent = '';
-                                    for (const meal of meals) {
+                                    if (meals.fourWeeksAgo) {
+                                        newdropdowncontent += '<li><h6 class="dropdown-header">Il y a un mois</h6></li>';
+                                        newdropdowncontent += createMeal(meals.fourWeeksAgo);
+                                    }
+                                    if (meals.fiftyTwoWeeksAgo) {
+                                        newdropdowncontent += '<li><h6 class="dropdown-header">Il y a un an</h6></li>';
+                                        newdropdowncontent += createMeal(meals.fiftyTwoWeeksAgo);
+                                    }
+                                    if (meals.fiftyTwoWeeksAgo || meals.fourWeeksAgo) {
+                                        newdropdowncontent += '<li><h6 class="dropdown-header">Les plus populaires</h6></li>';
+                                    }
+                                    for (const meal of meals.mostRecents) {
                                         newdropdowncontent += createMeal(meal);
                                     }
                                     dropdownmenu.innerHTML = newdropdowncontent

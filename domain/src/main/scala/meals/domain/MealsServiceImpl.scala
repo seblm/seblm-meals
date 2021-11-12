@@ -45,30 +45,46 @@ class MealsServiceImpl(clock: Clock, repository: MealRepository)(implicit ec: Ex
     val scores = dates.map(d => DatesTransformations.score(reference, d))
     if (scores.contains(0)) 0 else scores.zipWithIndex.map { case (s, index) => s / (index + 1) }.sum
 
-  override def suggest(reference: LocalDateTime, search: Option[String]): Future[Seq[MealSuggest]] =
+  override def suggest(reference: LocalDateTime, search: Option[String]): Future[SuggestResponse] =
     repository.all().map { mealsByDate =>
       val all = mealsByDate.toSeq
       val filtered = all
-        .filter { case (meal, _) =>
-          search.fold(true)(token => meal.description.contains(token))
-        }
+        .filter { case (meal, _) => search.fold(true)(token => meal.description.contains(token)) }
         .flatMap { case (meal, dates) =>
           val mealTimeDates = dates.filter(_.getHour == reference.getHour).filter(_.isBefore(reference))
           Option.when(mealTimeDates.nonEmpty)((meal, mealTimeDates))
         }
-      filtered.sortWith(moreRecent(reference)).take(15).map { case (meal, dates) =>
-        MealSuggest(
-          count = dates.length,
-          description = meal.description,
-          descriptionLabel = search.fold(meal.description) { token =>
-            val highlighted = s"<strong>$token</strong>"
-            meal.description.split(token).mkString(highlighted) + (if (meal.description.endsWith(token)) highlighted
-                                                                   else "")
-          },
-          lastused = Duration.between(dates.max, reference).toDays.toInt
-        )
-      }
+      val fourWeeksAgo = search
+        .fold(filtered)(_ => Seq.empty)
+        .find { case (meal, dates) => dates.contains(reference.minusWeeks(4)) }
+      val fiftyTwoWeeksAgo = search
+        .fold(filtered)(_ => Seq.empty)
+        .find { case (meal, dates) => dates.contains(reference.minusWeeks(52)) }
+      SuggestResponse(
+        fiftyTwoWeeksAgo = fiftyTwoWeeksAgo.map(createMealSuggest(reference, search)),
+        fourWeeksAgo = fourWeeksAgo.map(createMealSuggest(reference, search)),
+        mostRecents = filtered
+          .filterNot { case (meal, dates) =>
+            dates.contains(reference.minusWeeks(4)) || dates.contains(reference.minusWeeks(52))
+          }
+          .sortWith(moreRecent(reference))
+          .take(15)
+          .map(createMealSuggest(reference, search))
+      )
     }
+
+  private def createMealSuggest(reference: LocalDateTime, search: Option[String])(
+      meal: MealRow,
+      dates: Seq[LocalDateTime]
+  ): MealSuggest = MealSuggest(
+    count = dates.length,
+    description = meal.description,
+    descriptionLabel = search.fold(meal.description) { token =>
+      val highlighted = s"<strong>$token</strong>"
+      meal.description.split(token).mkString(highlighted) + (if (meal.description.endsWith(token)) highlighted else "")
+    },
+    lastused = Duration.between(dates.max, reference).toDays.toInt
+  )
 
   override def delete(mealTime: LocalDateTime): Future[Unit] = repository.unlink(mealTime)
 

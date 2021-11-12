@@ -1,7 +1,7 @@
 package meals.application
 
 import meals.domain.DatesTransformations.yearWeek
-import meals.domain.{DatesTransformations, MealSuggest, MealsService}
+import meals.domain.{DatesTransformations, MealSuggest, MealsService, SuggestResponse}
 import play.api.Logging
 import play.api.data.Forms._
 import play.api.data._
@@ -75,6 +75,19 @@ class MealsController @Inject() (cc: ControllerComponents, mealsService: MealsSe
       "descriptionLabel" -> JsString(mealSuggest.descriptionLabel),
       "lastused" -> JsNumber(mealSuggest.lastused)
     )
+  }
+
+  private implicit val suggestResponseWrites: Writes[SuggestResponse] = new Writes[SuggestResponse] {
+    override def writes(suggestResponse: SuggestResponse): JsValue = {
+      val fiftyTwoWeeksAgo = suggestResponse.fiftyTwoWeeksAgo
+        .map(mealSuggestWrites.writes)
+        .fold(JsObject.empty)(m => Json.obj("fiftyTwoWeeksAgo" -> m))
+      val fourWeeksAgo = suggestResponse.fourWeeksAgo
+        .map(mealSuggestWrites.writes)
+        .fold(JsObject.empty)(m => Json.obj("fourWeeksAgo" -> m))
+      val mostRecents = Json.obj("mostRecents" -> JsArray(suggestResponse.mostRecents.map(mealSuggestWrites.writes)))
+      fiftyTwoWeeksAgo ++ fourWeeksAgo ++ mostRecents
+    }
   }
 
   def suggest(reference: LocalDateTime, search: Option[String]): Action[AnyContent] = Action.async {
