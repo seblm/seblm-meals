@@ -1,19 +1,22 @@
 package meals.infrastructure
 
 import meals.domain.{Meal, MealRepository}
-import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
+import play.api.Play
+import play.api.db.slick.{DatabaseConfigProvider, DbName, HasDatabaseConfig, SlickApi}
 import play.api.mvc.{AbstractController, ControllerComponents}
+import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
+import slick.relational.RelationalProfile
 
 import java.time.LocalDateTime
 import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class MealsDAO @Inject() (protected val dbConfigProvider: DatabaseConfigProvider, cc: ControllerComponents)(implicit
+class MealsDAO(protected val dbConfig: DatabaseConfig[JdbcProfile], cc: ControllerComponents)(implicit
     executionContext: ExecutionContext
 ) extends AbstractController(cc)
-    with HasDatabaseConfigProvider[JdbcProfile]
+    with HasDatabaseConfig[JdbcProfile]
     with MealRepository {
 
   import profile.api._

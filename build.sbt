@@ -9,7 +9,8 @@ lazy val root = (project in file("."))
     routesImport += "meals.application.MealsBinders._",
     routesImport += "java.time.{LocalDateTime, Year}",
     routesImport += "java.util.UUID",
-    scalacOptions += "-Ytasty-reader"
+    scalacOptions += "-Ytasty-reader",
+    Test / javaOptions += "-Dconfig.file=test/resources/application-test.conf"
   )
   .aggregate(domain)
   .dependsOn(domain)
@@ -22,7 +23,7 @@ lazy val domain = project
 
 scalaVersion := "2.13.8"
 
-libraryDependencies ++= Seq(evolutions, guice)
+libraryDependencies += evolutions
 libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-slick" % "5.0.0",
   "com.typesafe.play" %% "play-slick-evolutions" % "5.0.0"

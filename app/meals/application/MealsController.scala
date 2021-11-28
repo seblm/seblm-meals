@@ -3,8 +3,8 @@ package meals.application
 import meals.domain.DatesTransformations.yearWeek
 import meals.domain.{DatesTransformations, MealSuggest, MealsService, SuggestResponse}
 import play.api.Logging
-import play.api.data.Forms._
 import play.api.data._
+import play.api.data.Forms._
 import play.api.libs.json._
 import play.api.mvc._
 
@@ -13,8 +13,7 @@ import java.util.UUID
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
-@Singleton
-class MealsController @Inject() (cc: ControllerComponents, mealsService: MealsService)
+class MealsController(cc: ControllerComponents, mealsService: MealsService)
     extends AbstractController(cc)
     with Logging {
 
