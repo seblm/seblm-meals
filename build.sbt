@@ -30,6 +30,6 @@ libraryDependencies ++= Seq(
 libraryDependencies += "org.postgresql" % "postgresql" % "42.3.1"
 
 libraryDependencies += "com.h2database" % "h2" % "2.0.206" % Test
-libraryDependencies += "org.mockito" %% "mockito-scala-scalatest" % "1.16.49" % Test
+libraryDependencies += "org.mockito" %% "mockito-scala-scalatest" % "1.16.55" % Test
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.10" % Test
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % Test
