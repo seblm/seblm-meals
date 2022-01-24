@@ -17,7 +17,7 @@ lazy val root = (project in file("."))
 lazy val domain = project
   .settings(
     scalaVersion := "3.1.0",
-    libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.10" % Test
+    libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.11" % Test
   )
 
 scalaVersion := "2.13.8"
@@ -31,5 +31,5 @@ libraryDependencies += "org.postgresql" % "postgresql" % "42.3.1"
 
 libraryDependencies += "com.h2database" % "h2" % "2.1.210" % Test
 libraryDependencies += "org.mockito" %% "mockito-scala-scalatest" % "1.17.0" % Test
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.10" % Test
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.11" % Test
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % Test
