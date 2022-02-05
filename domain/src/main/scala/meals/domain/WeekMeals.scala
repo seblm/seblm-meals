@@ -51,7 +51,7 @@ object WeekMeals:
     val fromMonth = Option.when(from.getMonth != to.getMonth)(s" ${DateTimeFormatter.ofPattern("MMMM").format(from)}")
     val fromYear = Option.when(from.getYear != to.getYear)(s" ${DateTimeFormatter.ofPattern("YYYY").format(from)}")
     val long = f"Semaine n°$week%02d - du lundi ${from.getDayOfMonth}${fromMonth
-      .getOrElse("")}${fromYear.getOrElse("")} au dimanche ${DateTimeFormatter.ofPattern("d MMMM YYYY").format(to)}"
+        .getOrElse("")}${fromYear.getOrElse("")} au dimanche ${DateTimeFormatter.ofPattern("d MMMM YYYY").format(to)}"
     WeekMeals(
       titles = Titles(short, long),
       previous = WeekReference(yearPrevious, weekPrevious, yearPrevious == year && weekPrevious == week),
