@@ -2,7 +2,7 @@ package meals.application
 
 import controllers.AssetsComponents
 import meals.application.MealsController
-import meals.domain.{MealRepository, MealsService, MealsServiceImpl}
+import meals.domain.{MealRepository, MealsService}
 import meals.infrastructure.MealsDAO
 import play.api.ApplicationLoader.Context
 import play.api.BuiltInComponentsFromContext
@@ -31,8 +31,8 @@ class MealsComponents(context: Context)
   )
 
   lazy val router: Router = {
-    val clock: Clock = Clock.system(ZoneId.of("Europe/Paris"))
-    val mealsService: MealsService = new MealsServiceImpl(clock, mealRepository)
+    val clock = Clock.system(ZoneId.of("Europe/Paris"))
+    val mealsService = new MealsService(clock, mealRepository)
     new Routes(httpErrorHandler, new MealsController(controllerComponents, mealsService), assets)
   }
 
