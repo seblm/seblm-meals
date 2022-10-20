@@ -21,7 +21,7 @@ lazy val domain = project
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.13" % Test
   )
 
-scalaVersion := "2.13.8"
+scalaVersion := "2.13.10"
 
 libraryDependencies += evolutions
 libraryDependencies ++= Seq(
