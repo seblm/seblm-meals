@@ -10,7 +10,6 @@ import play.api.mvc._
 
 import java.time.{Clock, LocalDateTime, Year}
 import java.util.UUID
-import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 class MealsController(cc: ControllerComponents, mealsService: MealsService)

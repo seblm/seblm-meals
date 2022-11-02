@@ -6,11 +6,9 @@ import play.api.db.slick.{DatabaseConfigProvider, DbName, HasDatabaseConfig, Sli
 import play.api.mvc.{AbstractController, ControllerComponents}
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
-import slick.relational.RelationalProfile
 
 import java.time.LocalDateTime
 import java.util.UUID
-import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class MealsDAO(protected val dbConfig: DatabaseConfig[JdbcProfile], cc: ControllerComponents)(implicit

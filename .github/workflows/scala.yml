@@ -19,4 +19,4 @@ jobs:
           java-version: '17'
           cache: 'sbt'
       - uses: coursier/cache-action@v6
-      - run: sbt scalafmtCheckAll test
+      - run: sbt scalafmtCheckAll undeclaredCompileDependenciesTest unusedCompileDependenciesTest test

@@ -12,8 +12,7 @@ import play.api.db.slick.{DbName, SlickComponents, SlickModule}
 import play.api.routing.Router
 import play.filters.HttpFiltersComponents
 import router.Routes
-import slick.basic.{BasicProfile, DatabaseConfig}
-import slick.jdbc.{JdbcProfile, PostgresProfile}
+import slick.jdbc.JdbcProfile
 
 import java.time.{Clock, ZoneId}
 
