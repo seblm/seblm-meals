@@ -18,8 +18,8 @@ lazy val root = (project in file("."))
 lazy val domain = project
   .settings(
     scalaVersion := "3.2.1",
-    libraryDependencies += "org.mockito" % "mockito-core" % "4.9.0" % Test,
-    libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.14" % Test
+    libraryDependencies += "org.mockito" % "mockito-core" % "4.11.0" % Test,
+    libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.15" % Test
   )
 
 scalaVersion := "2.13.10"
@@ -34,7 +34,7 @@ libraryDependencies += "com.typesafe.slick" %% "slick" % "3.4.1"
 libraryDependencies += "org.postgresql" % "postgresql" % "42.5.1" % Runtime
 
 libraryDependencies += "com.h2database" % "h2" % "2.1.214" % Test
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.14" % Test
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.15" % Test
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % Test
 
 // these three modules are declared by com.typesafe.play:sbt-plugin with wrong scope Compile instead of Runtime
