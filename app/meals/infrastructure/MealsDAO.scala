@@ -30,8 +30,7 @@ class MealsDAO(protected val dbConfig: DatabaseConfig[JdbcProfile], cc: Controll
     def description = column[String]("description")
 
     def * = (id, description) <> ({ case (id, description) => MealRow(id, description) },
-    (mealRow: MealRow) => Some((mealRow.id, mealRow.description)),
-    )
+    (mealRow: MealRow) => Some((mealRow.id, mealRow.description)))
 
   }
 
