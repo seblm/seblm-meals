@@ -181,7 +181,7 @@ class MealsServiceSpec extends AnyFlatSpec {
       suggests.mostRecents should contain inOrderOnly (
         MealSuggest(2, "salade tomates concombres", "salade tomates concombres", 11),
         MealSuggest(1, "ratatouille", "ratatouille", 9),
-        MealSuggest(1, "pâtes sauce tomate", "pâtes sauce tomate", 10),
+        MealSuggest(1, "pâtes sauce tomate", "pâtes sauce tomate", 10)
       )
     }
   }
@@ -203,7 +203,7 @@ class MealsServiceSpec extends AnyFlatSpec {
     whenReady(mealsService.suggest(reference, Some("omat"))) { suggests =>
       suggests.mostRecents should contain inOrderOnly (
         MealSuggest(2, "salade tomates concombres", "salade t<strong>omat</strong>es concombres", 11),
-        MealSuggest(1, "pâtes sauce tomate", "pâtes sauce t<strong>omat</strong>e", 10),
+        MealSuggest(1, "pâtes sauce tomate", "pâtes sauce t<strong>omat</strong>e", 10)
       )
     }
   }
@@ -228,7 +228,7 @@ class MealsServiceSpec extends AnyFlatSpec {
       )
       suggests.mostRecents should contain inOrderOnly (
         MealSuggest(1, "ratatouille", "ratatouille", 9),
-        MealSuggest(1, "pâtes sauce tomate", "pâtes sauce tomate", 10),
+        MealSuggest(1, "pâtes sauce tomate", "pâtes sauce tomate", 10)
       )
     }
   }
@@ -253,7 +253,7 @@ class MealsServiceSpec extends AnyFlatSpec {
       )
       suggests.mostRecents should contain inOrderOnly (
         MealSuggest(1, "ratatouille", "ratatouille", 9),
-        MealSuggest(1, "pâtes sauce tomate", "pâtes sauce tomate", 10),
+        MealSuggest(1, "pâtes sauce tomate", "pâtes sauce tomate", 10)
       )
     }
   }
