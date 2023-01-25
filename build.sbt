@@ -26,7 +26,7 @@ scalaVersion := "2.13.10"
 
 libraryDependencies += evolutions
 libraryDependencies += "com.typesafe.play" %% "play" % "2.8.18"
-libraryDependencies += "com.typesafe.play" %% "play-json" % "2.9.3"
+libraryDependencies += "com.typesafe.play" %% "play-json" % "2.9.4"
 libraryDependencies += "com.typesafe.play" %% "play-slick" % "5.1.0"
 libraryDependencies += "com.typesafe.play" %% "play-slick-evolutions" % "5.1.0"
 libraryDependencies += "com.typesafe.slick" %% "slick" % "3.4.1"
