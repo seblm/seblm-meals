@@ -28,6 +28,17 @@ lazy val domain = project
     Test / javaOptions += s"-javaagent:${csrCacheDirectory.value.getAbsolutePath}/https/repo1.maven.org/maven2/org/mockito/mockito-core/$mockitoVersion/mockito-core-$mockitoVersion.jar"
   )
 
+lazy val catseffect = project
+  .settings(
+    scalaVersion := "3.3.1",
+    libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.4.14" % Runtime,
+    libraryDependencies += "org.postgresql" % "r2dbc-postgresql" % "1.0.4.RELEASE",
+    libraryDependencies += "org.slf4j" % "slf4j-api" % "2.0.9",
+    libraryDependencies += "org.typelevel" %% "cats-effect" % "3.5.3",
+    libraryDependencies += "org.scalameta" %% "munit" % "1.0.0-M10" % Test,
+    libraryDependencies += "org.typelevel" %% "munit-cats-effect" % "2.0.0-M4" % Test,
+  )
+
 libraryDependencies += evolutions
 libraryDependencies += "org.playframework" %% "play" % "3.0.9"
 libraryDependencies += "org.playframework" %% "play-configuration" % "3.0.9"
