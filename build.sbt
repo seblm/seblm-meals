@@ -4,8 +4,17 @@ organization := "name.lemerdy.sebastian"
 version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file("."))
-  .enablePlugins(PlayScala)
+  .enablePlugins(DockerPlugin, PlayScala)
   .settings(
+    dockerBaseImage := "eclipse-temurin:17",
+    dockerExposedPorts := Seq(9000),
+    dockerEnvVars := Map(
+      "APPLICATION_SECRET" -> "",
+      "POSTGRESQL_ADDON_USER" -> "",
+      "POSTGRESQL_ADDON_PASSWORD" -> "",
+      "POSTGRESQL_ADDON_HOST" -> "",
+      "POSTGRESQL_ADDON_DB" -> ""
+    ),
     routesImport += "meals.application.MealsBinders._",
     routesImport += "java.time.{LocalDateTime, Year}",
     routesImport += "java.util.UUID",
