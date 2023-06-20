@@ -17,7 +17,7 @@ import java.util.UUID
 import scala.concurrent.ExecutionContext.global
 import scala.concurrent.{ExecutionContext, Future}
 
-class MealsServiceSpec extends AnyFlatSpec {
+class MealsServiceSpec extends AnyFlatSpec:
 
   implicit val ec: ExecutionContext = global
 
@@ -258,38 +258,29 @@ class MealsServiceSpec extends AnyFlatSpec {
     }
   }
 
-  private trait WithRepositoryAndService {
+  private trait WithRepositoryAndService:
     val mealRepository: MealRepository = mock(classOf[MealRepository])
     private val clock: Clock = Clock.fixed(Instant.parse("2020-02-29T11:00:00Z"), ZoneId.of("Europe/Paris"))
     val mealsService: MealsService = new MealsService(clock = clock, repository = mealRepository)
     val reference: LocalDateTime = clock.instant().atZone(clock.getZone).toLocalDateTime
-  }
 
-}
-
-object MealsServiceSpec {
+object MealsServiceSpec:
 
   case class AllResponse(all: Seq[String])
 
-  implicit class AllResponseOps(allResponse: AllResponse) {
+  implicit class AllResponseOps(allResponse: AllResponse):
 
     def toFuture: Future[Map[MealRow, Seq[LocalDateTime]]] =
       Future.successful(toAllResponseMap(allResponse))
 
-    private def toAllResponseMap(allResponse: AllResponse): Map[MealRow, Seq[LocalDateTime]] = allResponse.all match {
+    private def toAllResponseMap(allResponse: AllResponse): Map[MealRow, Seq[LocalDateTime]] = allResponse.all match
       case Nil          => Map.empty
       case last :: Nil  => Map(toAllResponseMap(last))
       case head :: tail => Map(toAllResponseMap(head)) ++ toAllResponseMap(AllResponse(tail))
-    }
 
-    private def toAllResponseMap(line: String): (MealRow, Seq[LocalDateTime]) = line.split("->") match {
+    private def toAllResponseMap(line: String): (MealRow, Seq[LocalDateTime]) = line.split("->") match
       case Array(description, dates) =>
         MealRow(UUID.randomUUID(), description.trim()) -> dates
           .split(",")
           .toIndexedSeq
           .map(x => LocalDateTime.parse(x.trim))
-    }
-
-  }
-
-}

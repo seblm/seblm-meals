@@ -1,6 +1,6 @@
 package meals.domain
 
-import java.time.DayOfWeek._
+import java.time.DayOfWeek.*
 import java.time.format.DateTimeFormatter
 import java.time.{Clock, LocalDate, LocalDateTime, Year}
 import scala.collection.immutable.ListMap

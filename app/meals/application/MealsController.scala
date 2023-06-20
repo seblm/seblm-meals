@@ -35,7 +35,7 @@ class MealsController(cc: ControllerComponents, mealsService: MealsService)
     mealsService.meals(year, week).map(meals => Ok(views.html.week(meals)))
   }
 
-  val mealTimeForm: Form[LocalDateTime] = Form(single("mealTime" -> localDateTime))
+  private val mealTimeForm: Form[LocalDateTime] = Form(single("mealTime" -> localDateTime))
 
   def shuffle(): Action[LocalDateTime] = Action.async(parse.form(mealTimeForm)) { implicit request =>
     logger.debug(s"shuffle(${request.body})")
@@ -45,7 +45,7 @@ class MealsController(cc: ControllerComponents, mealsService: MealsService)
 
   case class LinkOrInsertData(mealDescription: String, mealTime: LocalDateTime)
 
-  val linkOrInsertForm: Form[LinkOrInsertData] = Form(
+  private val linkOrInsertForm: Form[LinkOrInsertData] = Form(
     mapping(
       "mealDescription" -> text,
       "mealTime" -> localDateTime
@@ -66,8 +66,8 @@ class MealsController(cc: ControllerComponents, mealsService: MealsService)
     mealsService.delete(request.body).map(_ => Redirect(routes.MealsController.meals(year, week)))
   }
 
-  private implicit val mealSuggestWrites: Writes[MealSuggest] = new Writes[MealSuggest] {
-    override def writes(mealSuggest: MealSuggest): JsValue = Json.obj(
+  private implicit val mealSuggestWrites: Writes[MealSuggest] = { case mealSuggest: MealSuggest =>
+    Json.obj(
       "count" -> JsNumber(mealSuggest.count),
       "description" -> JsString(mealSuggest.description),
       "descriptionLabel" -> JsString(mealSuggest.descriptionLabel),
@@ -75,17 +75,15 @@ class MealsController(cc: ControllerComponents, mealsService: MealsService)
     )
   }
 
-  private implicit val suggestResponseWrites: Writes[SuggestResponse] = new Writes[SuggestResponse] {
-    override def writes(suggestResponse: SuggestResponse): JsValue = {
-      val fiftyTwoWeeksAgo = suggestResponse.fiftyTwoWeeksAgo
-        .map(mealSuggestWrites.writes)
-        .fold(JsObject.empty)(m => Json.obj("fiftyTwoWeeksAgo" -> m))
-      val fourWeeksAgo = suggestResponse.fourWeeksAgo
-        .map(mealSuggestWrites.writes)
-        .fold(JsObject.empty)(m => Json.obj("fourWeeksAgo" -> m))
-      val mostRecents = Json.obj("mostRecents" -> JsArray(suggestResponse.mostRecents.map(mealSuggestWrites.writes)))
-      fiftyTwoWeeksAgo ++ fourWeeksAgo ++ mostRecents
-    }
+  private implicit val suggestResponseWrites: Writes[SuggestResponse] = { case suggestResponse: SuggestResponse =>
+    val fiftyTwoWeeksAgo = suggestResponse.fiftyTwoWeeksAgo
+      .map(mealSuggestWrites.writes)
+      .fold(JsObject.empty)(m => Json.obj("fiftyTwoWeeksAgo" -> m))
+    val fourWeeksAgo = suggestResponse.fourWeeksAgo
+      .map(mealSuggestWrites.writes)
+      .fold(JsObject.empty)(m => Json.obj("fourWeeksAgo" -> m))
+    val mostRecents = Json.obj("mostRecents" -> JsArray(suggestResponse.mostRecents.map(mealSuggestWrites.writes)))
+    fiftyTwoWeeksAgo ++ fourWeeksAgo ++ mostRecents
   }
 
   def suggest(reference: LocalDateTime, search: Option[String]): Action[AnyContent] = Action.async {

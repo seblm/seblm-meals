@@ -1,6 +1,6 @@
 package meals.domain
 
-import java.time.DayOfWeek._
+import java.time.DayOfWeek.*
 import java.time.LocalDateTime
 
 object MealTimeConverter:

@@ -1,7 +1,7 @@
 package meals.domain
 
 import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers._
+import org.scalatest.matchers.should.Matchers.*
 
 import java.time.{LocalDateTime, Year}
 
