@@ -26,6 +26,10 @@ Go to http://localhost:9000 and you are good to go.
 docker compose stop
 ```
 
+## how to backup database:
+
+Please have a look to [specific documentation](backup/README.md).
+
 ## how to start application in dev mode
 
 ```shell
