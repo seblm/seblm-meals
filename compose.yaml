@@ -12,11 +12,12 @@ services:
     depends_on:
       - database
     environment:
+      APPLICATION_SECRET: ziN0JiGEzE6FvUBddNcEttAC/WdabutXXblfzusCQSs=
+      APPLICATION_UPDATE_DB:
       POSTGRESQL_ADDON_USER: seblm-meals
       POSTGRESQL_ADDON_PASSWORD: seblm-database-password
       POSTGRESQL_ADDON_HOST: database
       POSTGRESQL_ADDON_DB: seblm-meals
-      APPLICATION_SECRET: ziN0JiGEzE6FvUBddNcEttAC/WdabutXXblfzusCQSs=
     ports:
       - 9000:9000
 volumes:

@@ -1,6 +1,6 @@
 # seblm-meals
 
-## how to build and run
+## How to build and run
 
 First generate a `Dockerfile` with sbt through Docker:
 
@@ -9,28 +9,29 @@ docker run --rm --tty \
   --volume .:/home/sbtuser/seblm-meals \
   --volume ~/Library/Caches/Coursier:/home/sbtuser/.cache/coursier \
   --user sbtuser --workdir /home/sbtuser/seblm-meals \
-  sbtscala/scala-sbt:eclipse-temurin-jammy-17.0.5_8_1.9.1_3.3.0 sbt "Docker / stage"
+  sbtscala/scala-sbt:eclipse-temurin-jammy-17.0.5_8_1.9.4_3.3.0 sbt "Docker / stage"
 ```
 
 Then run compose:
 
 ```shell
-docker compose up
+APPLICATION_UPDATE_DB=true docker compose up
 ```
 
-Go to http://localhost:9000 and you are good to go.
+Go to http://localhost:9000 and you are good to go. Please note that `APPLICATION_UPDATE_DB=true` is only required for
+the first time you start compose. Once schema is created, this configuration can be omitted.
 
-## how to stop container:
+## How to stop container:
 
 ```shell
 docker compose stop
 ```
 
-## how to backup database:
+## How to backup database:
 
 Please have a look to [specific documentation](backup/README.md).
 
-## how to start application in dev mode
+## How to start application in dev mode
 
 ```shell
 docker compose up database
