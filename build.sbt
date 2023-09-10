@@ -26,7 +26,7 @@ lazy val root = (project in file("."))
 
 lazy val domain = project
   .settings(
-    scalaVersion := "3.3.0",
+    scalaVersion := "3.3.1",
     libraryDependencies += "org.mockito" % "mockito-core" % "5.5.0" % Test,
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.16" % Test
   )
