@@ -31,7 +31,7 @@ lazy val domain = project
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.16" % Test
   )
 
-scalaVersion := "2.13.11"
+scalaVersion := "2.13.12"
 
 libraryDependencies += evolutions
 libraryDependencies += "com.typesafe.play" %% "play" % "2.8.20"
