@@ -1,7 +1,6 @@
 package meals.application
 
 import controllers.AssetsComponents
-import meals.application.MealsController
 import meals.domain.{MealRepository, MealsService}
 import meals.infrastructure.MealsDAO
 import play.api.ApplicationLoader.Context
@@ -24,10 +23,8 @@ class MealsComponents(context: Context)
     with SlickComponents
     with SlickEvolutionsComponents {
 
-  lazy val mealRepository: MealRepository = new MealsDAO(
-    slickApi.dbConfig[JdbcProfile](DbName(configuration.get[String](SlickModule.DefaultDbName))),
-    controllerComponents
-  )
+  lazy val mealRepository: MealRepository =
+    new MealsDAO(slickApi.dbConfig[JdbcProfile](DbName(configuration.get[String](SlickModule.DefaultDbName))))
 
   lazy val router: Router = {
     val clock = Clock.system(ZoneId.of("Europe/Paris"))

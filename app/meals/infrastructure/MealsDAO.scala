@@ -1,27 +1,24 @@
 package meals.infrastructure
 
 import meals.domain.{Meal, MealRepository}
-import play.api.Play
-import play.api.db.slick.{DatabaseConfigProvider, DbName, HasDatabaseConfig, SlickApi}
-import play.api.mvc.{AbstractController, ControllerComponents}
+import play.api.db.slick.HasDatabaseConfig
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 
 import java.time.LocalDateTime
 import java.util.UUID
+import scala.Function.const
 import scala.concurrent.{ExecutionContext, Future}
 
-class MealsDAO(protected val dbConfig: DatabaseConfig[JdbcProfile], cc: ControllerComponents)(implicit
-    executionContext: ExecutionContext
-) extends AbstractController(cc)
-    with HasDatabaseConfig[JdbcProfile]
+class MealsDAO(protected val dbConfig: DatabaseConfig[JdbcProfile])(implicit executionContext: ExecutionContext)
+    extends HasDatabaseConfig[JdbcProfile]
     with MealRepository {
 
   import profile.api._
 
   private val meals = TableQuery[MealsTable]
 
-  override def insert(meal: MealRow): Future[Unit] = db.run(meals += meal).map(ignore)
+  override def insert(meal: MealRow): Future[Unit] = db.run(meals += meal).map(const(()))
 
   class MealsTable(tag: Tag) extends Table[MealRow](tag, "meals") {
 
@@ -91,7 +88,5 @@ class MealsDAO(protected val dbConfig: DatabaseConfig[JdbcProfile], cc: Controll
     def meal = foreignKey("meal_fk", mealId, meals)(_.id)
 
   }
-
-  private def ignore(a: Any): Unit = ()
 
 }

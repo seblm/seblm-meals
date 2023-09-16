@@ -1,14 +1,9 @@
 package meals
 
 import meals.domain.MealRepository
-import meals.infrastructure.{MealRow, MealsDAO}
-import org.scalatest.TestData
+import meals.infrastructure.MealRow
 import org.scalatest.concurrent.Eventually.eventually
 import org.scalatest.concurrent.ScalaFutures.whenReady
-import org.scalatestplus.play.PlaySpec
-import org.scalatestplus.play.guice.GuiceOneAppPerTest
-import play.api.Application
-import play.api.inject.guice.GuiceApplicationBuilder
 
 import java.time.LocalDateTime
 import java.util.UUID
