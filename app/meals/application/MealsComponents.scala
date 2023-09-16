@@ -15,7 +15,7 @@ import slick.jdbc.JdbcProfile
 
 import java.time.{Clock, ZoneId}
 
-class MealsComponents(context: Context)
+class MealsComponents(context: Context, clock: Clock = Clock.system(ZoneId.of("Europe/Paris")))
     extends BuiltInComponentsFromContext(context)
     with AssetsComponents
     with EvolutionsComponents
@@ -25,12 +25,10 @@ class MealsComponents(context: Context)
 
   lazy val mealRepository: MealRepository =
     new MealsDAO(slickApi.dbConfig[JdbcProfile](DbName(configuration.get[String](SlickModule.DefaultDbName))))
+  private lazy val mealsService = new MealsService(clock, mealRepository)
+  lazy val mealsController: MealsController = new MealsController(controllerComponents, mealsService)
 
-  lazy val router: Router = {
-    val clock = Clock.system(ZoneId.of("Europe/Paris"))
-    val mealsService = new MealsService(clock, mealRepository)
-    new Routes(httpErrorHandler, new MealsController(controllerComponents, mealsService), assets)
-  }
+  lazy val router: Router = new Routes(httpErrorHandler, mealsController, assets)
 
   // this will actually run the database migrations on startup
   applicationEvolutions

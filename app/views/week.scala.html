@@ -70,7 +70,7 @@
                                 }
 
                                 function suggest(event) {
-                                    let query = '/suggest';
+                                    let query = '/api/suggest';
                                     const mealTime = document.querySelector('select[name="mealTime"]').value
                                     query += `?reference=${mealTime}`
                                     if (event.target.value) query += `&search=${event.target.value}`;

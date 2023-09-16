@@ -7,7 +7,6 @@ import org.scalatest.concurrent.ScalaFutures.whenReady
 
 import java.time.LocalDateTime
 import java.util.UUID
-import scala.concurrent.ExecutionContext
 
 class MealsDAOSpec extends MealsPlaySpec {
 
@@ -16,7 +15,6 @@ class MealsDAOSpec extends MealsPlaySpec {
       val mealsDAO: MealRepository = mealsComponents.mealRepository
       val row = MealRow(UUID.randomUUID(), "some meal")
       val time = LocalDateTime.parse("2020-01-05T12:00:00")
-      implicit val executionContext: ExecutionContext = app.actorSystem.dispatcher
 
       val inserts = for {
         _ <- mealsDAO.insert(row)

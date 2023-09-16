@@ -1,10 +1,11 @@
 package meals.application
 
+import meals.application.WeekMealsWrites._
 import meals.domain.DatesTransformations.yearWeek
 import meals.domain.{DatesTransformations, MealSuggest, MealsService, SuggestResponse}
 import play.api.Logging
-import play.api.data._
 import play.api.data.Forms._
+import play.api.data._
 import play.api.libs.json._
 import play.api.mvc._
 
@@ -33,6 +34,10 @@ class MealsController(cc: ControllerComponents, mealsService: MealsService)
 
   def meals(year: Year, week: Int): Action[AnyContent] = Action.async { implicit requestHeader: RequestHeader =>
     mealsService.meals(year, week).map(meals => Ok(views.html.week(meals)))
+  }
+
+  def mealsApi(year: Year, week: Int): Action[AnyContent] = Action.async {
+    mealsService.meals(year, week).map(meals => Ok(Json.toJson(meals)))
   }
 
   private val mealTimeForm: Form[LocalDateTime] = Form(single("mealTime" -> localDateTime))
