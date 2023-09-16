@@ -12,7 +12,6 @@ import org.scalatest.matchers.must.Matchers.contain
 import org.scalatest.matchers.should.Matchers.*
 
 import java.time.*
-import java.time.format.DateTimeFormatter
 import java.util.UUID
 import scala.concurrent.ExecutionContext.global
 import scala.concurrent.{ExecutionContext, Future}
@@ -20,8 +19,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class MealsServiceSpec extends AnyFlatSpec:
 
   implicit val ec: ExecutionContext = global
-
-  private val monthFormatter = DateTimeFormatter.ofPattern("MMMM")
 
   "Meals" should "be displayed for each day of current week" in new WithRepositoryAndService() {
     private val from = LocalDateTime.parse("2020-02-24T00:00")
@@ -42,12 +39,9 @@ class MealsServiceSpec extends AnyFlatSpec:
         )
       )
     )
-    private val february = monthFormatter.format(from)
-    private val march = monthFormatter.format(to)
-
     whenReady(mealsService.meals(Year.of(2020), 9)) { weekMeals =>
       weekMeals.titles.short shouldBe "2020 semaine n°09"
-      weekMeals.titles.long shouldBe s"Semaine n°09 - du lundi 24 $february au dimanche 1 $march 2020"
+      weekMeals.titles.long shouldBe s"Semaine n°09 - du lundi 24 février au dimanche 1 mars 2020"
       weekMeals.previous.year shouldBe Year.of(2020)
       weekMeals.previous.week shouldBe 8
       weekMeals.previous.isActive shouldBe false
@@ -110,10 +104,9 @@ class MealsServiceSpec extends AnyFlatSpec:
         )
     )
 
-    private val march = monthFormatter.format(from)
     whenReady(mealsService.meals(Year.of(2020), 10)) { weekMeals =>
       weekMeals.titles.short shouldBe "2020 semaine n°10"
-      weekMeals.titles.long shouldBe s"Semaine n°10 - du lundi 2 au dimanche 8 $march 2020"
+      weekMeals.titles.long shouldBe s"Semaine n°10 - du lundi 2 au dimanche 8 mars 2020"
       weekMeals.previous.year shouldBe Year.of(2020)
       weekMeals.previous.week shouldBe 8
       weekMeals.previous.isActive shouldBe false
