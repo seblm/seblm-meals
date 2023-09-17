@@ -1,0 +1,195 @@
+openapi: 3.1.0
+info:
+  title: seblm-meals API
+  version: 1.0.0
+tags:
+  - name: Meal
+servers:
+  - url: http://localhost:9000/api
+paths:
+  /meals/{year}/{week}:
+    get:
+      tags:
+        - Meal
+      description: Get all meals for a week
+      operationId: mealsApi
+      parameters:
+        - name: year
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: week
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: WeekMeals
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeekMeals'
+  /suggest:
+    get:
+      tags:
+        - Meal
+      description: Suggest some meals according to a reference date and an optional search
+      operationId: suggest
+      parameters:
+        - name: reference
+          in: query
+          required: true
+          description: Format is either 'YYYY-MM-DD 12:00' or 'YYYY-MM-DD 20:00'
+          schema:
+            type: string
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuggestResponse'
+  /link-or-insert:
+    post:
+      tags:
+        - Meal
+      description: Create a meal
+      operationId: linkOrInsertApi
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LinkOrInsertData'
+components:
+  schemas:
+    WeekMeals:
+      required:
+        - titles
+        - previous
+        - now
+        - next
+        - monday
+        - tuesday
+        - wednesday
+        - thursday
+        - friday
+        - saturday
+        - sunday
+      type: object
+      properties:
+        titles:
+          $ref: '#/components/schemas/Titles'
+        previous:
+          $ref: '#/components/schemas/WeekReference'
+        now:
+          $ref: '#/components/schemas/WeekReference'
+        next:
+          $ref: '#/components/schemas/WeekReference'
+        monday:
+          $ref: '#/components/schemas/WeekDay'
+        tuesday:
+          $ref: '#/components/schemas/WeekDay'
+        wednesday:
+          $ref: '#/components/schemas/WeekDay'
+        thursday:
+          $ref: '#/components/schemas/WeekDay'
+        friday:
+          $ref: '#/components/schemas/WeekDay'
+        saturday:
+          $ref: '#/components/schemas/WeekDay'
+        sunday:
+          $ref: '#/components/schemas/WeekDay'
+    Titles:
+      required:
+        - short
+        - long
+      type: object
+      properties:
+        short:
+          type: string
+        long:
+          type: string
+    WeekReference:
+      required:
+        - year
+        - week
+        - isActive
+      type: object
+      properties:
+        year:
+          type: integer
+        week:
+          type: integer
+        isActive:
+          type: boolean
+    WeekDay:
+      required:
+        - reference
+      type: object
+      properties:
+        reference:
+          type: string
+          format: date
+        lunch:
+          $ref: '#/components/schemas/Meal'
+        dinner:
+          $ref: '#/components/schemas/Meal'
+    Meal:
+      required:
+        - id
+        - time
+        - meal
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        time:
+          type: string
+        meal:
+          type: string
+    SuggestResponse:
+      type: object
+      properties:
+        fiftyTwoWeeksAgo:
+          $ref: '#/components/schemas/MealSuggest'
+        fourWeeksAgo:
+          $ref: '#/components/schemas/MealSuggest'
+        mostRecents:
+          type: array
+          items:
+            $ref: '#/components/schemas/MealSuggest'
+    MealSuggest:
+      required:
+        - count
+        - description
+        - descriptionLabel
+        - lastused
+      type: object
+      properties:
+        count:
+          type: integer
+        description:
+          type: string
+        descriptionLabel:
+          type: string
+        lastused:
+          type: integer
+    LinkOrInsertData:
+      required:
+        - mealDescription
+        - mealTime
+      type: object
+      properties:
+        mealDescription:
+          type: string
+        mealTime:
+          type: string
+          format: date-time
