@@ -11,6 +11,7 @@ import play.api.mvc._
 
 import java.time.{Clock, LocalDateTime, Year}
 import java.util.UUID
+import scala.Function.const
 import scala.concurrent.ExecutionContext
 
 class MealsController(cc: ControllerComponents, mealsService: MealsService)
@@ -48,8 +49,6 @@ class MealsController(cc: ControllerComponents, mealsService: MealsService)
     mealsService.shuffle(request.body).map(_ => Redirect(routes.MealsController.meals(year, week)))
   }
 
-  case class LinkOrInsertData(mealDescription: String, mealTime: LocalDateTime)
-
   private val linkOrInsertForm: Form[LinkOrInsertData] = Form(
     mapping(
       "mealDescription" -> text,
@@ -63,6 +62,12 @@ class MealsController(cc: ControllerComponents, mealsService: MealsService)
     mealsService
       .linkOrInsert(request.body.mealTime, request.body.mealDescription)
       .map(_ => Redirect(routes.MealsController.meals(year, week)))
+  }
+
+  private implicit val linkOrInsertDataReads: Reads[LinkOrInsertData] = Json.reads
+
+  def linkOrInsertApi(): Action[LinkOrInsertData] = Action.async(parse.json[LinkOrInsertData]) { request =>
+    mealsService.linkOrInsert(request.body.mealTime, request.body.mealDescription).map(const(Created))
   }
 
   def unlink(): Action[LocalDateTime] = Action.async(parse.form(mealTimeForm)) { implicit request =>

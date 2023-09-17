@@ -1,6 +1,7 @@
 GET  /                                      meals.application.MealsController.week()
 GET  /api/meals/$year<[0-9]+>/$week<[0-9]+> meals.application.MealsController.mealsApi(year: Year, week: Int)
 GET  /api/suggest                           meals.application.MealsController.suggest(reference: LocalDateTime, search: Option[String])
+POST /api/link-or-insert                    meals.application.MealsController.linkOrInsertApi()
 GET  /meal/:id                              meals.application.MealsController.meal(id: UUID)
 GET  /meals/$year<[0-9]+>/$week<[0-9]+>     meals.application.MealsController.meals(year: Year, week: Int)
 POST /link-or-insert                        meals.application.MealsController.linkOrInsert()

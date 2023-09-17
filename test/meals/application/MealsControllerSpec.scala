@@ -35,6 +35,26 @@ class MealsControllerSpec extends MealsPlaySpec {
         )
       )
     }
+
+    "link or insert a meal" in {
+      import meals.application.LinkOrInsertDataWrites._
+
+      val result = call(
+        mealsComponents.mealsController.linkOrInsertApi(),
+        FakeRequest().withBody(Json.toJson(LinkOrInsertData("pizza", LocalDateTime.parse("2023-09-17T12:00:00"))))
+      )
+
+      status(result) must be(CREATED)
+
+      val weekMeals = Json
+        .fromJson[WeekMeals](
+          contentAsJson(call(mealsComponents.mealsController.mealsApi(Year.of(2023), 37), FakeRequest()))
+        )
+        .asOpt
+        .value
+      weekMeals.sunday.lunch.value.meal must be("pizza")
+    }
+
   }
 
 }
