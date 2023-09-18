@@ -6,6 +6,7 @@ import meals.domain.{Titles, WeekDay, WeekMeals, WeekReference}
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import meals.application.UnlinkMealWrites._
 
 import java.time._
 
@@ -36,23 +37,27 @@ class MealsControllerSpec extends MealsPlaySpec {
       )
     }
 
-    "link or insert a meal" in {
+    "insert, unlink and link a meal" in {
       import meals.application.LinkOrInsertDataWrites._
 
-      val result = call(
-        mealsComponents.mealsController.linkOrInsertApi(),
-        FakeRequest().withBody(Json.toJson(LinkOrInsertData("pizza", LocalDateTime.parse("2023-09-17T12:00:00"))))
-      )
+      val mealTime = LocalDateTime.parse("2023-09-17T12:00:00")
+      val pizza = FakeRequest().withBody(Json.toJson(LinkOrInsertData("pizza", mealTime)))
 
-      status(result) must be(CREATED)
+      val inserted = call(mealsComponents.mealsController.linkOrInsertApi(), pizza)
+      status(inserted) must be(CREATED)
+      val mealsInserted = call(mealsComponents.mealsController.mealsApi(Year.of(2023), 37), FakeRequest())
+      Json.fromJson[WeekMeals](contentAsJson(mealsInserted)).asOpt.value.sunday.lunch.value.meal must be("pizza")
 
-      val weekMeals = Json
-        .fromJson[WeekMeals](
-          contentAsJson(call(mealsComponents.mealsController.mealsApi(Year.of(2023), 37), FakeRequest()))
-        )
-        .asOpt
-        .value
-      weekMeals.sunday.lunch.value.meal must be("pizza")
+      val deleted =
+        call(mealsComponents.mealsController.unlinkApi(), FakeRequest().withBody(Json.toJson(UnlinkMeal(mealTime))))
+      status(deleted) must be(NO_CONTENT)
+      val mealsDeleted = call(mealsComponents.mealsController.mealsApi(Year.of(2023), 37), FakeRequest())
+      Json.fromJson[WeekMeals](contentAsJson(mealsDeleted)).asOpt.value.sunday.lunch must be(empty)
+
+      val linked = call(mealsComponents.mealsController.linkOrInsertApi(), pizza)
+      status(linked) must be(CREATED)
+      val mealsLinked = call(mealsComponents.mealsController.mealsApi(Year.of(2023), 37), FakeRequest())
+      Json.fromJson[WeekMeals](contentAsJson(mealsLinked)).asOpt.value.sunday.lunch.value.meal must be("pizza")
     }
 
   }

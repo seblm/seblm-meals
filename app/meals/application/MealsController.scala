@@ -76,6 +76,12 @@ class MealsController(cc: ControllerComponents, mealsService: MealsService)
     mealsService.delete(request.body).map(_ => Redirect(routes.MealsController.meals(year, week)))
   }
 
+  private implicit val unlinkMealReads: Reads[UnlinkMeal] = Json.reads
+
+  def unlinkApi(): Action[UnlinkMeal] = Action.async(parse.json[UnlinkMeal]) { request =>
+    mealsService.delete(request.body.mealTime).map(const(NoContent))
+  }
+
   private implicit val mealSuggestWrites: Writes[MealSuggest] = { case mealSuggest: MealSuggest =>
     Json.obj(
       "count" -> JsNumber(mealSuggest.count),

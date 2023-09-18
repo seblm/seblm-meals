@@ -67,6 +67,18 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/LinkOrInsertData'
+  /unlink:
+    delete:
+      tags:
+        - Meal
+      description: Unlink a meal
+      operationId: unlinkApi
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnlinkMeal'
 components:
   schemas:
     WeekMeals:
@@ -190,6 +202,14 @@ components:
       properties:
         mealDescription:
           type: string
+        mealTime:
+          type: string
+          format: date-time
+    UnlinkMeal:
+      required:
+        - mealTime
+      type: object
+      properties:
         mealTime:
           type: string
           format: date-time
