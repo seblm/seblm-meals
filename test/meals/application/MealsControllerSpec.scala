@@ -42,6 +42,7 @@ class MealsControllerSpec extends MealsPlaySpec {
 
       val mealTime = LocalDateTime.parse("2023-09-17T12:00:00")
       val pizza = FakeRequest().withBody(Json.toJson(LinkOrInsertData("pizza", mealTime)))
+      val pasta = FakeRequest().withBody(Json.toJson(LinkOrInsertData("pasta", mealTime)))
 
       val inserted = call(mealsComponents.mealsController.linkOrInsertApi(), pizza)
       status(inserted) must be(CREATED)
@@ -58,6 +59,11 @@ class MealsControllerSpec extends MealsPlaySpec {
       status(linked) must be(CREATED)
       val mealsLinked = call(mealsComponents.mealsController.mealsApi(Year.of(2023), 37), FakeRequest())
       Json.fromJson[WeekMeals](contentAsJson(mealsLinked)).asOpt.value.sunday.lunch.value.meal must be("pizza")
+
+      val otherInserted = call(mealsComponents.mealsController.linkOrInsertApi(), pasta)
+      status(otherInserted) must be(CREATED)
+      val otherMealsLinked = call(mealsComponents.mealsController.mealsApi(Year.of(2023), 37), FakeRequest())
+      Json.fromJson[WeekMeals](contentAsJson(otherMealsLinked)).asOpt.value.sunday.lunch.value.meal must be("pasta")
     }
 
   }
