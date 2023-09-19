@@ -1,4 +1,4 @@
-import type { LinkOrInsert, SearchSuggestions, UnlinkMeal } from '$lib/model/WeekMeals';
+import type { LinkOrInsert, SuggestionResponse, UnlinkMeal } from '$lib/model/WeekMeals';
 
 export async function getWeekMeals(year: number, weekNumber: number) {
 	return await fetch(`/api/meals/${year}/${weekNumber}`).then(
@@ -11,7 +11,7 @@ export async function getSuggestions(
 	refDate: string,
 	search: string,
 	isLunch: boolean
-): Promise<{ mostRecents: SearchSuggestions[] }> {
+): Promise<SuggestionResponse> {
 	return await fetch(
 		`/api/suggest?reference=${refDate}%20${isLunch ? '12:00' : '20:00'}${
 			search.length > 0 ? '&search=' + search : ''
@@ -51,4 +51,5 @@ export async function unlink(day: string, isLunch: boolean) {
 	});
 }
 
-const getMealTime = (day: string, isLunch: boolean): string => `${day}T${isLunch ? '12' : '20'}:00:00.000Z`;
+const getMealTime = (day: string, isLunch: boolean): string =>
+	`${day}T${isLunch ? '12' : '20'}:00:00.000Z`;
