@@ -31,6 +31,7 @@
     title={title}
     on:input={handleInputChange}
     on:keypress={handleEnterPress}
+    on:focus={handleInputChange}
 />
 {#if showSuggestions}
   <ul
