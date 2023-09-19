@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { check } from '$lib/images/check';
-	import shuffle from '$lib/images/shuffle';
+	import bin from '$lib/images/bin';
 	import type { Day, SeachSuggestions, WeekMeals } from '$lib/model/WeekMeals';
 	import { date } from '$lib/stores';
-	import { getSuggestions, getWeekMeals, linkOrInsert } from '$lib/utils/api';
+	import { getSuggestions, getWeekMeals, linkOrInsert, unlink } from '$lib/utils/api';
 	import { getDayName } from '$lib/utils/functions';
 	import { getWeek, getYear } from 'date-fns';
 	import { addWeeks } from 'date-fns/fp';
@@ -102,6 +102,21 @@
 				},
 				(error) => {
 					showSnackBar("Erreur lors de l'enregistrement : " + error, 'error');
+				}
+			);
+		}
+	};
+
+	const unlinkMeal = (day: string, isLunch: boolean) => {
+		const dayDate = getDay(day)?.reference;
+		if (dayDate) {
+			unlink(dayDate!, isLunch).then(
+				() => {
+					showSnackBar('Repas supprimé', 'success');
+					updateWeekMeals();
+				},
+				(error) => {
+					showSnackBar("Erreur lors de la suppression : " + error, 'error');
 				}
 			);
 		}
@@ -224,8 +239,8 @@
 				</button>
 			</div>
 			<div class="week-calendar-day-cell week-calendar-day-actions">
-				<button>
-					{@html shuffle}
+				<button on:click={() => unlinkMeal(day, true)}>
+					{@html bin}
 				</button>
 			</div>
 			<div
@@ -265,8 +280,8 @@
 				</button>
 			</div>
 			<div class="week-calendar-day-cell week-calendar-day-actions">
-				<button>
-					{@html shuffle}
+				<button on:click={() => unlinkMeal(day, false)}>
+					{@html bin}
 				</button>
 			</div>
 		</div>

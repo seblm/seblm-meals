@@ -75,3 +75,7 @@ export interface LinkOrInsert {
 	mealDescription: string;
 	mealTime: string;
 }
+
+export interface UnlinkMeal {
+	mealTime: string;
+}

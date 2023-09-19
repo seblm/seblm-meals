@@ -1,4 +1,4 @@
-import type { LinkOrInsert, SeachSuggestions } from '$lib/model/WeekMeals';
+import type { LinkOrInsert, SeachSuggestions, UnlinkMeal } from '$lib/model/WeekMeals';
 
 export async function getWeekMeals(year: number, weekNumber: number) {
 	return await fetch(`/api/meals/${year}/${weekNumber}`).then(
@@ -34,5 +34,19 @@ export async function linkOrInsert(mealDescription: string, day: string, isLunch
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify(link)
+	});
+}
+
+export async function unlink(day: string, isLunch: boolean) {
+	const mealTime = `${day}T${isLunch ? '12' : '20'}:00:00.000Z`;
+	const unlink: UnlinkMeal = {
+		mealTime
+	};
+	return await fetch(`/api/unlink`, {
+		method: 'DELETE',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(unlink)
 	});
 }
