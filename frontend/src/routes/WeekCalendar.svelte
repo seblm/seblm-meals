@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { check } from '$lib/images/check';
 	import bin from '$lib/images/bin';
-	import type { Day, SeachSuggestions, WeekMeals } from '$lib/model/WeekMeals';
+	import type { Day, SearchSuggestions, WeekMeals } from '$lib/model/WeekMeals';
 	import { date } from '$lib/stores';
 	import { getSuggestions, getWeekMeals, linkOrInsert, unlink } from '$lib/utils/api';
 	import { getDayName } from '$lib/utils/functions';
@@ -10,6 +10,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { blur } from 'svelte/transition';
 	import CalendarNavigation from './CalendarNavigation.svelte';
+	import MealInput from './MealInput.svelte';
 	import SnackBar from './SnackBar.svelte';
 	import { clickOutside } from '$lib/utils/ClickOutside';
 
@@ -23,7 +24,7 @@
 
 	interface SuggestionList {
 		input: string;
-		suggestions: SeachSuggestions[];
+		suggestions: SearchSuggestions[];
 	}
 
 	let selectedDate: Date;
@@ -207,33 +208,14 @@
 				use:clickOutside
 				on:click_outside={() => handleClickOutsideCell(`${day}-${true}`)}
 			>
-				<input
-					type="text"
-					value={weekMeals ? getMeal(day, true) : ''}
-					title={weekMeals ? getMeal(day, true) : null}
-					on:input={(inputEvent) => onInputChange(inputEvent.target.value, day, true)}
-					on:keypress={(keyEvent) => {
-						if(keyEvent.code === 'Enter') {
-							saveMeal(day, true);
-						}
-					}}
+				<MealInput
+						value={weekMeals ? getMeal(day, true) : ''}
+						title={weekMeals ? getMeal(day, true) : null}
+						suggestions={suggestions.input === `${day}-${true}` ? suggestions.suggestions : null}
+						on:valueChange={(event) => onInputChange(event.detail.value, day, true)}
+						on:enterPressed={() => saveMeal(day, true)}
+						on:selectSuggestion={(event) => onSelectSuggestion(day, true, event.detail.description)}
 				/>
-				{#if suggestions && suggestions.input === `${day}-${true}`}
-					<ul
-						class="week-calendar-day-cell-suggestions"
-						class:week-calendar-day-cell-suggestions-visible={suggestions.input ===
-							`${day}-${true}`}
-					>
-						{#each suggestions.suggestions ?? [] as suggestion}
-							<li on:click={() => onSelectSuggestion(day, true, suggestion.description)}>
-								<span title={suggestion.description}>{@html suggestion.descriptionLabel} </span>
-								<span> ({suggestion.count})</span>
-								<div class="spacer" />
-								<span>{suggestion.lastused} jours</span>
-							</li>
-						{/each}
-					</ul>
-				{/if}
 				<button class="week-calendar-day-cell-save" on:click={() => saveMeal(day, true)}>
 					{@html check}
 				</button>
@@ -248,33 +230,14 @@
 				use:clickOutside
 				on:click_outside={() => handleClickOutsideCell(`${day}-${false}`)}
 			>
-				<input
-					type="text"
-					value={weekMeals ? getMeal(day, false) : ''}
-					title={weekMeals ? getMeal(day, false) : null}
-					on:input={(inputEvent) => onInputChange(inputEvent.target.value, day, false)}
-					on:keypress={(keyEvent) => {
-						if(keyEvent.code === 'Enter') {
-							saveMeal(day, false);
-						}
-					}}
+				<MealInput
+						value={weekMeals ? getMeal(day, false) : ''}
+						title={weekMeals ? getMeal(day, false) : null}
+						suggestions={suggestions.input === `${day}-${false}` ? suggestions.suggestions : null}
+						on:valueChange={(event) => onInputChange(event.detail.value, day, false)}
+						on:enterPressed={() => saveMeal(day, false)}
+						on:selectSuggestion={(event) => onSelectSuggestion(day, false, event.detail.description)}
 				/>
-				{#if suggestions && suggestions.input === `${day}-${false}`}
-					<ul
-						class="week-calendar-day-cell-suggestions"
-						class:week-calendar-day-cell-suggestions-visible={suggestions.input ===
-							`${day}-${false}`}
-					>
-						{#each suggestions.suggestions ?? [] as suggestion}
-							<li on:click={() => onSelectSuggestion(day, false, suggestion.description)}>
-								<span title={suggestion.description}>{@html suggestion.descriptionLabel} </span>
-								<span> ({suggestion.count})</span>
-								<div class="spacer" />
-								<span>{suggestion.lastused} jours</span>
-							</li>
-						{/each}
-					</ul>
-				{/if}
 				<button class="week-calendar-day-cell-save" on:click={() => saveMeal(day, false)}>
 					{@html check}
 				</button>
@@ -318,20 +281,7 @@
 				align-items: center;
 				border-left: 1px solid var(--color-theme-1);
 				position: relative;
-				input[type='text'] {
-					width: 100%;
-					margin: auto 1rem;
-					padding: 1rem;
-					border: none;
-					border-radius: 5px;
-					box-shadow: inset 2px 3px 6px rgba(0, 0, 0, 0);
-					transition: 0.2s ease-in;
-					overflow: hidden;
-					text-overflow: ellipsis;
-					&:focus-visible {
-						box-shadow: inset 2px 3px 6px var(--color-bg-0);
-					}
-				}
+
 				&-save {
 					opacity: 0;
 					pointer-events: none;
@@ -360,43 +310,6 @@
 						visibility: visible;
 						opacity: 1;
 						pointer-events: auto;
-					}
-				}
-				&-suggestions {
-					display: none;
-					position: absolute;
-					left: 0;
-					top: 100%;
-					width: 100%;
-					background: #fff;
-					border-radius: 5px;
-					box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 0, 0, 0.1);
-					z-index: 9;
-					padding: 0;
-					&-visible {
-						display: block;
-					}
-					li {
-						list-style: none;
-						margin: 0;
-						padding: 0.5rem 1rem;
-						cursor: pointer;
-						transition: 0.2s ease-in;
-						display: flex;
-						span {
-							overflow: hidden;
-							white-space: nowrap;
-							text-overflow: ellipsis;
-							&:first-child {
-								max-width: 200px;
-							}
-							&:not(:last-child) {
-								margin-right: 5px;
-							}
-						}
-						&:hover {
-							background: var(--color-bg-2);
-						}
 					}
 				}
 			}

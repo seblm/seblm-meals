@@ -64,7 +64,7 @@ export const emptyWeekMeals: WeekMeals = {
 	sunday: emptyDay
 };
 
-export interface SeachSuggestions {
+export interface SearchSuggestions {
 	count: number;
 	description: string;
 	descriptionLabel: string;
