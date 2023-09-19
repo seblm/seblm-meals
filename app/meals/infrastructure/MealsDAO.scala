@@ -56,7 +56,7 @@ class MealsDAO(protected val dbConfig: DatabaseConfig[JdbcProfile])(implicit exe
       })
 
   override def link(meal: MealRow, at: LocalDateTime): Future[Meal] =
-    db.run(meals_by_time += MealsByTimeRow(at, meal.id)).flatMap {
+    db.run(meals_by_time.insertOrUpdate(MealsByTimeRow(at, meal.id))).flatMap {
       case 1 => Future.successful(Meal(meal.id, at, meal.description))
       case _ => Future.failed(new Exception("Error when link meal"))
     }
