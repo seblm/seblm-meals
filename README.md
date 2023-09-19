@@ -33,8 +33,17 @@ Please have a look to [specific documentation](backup/README.md).
 
 ## How to start application in dev mode
 
+Expose database by adding exposed ports into `compose.yaml`:
+
+```yaml
+services:
+  database:
+    ports:
+      - 5432:5432
+```
+
 ```shell
-docker compose up database
+docker compose up database --detach
 export POSTGRESQL_ADDON_USER=seblm-meals
 export POSTGRESQL_ADDON_PASSWORD=seblm-database-password
 export POSTGRESQL_ADDON_HOST=localhost
