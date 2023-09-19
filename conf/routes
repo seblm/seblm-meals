@@ -3,6 +3,7 @@ GET    /api/meals/$year<[0-9]+>/$week<[0-9]+> meals.application.MealsController.
 GET    /api/suggest                           meals.application.MealsController.suggest(reference: LocalDateTime, search: Option[String])
  + nocsrf
 POST   /api/link-or-insert                    meals.application.MealsController.linkOrInsertApi()
+ + nocsrf
 DELETE /api/unlink                            meals.application.MealsController.unlinkApi()
 GET    /meal/:id                              meals.application.MealsController.meal(id: UUID)
 GET    /meals/$year<[0-9]+>/$week<[0-9]+>     meals.application.MealsController.meals(year: Year, week: Int)
