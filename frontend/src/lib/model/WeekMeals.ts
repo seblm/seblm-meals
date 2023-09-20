@@ -64,11 +64,17 @@ export const emptyWeekMeals: WeekMeals = {
 	sunday: emptyDay
 };
 
-export interface SearchSuggestions {
+export interface SearchSuggestion {
 	count: number;
 	description: string;
 	descriptionLabel: string;
 	lastused: number;
+}
+
+export interface SuggestionResponse {
+	mostRecents: SearchSuggestion[];
+	fourWeeksAgo?: SearchSuggestion;
+	fiftyTwoWeeksAgo?: SearchSuggestion;
 }
 
 export interface LinkOrInsert {

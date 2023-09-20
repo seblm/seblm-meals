@@ -41,7 +41,7 @@
 		const newDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), day);
 		date.update(() => newDate);
 		calendarViewMode.update(() => CalendarMode.WEEK);
-	}
+	};
 
 	$: isInMonth = (weekDay: number, week: number): boolean =>
 		!(firstDayOfMonthInWeek > weekDay && week === 0) &&

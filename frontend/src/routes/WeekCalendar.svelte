@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { check } from '$lib/images/check';
 	import bin from '$lib/images/bin';
-	import type { Day, SearchSuggestions, WeekMeals } from '$lib/model/WeekMeals';
+	import { check } from '$lib/images/check';
+	import type { Day, SuggestionResponse, WeekMeals } from '$lib/model/WeekMeals';
 	import { date } from '$lib/stores';
 	import { getSuggestions, getWeekMeals, linkOrInsert, unlink } from '$lib/utils/api';
+	import { clickOutside } from '$lib/utils/ClickOutside';
 	import { getDayName } from '$lib/utils/functions';
 	import { getWeek, getYear } from 'date-fns';
 	import { addWeeks } from 'date-fns/fp';
@@ -12,7 +13,6 @@
 	import CalendarNavigation from './CalendarNavigation.svelte';
 	import MealInput from './MealInput.svelte';
 	import SnackBar from './SnackBar.svelte';
-	import { clickOutside } from '$lib/utils/ClickOutside';
 
 	const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
@@ -22,9 +22,9 @@
 		mealDescription: string;
 	}
 
-	interface SuggestionList {
+	interface InputSuggestions {
 		input: string;
-		suggestions: SearchSuggestions[];
+		suggestions: SuggestionResponse;
 	}
 
 	let selectedDate: Date;
@@ -33,9 +33,11 @@
 	let snackBarVisible = false;
 	let snackBarContent = '';
 	let snackBarStatus: 'success' | 'error' = 'success';
-	const suggestions: SuggestionList = {
+	const suggestions: InputSuggestions = {
 		input: '',
-		suggestions: []
+		suggestions: {
+			mostRecents: []
+		}
 	};
 
 	const unsubscribe = date.subscribe((d) => {
@@ -117,7 +119,7 @@
 					updateWeekMeals();
 				},
 				(error) => {
-					showSnackBar("Erreur lors de la suppression : " + error, 'error');
+					showSnackBar('Erreur lors de la suppression : ' + error, 'error');
 				}
 			);
 		}
@@ -134,7 +136,7 @@
 		};
 		getSuggestions(ref, mealDescription, isLunch).then((response) => {
 			suggestions.input = recordKey;
-			suggestions.suggestions = response.mostRecents;
+			suggestions.suggestions = response;
 		});
 	};
 
@@ -151,7 +153,7 @@
 	};
 
 	const reinitSuggestions = () => {
-		suggestions.suggestions = [];
+		suggestions.suggestions = { mostRecents: [] };
 		suggestions.input = '';
 	};
 
@@ -209,12 +211,12 @@
 				on:click_outside={() => handleClickOutsideCell(`${day}-${true}`)}
 			>
 				<MealInput
-						value={weekMeals ? getMeal(day, true) : ''}
-						title={weekMeals ? getMeal(day, true) : null}
-						suggestions={suggestions.input === `${day}-${true}` ? suggestions.suggestions : null}
-						on:valueChange={(event) => onInputChange(event.detail.value, day, true)}
-						on:enterPressed={() => saveMeal(day, true)}
-						on:selectSuggestion={(event) => onSelectSuggestion(day, true, event.detail.description)}
+					value={weekMeals ? getMeal(day, true) : ''}
+					title={weekMeals ? getMeal(day, true) : null}
+					suggestions={suggestions.input === `${day}-${true}` ? suggestions.suggestions : null}
+					on:valueChange={(event) => onInputChange(event.detail.value, day, true)}
+					on:enterPressed={() => saveMeal(day, true)}
+					on:selectSuggestion={(event) => onSelectSuggestion(day, true, event.detail.description)}
 				/>
 				<button class="week-calendar-day-cell-save" on:click={() => saveMeal(day, true)}>
 					{@html check}
@@ -231,12 +233,12 @@
 				on:click_outside={() => handleClickOutsideCell(`${day}-${false}`)}
 			>
 				<MealInput
-						value={weekMeals ? getMeal(day, false) : ''}
-						title={weekMeals ? getMeal(day, false) : null}
-						suggestions={suggestions.input === `${day}-${false}` ? suggestions.suggestions : null}
-						on:valueChange={(event) => onInputChange(event.detail.value, day, false)}
-						on:enterPressed={() => saveMeal(day, false)}
-						on:selectSuggestion={(event) => onSelectSuggestion(day, false, event.detail.description)}
+					value={weekMeals ? getMeal(day, false) : ''}
+					title={weekMeals ? getMeal(day, false) : null}
+					suggestions={suggestions.input === `${day}-${false}` ? suggestions.suggestions : null}
+					on:valueChange={(event) => onInputChange(event.detail.value, day, false)}
+					on:enterPressed={() => saveMeal(day, false)}
+					on:selectSuggestion={(event) => onSelectSuggestion(day, false, event.detail.description)}
 				/>
 				<button class="week-calendar-day-cell-save" on:click={() => saveMeal(day, false)}>
 					{@html check}
