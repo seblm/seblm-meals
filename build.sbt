@@ -1,11 +1,17 @@
+import scala.sys.process.Process
+
 name := "seblm-meals"
 organization := "name.lemerdy.sebastian"
 
 version := "1.0-SNAPSHOT"
 
+lazy val npmBuildTask = taskKey[Unit]("Task to build the application")
+
 lazy val root = (project in file("."))
   .enablePlugins(DockerPlugin, PlayScala)
   .settings(
+    Assets / unmanagedResourceDirectories += baseDirectory.value / "frontend" / "build",
+    Docker / stage := (Docker / stage dependsOn npmBuildTask).value,
     dockerBaseImage := "eclipse-temurin:17",
     dockerExposedPorts := Seq(9000),
     dockerEnvVars := Map(
@@ -15,6 +21,13 @@ lazy val root = (project in file("."))
       "POSTGRESQL_ADDON_HOST" -> "",
       "POSTGRESQL_ADDON_DB" -> ""
     ),
+    npmBuildTask := {
+      val dir = baseDirectory.value / "frontend"
+      if (!((baseDirectory.value / "frontend" / "node_modules").exists() || Process("npm install", dir).! == 0) ||
+        Process("npm run build", dir).! != 0) {
+        throw new Exception("Build failed!")
+      }
+    },
     routesImport += "meals.application.MealsBinders._",
     routesImport += "java.time.{LocalDateTime, Year}",
     routesImport += "java.util.UUID",
@@ -48,6 +61,8 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.17" % Test
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % Test
 
 // these three modules are declared by com.typesafe.play:sbt-plugin with wrong scope Compile instead of Runtime
+// raised by unusedCompileDependenciesTest
 unusedCompileDependenciesFilter -= moduleFilter("com.typesafe.play", "play-akka-http-server")
 unusedCompileDependenciesFilter -= moduleFilter("com.typesafe.play", "play-logback")
 unusedCompileDependenciesFilter -= moduleFilter("com.typesafe.play", "play-server")
+unusedCompileDependenciesFilter -= moduleFilter("com.typesafe.play", "twirl-api")

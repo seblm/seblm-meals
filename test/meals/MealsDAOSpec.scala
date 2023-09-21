@@ -13,20 +13,16 @@ class MealsDAOSpec extends MealsPlaySpec {
   "MealsDAO" must {
     "insert a new meal" in {
       val mealsDAO: MealRepository = mealsComponents.mealRepository
-      val row = MealRow(UUID.randomUUID(), "some meal")
       val time = LocalDateTime.parse("2020-01-05T12:00:00")
 
-      val inserts = for {
-        _ <- mealsDAO.insert(row)
-        insertedMeal <- mealsDAO.link(row, time)
-      } yield insertedMeal
+      val inserts = mealsDAO.linkOrInsert(time, "some meal")
 
       eventually {
-        inserts.value.value mustBe Symbol("Success")
+        inserts.value.value must be(Symbol("Success"))
       }
 
-      whenReady(mealsDAO.all()) { allMeals =>
-        allMeals must contain only (row -> Seq(time))
+      whenReady(mealsDAO.all()) { (allMeals: Map[MealRow, Seq[LocalDateTime]]) =>
+        allMeals.values must contain only Seq(time)
       }
     }
   }

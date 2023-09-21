@@ -18,7 +18,7 @@ class MealsDAO(protected val dbConfig: DatabaseConfig[JdbcProfile])(implicit exe
 
   private val meals = TableQuery[MealsTable]
 
-  override def insert(meal: MealRow): Future[Unit] = db.run(meals += meal).map(const(()))
+  private def insert(meal: MealRow): Future[Unit] = db.run(meals += meal).map(const(()))
 
   class MealsTable(tag: Tag) extends Table[MealRow](tag, "meals") {
 
@@ -55,7 +55,7 @@ class MealsDAO(protected val dbConfig: DatabaseConfig[JdbcProfile])(implicit exe
         acc.updated(mealRow, acc.getOrElse(mealRow, Seq.empty[LocalDateTime]) :+ mealsByType.time)
       })
 
-  override def link(meal: MealRow, at: LocalDateTime): Future[Meal] =
+  private def link(meal: MealRow, at: LocalDateTime): Future[Meal] =
     db.run(meals_by_time.insertOrUpdate(MealsByTimeRow(at, meal.id))).flatMap {
       case 1 => Future.successful(Meal(meal.id, at, meal.description))
       case _ => Future.failed(new Exception("Error when link meal"))
@@ -66,7 +66,7 @@ class MealsDAO(protected val dbConfig: DatabaseConfig[JdbcProfile])(implicit exe
       existingMealRow <- db.run(meals.filter(_.description === mealDescription).take(1).result.headOption)
       mealRow <- existingMealRow.fold {
         val newMealRow = MealRow(UUID.randomUUID(), mealDescription)
-        insert(newMealRow).map(_ => newMealRow)
+        insert(newMealRow).map(const(newMealRow))
       }(Future.successful)
       newMeal <- link(mealRow, mealTime)
     } yield newMeal

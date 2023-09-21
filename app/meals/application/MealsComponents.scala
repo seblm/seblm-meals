@@ -28,7 +28,7 @@ class MealsComponents(context: Context, clock: Clock = Clock.system(ZoneId.of("E
   private lazy val mealsService = new MealsService(clock, mealRepository)
   lazy val mealsController: MealsController = new MealsController(controllerComponents, mealsService)
 
-  lazy val router: Router = new Routes(httpErrorHandler, mealsController, assets)
+  lazy val router: Router = new Routes(httpErrorHandler, assets, mealsController)
 
   // this will actually run the database migrations on startup
   applicationEvolutions

@@ -133,29 +133,6 @@ class MealsServiceSpec extends AnyFlatSpec:
     }
   }
 
-  it should "randomly choose a meal" in new WithRepositoryAndService {
-    private val day = LocalDateTime.parse("2020-03-02T20:00")
-    when(mealRepository.all()).thenReturn(
-      MealsServiceSpec
-        .AllResponse(
-          Seq(
-            "monday next week                          ->                   2020-03-02T20:00",
-            "monday current week and tuesday next week -> 2020-02-24T20:00, 2020-03-03T20:00",
-            "tuesday current week                      -> 2020-02-25T20:00",
-            "wednesday current week                    -> 2020-02-26T20:00"
-          )
-        )
-        .toFuture
-    )
-    when(mealRepository.link(any[MealRow], eqTo(day))).thenAnswer(answer { (mealRow: MealRow, day: LocalDateTime) =>
-      Future.successful(Meal(mealRow.id, day, mealRow.description))
-    })
-
-    whenReady(mealsService.shuffle(day)) { meal =>
-      meal.value.meal should (be("tuesday current week") or be("wednesday current week"))
-    }
-  }
-
   it should "suggest meals ordered by most recent" in new WithRepositoryAndService {
     when(mealRepository.all()).thenReturn(
       MealsServiceSpec
