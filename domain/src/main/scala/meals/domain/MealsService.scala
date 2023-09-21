@@ -4,21 +4,9 @@ import meals.infrastructure.MealRow
 
 import java.time.*
 import java.time.DayOfWeek.*
-import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Random, Try}
 
 class MealsService(clock: Clock, repository: MealRepository)(implicit ec: ExecutionContext):
-
-  def meal(id: UUID): Future[Option[MealByTimes]] =
-    repository
-      .meals(id)
-      .map(_.foldLeft[Option[MealByTimes]](None) {
-        case (Some(mealByTimes), meal) =>
-          Some(mealByTimes.copy(times = mealByTimes.times :+ (meal.time, WeekReference(meal.time))))
-        case (None, meal) =>
-          Some(MealByTimes(meal.id, meal.meal, Seq((meal.time, WeekReference(meal.time)))))
-      })
 
   def meals(year: Year, week: Int): Future[WeekMeals] =
     val (from, to) = DatesTransformations.range(year, week)
@@ -27,16 +15,7 @@ class MealsService(clock: Clock, repository: MealRepository)(implicit ec: Execut
   def linkOrInsert(mealTime: LocalDateTime, mealDescription: String): Future[Meal] =
     repository.linkOrInsert(mealTime, mealDescription)
 
-  def shuffle(day: LocalDateTime): Future[Option[Meal]] =
-    val until = day.toLocalDate.atStartOfDay().`with`(MONDAY).minusNanos(1)
-    for {
-      all <- repository.all()
-      keys = all.filterNot(_._2.exists(_.isAfter(until))).keys.toSeq
-      newRandom <- Future.successful(Try(keys(random.nextInt(keys.length))).toOption)
-      result <- newRandom.fold(Future.successful[Option[Meal]](None))(repository.link(_, day).map(Some(_)))
-    } yield result
-
-  def moreRecent(
+  private def moreRecent(
       reference: LocalDateTime
   )(first: (MealRow, Seq[LocalDateTime]), second: (MealRow, Seq[LocalDateTime])): Boolean =
     sumScores(reference)(first._2) > sumScores(reference)(second._2)
@@ -108,5 +87,3 @@ class MealsService(clock: Clock, repository: MealRepository)(implicit ec: Execut
         case _               => weekMeals
       }
     )
-
-  private val random: Random = new Random
