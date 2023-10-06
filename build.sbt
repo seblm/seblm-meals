@@ -23,8 +23,10 @@ lazy val root = (project in file("."))
     ),
     npmBuildTask := {
       val dir = baseDirectory.value / "frontend"
-      if (!((baseDirectory.value / "frontend" / "node_modules").exists() || Process("npm install", dir).! == 0) ||
-        Process("npm run build", dir).! != 0) {
+      if (
+        !((baseDirectory.value / "frontend" / "node_modules").exists() || Process("npm install", dir).! == 0) ||
+        Process("npm run build", dir).! != 0
+      ) {
         throw new Exception("Build failed!")
       }
     },
@@ -40,7 +42,7 @@ lazy val root = (project in file("."))
 lazy val domain = project
   .settings(
     scalaVersion := "3.3.1",
-    libraryDependencies += "org.mockito" % "mockito-core" % "5.5.0" % Test,
+    libraryDependencies += "org.mockito" % "mockito-core" % "5.6.0" % Test,
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.17" % Test
   )
 
