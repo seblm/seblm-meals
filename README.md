@@ -1,5 +1,9 @@
 # seblm-meals
 
+## API
+
+There is an [openapi specification][openapi.yaml]. You can have a look with [Swagger UI][swagger-ui-demo].
+
 ## How to build and run
 
 First generate a `Dockerfile` with sbt through Docker:
@@ -50,3 +54,6 @@ export POSTGRESQL_ADDON_HOST=localhost
 export POSTGRESQL_ADDON_DB=seblm-meals
 sbt run
 ```
+
+[openapi.yaml]: conf/openapi.yaml
+[swagger-ui-demo]: https://petstore.swagger.io/?url=https%3A%2F%2Fraw.githubusercontent.com%2Fseblm%2Fseblm-meals%2Fmain%2Fconf%2Fopenapi.yaml
