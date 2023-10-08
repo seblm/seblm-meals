@@ -6,7 +6,20 @@ There is an [openapi specification][openapi.yaml]. You can have a look with [Swa
 
 ## How to build and run
 
-First generate a `Dockerfile` with sbt through Docker:
+Build frontend files:
+
+```shell
+docker run --rm --tty \
+  --volume ./frontend:/home/node/seblm-meals \
+  --user node --workdir /home/node/seblm-meals \
+  node:18-alpine yarn
+docker run --rm --tty \
+  --volume ./frontend:/home/node/seblm-meals \
+  --user node --workdir /home/node/seblm-meals \
+  node:18-alpine yarn build
+```
+
+Generate a `Dockerfile` with sbt through Docker:
 
 ```shell
 docker run --rm --tty \
@@ -19,7 +32,7 @@ docker run --rm --tty \
 Then run compose:
 
 ```shell
-APPLICATION_UPDATE_DB=true docker compose up
+APPLICATION_UPDATE_DB=true docker compose up --detach
 ```
 
 Go to http://localhost:9000 and you are good to go. Please note that `APPLICATION_UPDATE_DB=true` is only required for
@@ -36,6 +49,18 @@ docker compose stop
 Please have a look to [specific documentation](backup/README.md).
 
 ## How to start application in dev mode
+
+You need to have `yarn` and `sbt` installed on your machine.
+
+### Frontend
+
+```shell
+cd frontend
+yarn
+yarn dev
+```
+
+### Backend
 
 Expose database by adding exposed ports into `compose.yaml`:
 
