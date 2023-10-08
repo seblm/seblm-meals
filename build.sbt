@@ -1,5 +1,3 @@
-import scala.sys.process.Process
-
 name := "seblm-meals"
 organization := "name.lemerdy.sebastian"
 
@@ -11,7 +9,6 @@ lazy val root = (project in file("."))
   .enablePlugins(DockerPlugin, PlayScala)
   .settings(
     Assets / unmanagedResourceDirectories += baseDirectory.value / "frontend" / "build",
-    Docker / stage := (Docker / stage dependsOn npmBuildTask).value,
     dockerBaseImage := "eclipse-temurin:17",
     dockerExposedPorts := Seq(9000),
     dockerEnvVars := Map(
@@ -21,15 +18,6 @@ lazy val root = (project in file("."))
       "POSTGRESQL_ADDON_HOST" -> "",
       "POSTGRESQL_ADDON_DB" -> ""
     ),
-    npmBuildTask := {
-      val dir = baseDirectory.value / "frontend"
-      if (
-        !((baseDirectory.value / "frontend" / "node_modules").exists() || Process("npm install", dir).! == 0) ||
-        Process("npm run build", dir).! != 0
-      ) {
-        throw new Exception("Build failed!")
-      }
-    },
     routesImport += "meals.application.MealsBinders._",
     routesImport += "java.time.{LocalDateTime, Year}",
     routesImport += "java.util.UUID",
