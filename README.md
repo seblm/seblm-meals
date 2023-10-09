@@ -1,5 +1,9 @@
 # seblm-meals
 
+## Docker image
+
+You can find [some Docker images pushed to hub][docker-hub-repository]. 
+
 ## API
 
 There is an [openapi specification][openapi.yaml]. You can have a look with [Swagger UI][swagger-ui-demo].
@@ -80,5 +84,6 @@ export POSTGRESQL_ADDON_DB=seblm-meals
 sbt run
 ```
 
+[docker-hub-repository]: https://hub.docker.com/r/seblm/seblm-meals
 [openapi.yaml]: conf/openapi.yaml
 [swagger-ui-demo]: https://petstore.swagger.io/?url=https%3A%2F%2Fraw.githubusercontent.com%2Fseblm%2Fseblm-meals%2Fmain%2Fconf%2Fopenapi.yaml
