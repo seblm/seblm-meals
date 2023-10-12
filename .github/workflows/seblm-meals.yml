@@ -75,6 +75,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: seblm/seblm-meals
+          tags: latest
       - uses: docker/build-push-action@v5
         with:
           context: .
