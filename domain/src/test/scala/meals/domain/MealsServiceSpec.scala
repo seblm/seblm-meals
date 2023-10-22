@@ -2,13 +2,10 @@ package meals.domain
 
 import meals.domain.*
 import meals.infrastructure.MealRow
-import org.mockito.AdditionalAnswers.answer
-import org.mockito.ArgumentMatchers.{any, eq as eqTo}
 import org.mockito.Mockito.{mock, when}
 import org.scalatest.OptionValues.*
 import org.scalatest.concurrent.ScalaFutures.whenReady
 import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.must.Matchers.contain
 import org.scalatest.matchers.should.Matchers.*
 
 import java.time.*
