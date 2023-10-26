@@ -16,16 +16,24 @@
 	}
 </script>
 
-<header class="calendar-header">
-	<button class="calendar-header-action" on:click={onPrev}>{@html arrowLeft}</button>
-	<h2 class="calendar-header-title">{title}</h2>
-	<button class="calendar-header-action" on:click={onNext}>{@html arrowRight}</button>
+<header class="calendar-nav">
+	<button class="calendar-nav-action" on:click={onPrev}>{@html arrowLeft}</button>
+	<h2 class="calendar-nav-title">{title}</h2>
+	<button class="calendar-nav-action" on:click={onNext}>{@html arrowRight}</button>
 </header>
 
 <style lang="scss">
-	.calendar-header {
+	@import '../lib/styles/variables';
+
+	.calendar-nav {
 		display: flex;
 		justify-content: space-between;
+		align-items: center;
+		gap: 1rem;
+		margin-bottom: $spacing-m;
+		&-title {
+			text-align: center;
+		}
 		&-action {
 			color: var(--color-theme-1);
 			cursor: pointer;
@@ -41,6 +49,12 @@
 			&:focus {
 				filter: brightness(0.95);
 			}
+		}
+	}
+	
+	@media (min-width: $screen-m) {
+		.calendar-nav {
+			margin-bottom: 0;
 		}
 	}
 </style>
