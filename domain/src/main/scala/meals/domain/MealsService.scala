@@ -28,7 +28,9 @@ class MealsService(clock: Clock, repository: MealRepository)(implicit ec: Execut
     repository.all().map { mealsByDate =>
       val all = mealsByDate.toSeq
       val filtered = all
-        .filter { case (meal, _) => search.fold(true)(token => meal.description.contains(token)) }
+        .filter { case (meal, _) =>
+          search.fold(true)(token => meal.description.toLowerCase.contains(token.toLowerCase))
+        }
         .flatMap { case (meal, dates) =>
           val mealTimeDates = dates.filter(_.getHour == reference.getHour).filter(_.isBefore(reference))
           Option.when(mealTimeDates.nonEmpty)((meal, mealTimeDates))

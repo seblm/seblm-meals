@@ -175,6 +175,28 @@ class MealsServiceSpec extends AnyFlatSpec:
     }
   }
 
+  it should "suggest case insensitive meals" in new WithRepositoryAndService {
+    when(mealRepository.all()).thenReturn(
+      MealsServiceSpec
+        .AllResponse(
+          Seq(
+            "salade tomates concombres -> 2020-02-17T12:00, 2020-02-18T12:00",
+            "tomates farcies           -> 2020-02-17T20:00",
+            "pâtes sauce tomate        -> 2020-02-19T12:00",
+            "ratatouille               -> 2020-02-20T12:00"
+          )
+        )
+        .toFuture
+    )
+
+    whenReady(mealsService.suggest(reference, Some("OMaT"))) { suggests =>
+      suggests.mostRecents should contain inOrderOnly (
+        MealSuggest(2, "salade tomates concombres", "salade tomates concombres", 11),
+        MealSuggest(1, "pâtes sauce tomate", "pâtes sauce tomate", 10)
+      )
+    }
+  }
+
   it should "suggest four weeks ago meal" in new WithRepositoryAndService {
     when(mealRepository.all()).thenReturn(
       MealsServiceSpec
