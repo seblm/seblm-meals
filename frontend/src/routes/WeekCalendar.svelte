@@ -45,6 +45,7 @@
 	});
 
 	$: weekNumber = getWeek(selectedDate);
+	$: weekDays = weekMeals ? getWeekDays() : [];
 
 	onMount(() => {
 		updateWeekMeals();
@@ -184,6 +185,15 @@
 		}
 	};
 
+	const getWeekDays = () => {
+		const weekDays = [];
+		days.forEach(dayString => {
+			const dayReference = getDay(dayString)?.reference;
+			weekDays.push(dayReference?.substring(8, dayReference?.length));
+		})
+		return weekDays;
+	}
+
 	onDestroy(unsubscribe);
 </script>
 
@@ -200,10 +210,11 @@
 		<div class="week-calendar-day-meal week-calendar-day-cell week-calendar-heading-cell">Soir</div>
 		<div class="week-calendar-day-cell week-calendar-day-actions week-calendar-heading-cell" />
 	</div>
-	{#each days as day}
+	{#each days as day, index}
 		<div class="week-calendar-day">
 			<div class="week-calendar-day-name week-calendar-day-cell week-calendar-heading-cell">
-				{getDayName(day)}
+				<p>{getDayName(day)}</p>
+				<div class="week-calendar-day-number">{weekDays[index] ?? ''}</div>
 			</div>
 			<div
 				class="week-calendar-day-meal week-calendar-day-cell"
@@ -319,6 +330,16 @@
 			}
 			&-name {
 				flex: 0 0 150px;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				p {
+					margin: 0 0 0.25rem 0;
+				}
+			}
+			&-number {
+				font-weight: bold;
+				font-size: 1.1em;
 			}
 			&-actions {
 				flex: 1;
