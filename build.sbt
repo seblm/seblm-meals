@@ -48,7 +48,7 @@ libraryDependencies += "org.postgresql" % "postgresql" % "42.6.0" % Runtime
 
 libraryDependencies += "com.h2database" % "h2" % "2.2.224" % Test
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.17" % Test
-libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % Test
+libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.0" % Test
 
 // these three modules are declared by com.typesafe.play:sbt-plugin with wrong scope Compile instead of Runtime
 // raised by unusedCompileDependenciesTest
