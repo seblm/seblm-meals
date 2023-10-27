@@ -2,13 +2,15 @@ package meals
 
 import meals.domain.MealRepository
 import meals.infrastructure.MealRow
-import org.scalatest.concurrent.Eventually.eventually
+import org.scalatest.concurrent.Eventually
 import org.scalatest.concurrent.ScalaFutures.whenReady
+import org.scalatest.time.{Millis, Span}
 
 import java.time.LocalDateTime
-import java.util.UUID
 
-class MealsDAOSpec extends MealsPlaySpec {
+class MealsDAOSpec extends MealsPlaySpec with Eventually {
+
+  implicit override val patienceConfig: PatienceConfig = PatienceConfig(timeout = scaled(Span(300, Millis)))
 
   "MealsDAO" must {
     "insert a new meal" in {
