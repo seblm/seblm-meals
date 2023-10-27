@@ -227,6 +227,7 @@
 					{@html bin}
 				</button>
 			</div>
+
 			<div
 				class="week-calendar-day-meal week-calendar-day-cell"
 				use:clickOutside
@@ -258,6 +259,7 @@
 {/if}
 
 <style lang="scss">
+	@import '../lib/styles/variables';
 	.week-calendar {
 		&-wrapper {
 			width: 100%;
@@ -320,6 +322,7 @@
 			}
 			&-actions {
 				flex: 1;
+				min-width: 50px;
 				button {
 					background: transparent;
 					border-radius: 50px;
@@ -350,6 +353,31 @@
 			}
 			&-row {
 				max-height: 50px;
+			}
+		}
+	}
+	@media screen and (max-width: $screen-m) {
+		.week-calendar {
+			&-day {
+				height: 140px;
+				display: grid;
+				grid-template-rows: repeat(2, 70px);
+				grid-template-columns: 80px 1fr 50px;
+				&-name {
+					grid-column: 1 / span 1;
+					grid-row: 1 / span 2;
+					&:not(:last-of-type) {
+						border-bottom: 1px solid var(--color-text);
+					}
+				}
+				&-cell {
+					&:nth-child(n+4) {
+						border-top: 1px solid var(--color-theme-1);
+					}
+				}
+			}
+			&-heading-row {
+				display: none;
 			}
 		}
 	}

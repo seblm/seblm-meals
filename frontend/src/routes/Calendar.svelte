@@ -44,11 +44,14 @@
 </div>
 
 <style lang="scss">
+	@import '../lib/styles/variables';
+
 	.calendar {
 		width: 100%;
 		&-header {
-			display: grid;
-			grid-template-columns: repeat(3, 1fr);
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
 			margin: 24px 0;
 			h1 {
 				grid-column: 2 / span 1;
@@ -62,11 +65,24 @@
 				border: none;
 				cursor: pointer;
 				transition: 0.2s ease-in;
-				font-size: 1.2rem;
+				font-size: 1rem;
 				font-weight: 700;
 				&:focus,
 				&:hover {
 					filter: brightness(0.7);
+				}
+			}
+		}
+	}
+
+	@media (min-width: $screen-m) {
+		.calendar {
+			&-header {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+
+				button {
+					font-size: 1.2rem;
 				}
 			}
 		}
