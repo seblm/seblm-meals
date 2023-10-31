@@ -5,7 +5,7 @@ import play.api.mvc.{PathBindable, QueryStringBindable}
 import java.time.{LocalDateTime, Year}
 import scala.util.Try
 
-object MealsBinders {
+object MealsBinders:
 
   implicit def localDateTimeBinder(implicit binder: QueryStringBindable[String]): QueryStringBindable[LocalDateTime] =
     new QueryStringBindable[LocalDateTime] {
@@ -30,5 +30,3 @@ object MealsBinders {
     override def unbind(key: String, year: Year): String = year.getValue.toString
 
   }
-
-}

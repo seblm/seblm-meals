@@ -2,9 +2,9 @@ package meals.application
 
 import meals.domain.{Meal, Titles, WeekDay, WeekMeals, WeekReference}
 import play.api.libs.json.{JsObject, JsString, JsValue, Json, Writes}
-import play.api.libs.json.JsValue._
+import play.api.libs.json.JsValue.*
 
-object WeekMealsWrites {
+object WeekMealsWrites:
 
   private implicit val titlesWrites: Writes[Titles] = (titles: Titles) =>
     Json.obj("short" -> titles.short, "long" -> titles.long)
@@ -38,5 +38,3 @@ object WeekMealsWrites {
       "saturday" -> Json.toJson(weekMeals.saturday),
       "sunday" -> Json.toJson(weekMeals.sunday)
     )
-
-}

@@ -1,7 +1,7 @@
 package meals
 
-import akka.stream.Materializer
 import meals.application.MealsComponents
+import org.apache.pekko.stream.Materializer
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.components.OneAppPerSuiteWithComponents
 import play.api.BuiltInComponents

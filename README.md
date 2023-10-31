@@ -30,7 +30,7 @@ docker run --rm --tty \
   --volume .:/home/sbtuser/seblm-meals \
   --volume ~/Library/Caches/Coursier:/home/sbtuser/.cache/coursier \
   --user sbtuser --workdir /home/sbtuser/seblm-meals \
-  sbtscala/scala-sbt:eclipse-temurin-jammy-17.0.8.1_1_1.9.6_3.3.1 sbt "Docker / stage"
+  sbtscala/scala-sbt:eclipse-temurin-jammy-21_35_1.9.7_3.3.1 sbt "Docker / stage"
 ```
 
 Then run compose:

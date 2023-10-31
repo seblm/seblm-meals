@@ -1,16 +1,16 @@
 package meals.application
 
 import meals.MealsPlaySpec
-import meals.domain.WeekMealsReads._
+import meals.domain.WeekMealsReads.*
 import meals.domain.{Titles, WeekDay, WeekMeals, WeekReference}
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import meals.application.UnlinkMealWrites._
+import play.api.test.Helpers.*
+import meals.application.UnlinkMealWrites.*
 
-import java.time._
+import java.time.*
 
-class MealsControllerSpec extends MealsPlaySpec {
+class MealsControllerSpec extends MealsPlaySpec:
 
   override def clock(): Option[Clock] =
     Some(Clock.fixed(Instant.parse("2023-01-19T18:54:55.716650Z"), ZoneId.of("Europe/Paris")))
@@ -67,5 +67,3 @@ class MealsControllerSpec extends MealsPlaySpec {
     }
 
   }
-
-}
