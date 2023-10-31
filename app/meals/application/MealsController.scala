@@ -1,18 +1,16 @@
 package meals.application
 
-import meals.application.WeekMealsWrites._
+import meals.application.WeekMealsWrites.*
 import meals.domain.{MealSuggest, MealsService, SuggestResponse}
 import play.api.Logging
-import play.api.libs.json._
-import play.api.mvc._
+import play.api.libs.json.*
+import play.api.mvc.*
 
 import java.time.{LocalDateTime, Year}
 import scala.Function.const
 import scala.concurrent.ExecutionContext
 
-class MealsController(cc: ControllerComponents, mealsService: MealsService)
-    extends AbstractController(cc)
-    with Logging {
+class MealsController(cc: ControllerComponents, mealsService: MealsService) extends AbstractController(cc) with Logging:
 
   implicit val ec: ExecutionContext = cc.executionContext
 
@@ -55,5 +53,3 @@ class MealsController(cc: ControllerComponents, mealsService: MealsService)
   def suggest(reference: LocalDateTime, search: Option[String]): Action[AnyContent] = Action.async {
     mealsService.suggest(reference, search).map(meals => Ok(Json.toJson(meals)))
   }
-
-}

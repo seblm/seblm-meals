@@ -1,7 +1,8 @@
 package meals.infrastructure
 
 import meals.domain.{Meal, MealRepository}
-import play.api.db.slick.HasDatabaseConfig
+import play.api.Play
+import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfig}
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 
@@ -10,9 +11,11 @@ import java.util.UUID
 import scala.Function.const
 import scala.concurrent.{ExecutionContext, Future}
 
-class MealsDAO(protected val dbConfig: DatabaseConfig[JdbcProfile])(implicit executionContext: ExecutionContext)
+class MealsDAO(dbConfig1: DatabaseConfig[JdbcProfile])(implicit executionContext: ExecutionContext)
     extends HasDatabaseConfig[JdbcProfile]
-    with MealRepository {
+    with MealRepository:
+
+  protected override lazy val dbConfig: DatabaseConfig[JdbcProfile] = dbConfig1
 
   import profile.api._
 
@@ -20,7 +23,7 @@ class MealsDAO(protected val dbConfig: DatabaseConfig[JdbcProfile])(implicit exe
 
   private def insert(meal: MealRow): Future[Unit] = db.run(meals += meal).map(const(()))
 
-  class MealsTable(tag: Tag) extends Table[MealRow](tag, "meals") {
+  class MealsTable(tag: Tag) extends Table[MealRow](tag, "meals"):
 
     def id = column[UUID]("id", O.PrimaryKey)
 
@@ -28,8 +31,6 @@ class MealsDAO(protected val dbConfig: DatabaseConfig[JdbcProfile])(implicit exe
 
     def * = (id, description) <> ({ case (id, description) => MealRow(id, description) },
     (mealRow: MealRow) => Some((mealRow.id, mealRow.description)))
-
-  }
 
   private val meals_by_time = TableQuery[MealsByTimeTable]
 
@@ -77,16 +78,12 @@ class MealsDAO(protected val dbConfig: DatabaseConfig[JdbcProfile])(implicit exe
       case _ => Future.failed(new Exception("Error when unlink meal"))
     }
 
-  class MealsByTimeTable(tag: Tag) extends Table[MealsByTimeRow](tag, "meals_by_time") {
+  class MealsByTimeTable(tag: Tag) extends Table[MealsByTimeRow](tag, "meals_by_time"):
 
     def time = column[LocalDateTime]("time", O.PrimaryKey)
 
     def mealId = column[UUID]("meal_id")
 
-    def * = (time, mealId) <> (MealsByTimeRow.tupled, MealsByTimeRow.unapply)
+    def * = (time, mealId) <> ((MealsByTimeRow.apply _).tupled, MealsByTimeRow.unapply)
 
     def meal = foreignKey("meal_fk", mealId, meals)(_.id)
-
-  }
-
-}

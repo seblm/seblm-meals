@@ -21,7 +21,7 @@ class MealsComponents(context: Context, clock: Clock = Clock.system(ZoneId.of("E
     with EvolutionsComponents
     with HttpFiltersComponents
     with SlickComponents
-    with SlickEvolutionsComponents {
+    with SlickEvolutionsComponents:
 
   lazy val mealRepository: MealRepository =
     new MealsDAO(slickApi.dbConfig[JdbcProfile](DbName(configuration.get[String](SlickModule.DefaultDbName))))
@@ -32,5 +32,3 @@ class MealsComponents(context: Context, clock: Clock = Clock.system(ZoneId.of("E
 
   // this will actually run the database migrations on startup
   applicationEvolutions
-
-}

@@ -46,7 +46,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
           cache: 'sbt'
       - run: sbt scalafmtCheckAll undeclaredCompileDependenciesTest unusedCompileDependenciesTest test "Docker / stage"
       - uses: actions/upload-artifact@v3
