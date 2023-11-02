@@ -16,9 +16,8 @@ lazy val root = (project in file("."))
       "POSTGRESQL_ADDON_HOST" -> "",
       "POSTGRESQL_ADDON_DB" -> ""
     ),
-    routesImport += "meals.application.MealsBinders._",
+    routesImport += "meals.application.MealsBinders.given",
     routesImport += "java.time.{LocalDateTime, Year}",
-    routesImport += "java.util.UUID",
     scalaVersion := "3.3.1",
     Test / javaOptions += "-Dconfig.file=test/resources/application-test.conf"
   )
@@ -36,9 +35,9 @@ lazy val domain = project
 libraryDependencies += evolutions
 libraryDependencies += "org.playframework" %% "play" % "3.0.0"
 libraryDependencies += "org.playframework" %% "play-configuration" % "3.0.0"
-libraryDependencies += "com.typesafe.play" %% "play-json" % "2.10.2"
-libraryDependencies += "com.typesafe.play" %% "play-slick" % "5.2.0-RC1"
-libraryDependencies += "com.typesafe.play" %% "play-slick-evolutions" % "5.2.0-RC1"
+libraryDependencies += "org.playframework" %% "play-json" % "3.0.0"
+libraryDependencies += "org.playframework" %% "play-slick" % "6.0.0-M1"
+libraryDependencies += "org.playframework" %% "play-slick-evolutions" % "6.0.0-M1"
 libraryDependencies += "com.typesafe.slick" %% "slick" % "3.5.0-M4"
 
 libraryDependencies += "org.postgresql" % "postgresql" % "42.6.0" % Runtime

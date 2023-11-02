@@ -9,7 +9,7 @@ import play.api.BuiltInComponents
 import java.time.Clock
 import scala.concurrent.ExecutionContext
 
-trait MealsPlaySpec extends PlaySpec with OneAppPerSuiteWithComponents {
+trait MealsPlaySpec extends PlaySpec with OneAppPerSuiteWithComponents:
 
   implicit lazy val materializer: Materializer = app.materializer
   implicit lazy val ec: ExecutionContext = app.actorSystem.dispatcher
@@ -20,5 +20,3 @@ trait MealsPlaySpec extends PlaySpec with OneAppPerSuiteWithComponents {
   def clock(): Option[Clock] = None
 
   override lazy val components: BuiltInComponents = mealsComponents
-
-}
