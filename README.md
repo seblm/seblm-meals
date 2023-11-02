@@ -1,12 +1,30 @@
 # seblm-meals
 
-## Docker image
+An application to quickly answer a simple question: what do we eat today?
 
-You can find [some Docker images pushed to hub][docker-hub-repository]. 
+![seblm-meals screenshot](docs/screenshot.png)
+
+Built with [Svelte] and [play].
+
+## How to run
+
+```shell
+APPLICATION_UPDATE_DB=true docker compose up --detach
+```
+
+Go to http://localhost:9000 and you are good to go. Please note that `APPLICATION_UPDATE_DB=true` is only required for
+the first time you start compose. Once schema is created, this configuration can be omitted.
+
+It will start two containers:
+
+1. a [postgres][docker-hub-postgres] database instance
+2. the [Svelte/play][docker-hub-repository] web server instance
 
 ## API
 
 There is an [openapi specification][openapi.yaml]. You can have a look with [Swagger UI][swagger-ui-demo].
+
+[![Swagger UI visualization of openapi specification](docs/swagger-ui.png)][swagger-ui-demo]
 
 ## How to build and run
 
@@ -33,14 +51,19 @@ docker run --rm --tty \
   sbtscala/scala-sbt:eclipse-temurin-jammy-21_35_1.9.7_3.3.1 sbt "Docker / stage"
 ```
 
+Modify `compose.yaml` to build your image:
+
+```yaml
+services:
+  application:
+    build: target/docker/stage
+```
+
 Then run compose:
 
 ```shell
 APPLICATION_UPDATE_DB=true docker compose up --detach
 ```
-
-Go to http://localhost:9000 and you are good to go. Please note that `APPLICATION_UPDATE_DB=true` is only required for
-the first time you start compose. Once schema is created, this configuration can be omitted.
 
 ## How to stop container:
 
@@ -84,6 +107,9 @@ export POSTGRESQL_ADDON_DB=seblm-meals
 sbt run
 ```
 
+[docker-hub-postgres]: https://hub.docker.com/_/postgres
 [docker-hub-repository]: https://hub.docker.com/r/seblm/seblm-meals
 [openapi.yaml]: conf/openapi.yaml
+[play]: https://www.playframework.com
+[Svelte]: https://svelte.dev
 [swagger-ui-demo]: https://petstore.swagger.io/?url=https%3A%2F%2Fraw.githubusercontent.com%2Fseblm%2Fseblm-meals%2Fmain%2Fconf%2Fopenapi.yaml

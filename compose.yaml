@@ -7,7 +7,6 @@ services:
     volumes:
       - data:/var/lib/postgresql/data
   application:
-    build: target/docker/stage
     image: seblm-meals
     depends_on:
       - database
