@@ -8,7 +8,7 @@ import org.scalatest.time.{Millis, Span}
 
 import java.time.LocalDateTime
 
-class MealsDAOSpec extends MealsPlaySpec with Eventually {
+class MealsDAOSpec extends MealsPlaySpec with Eventually:
 
   implicit override val patienceConfig: PatienceConfig = PatienceConfig(timeout = scaled(Span(300, Millis)))
 
@@ -28,5 +28,3 @@ class MealsDAOSpec extends MealsPlaySpec with Eventually {
       }
     }
   }
-
-}
