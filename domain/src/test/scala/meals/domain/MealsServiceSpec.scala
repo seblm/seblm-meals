@@ -4,18 +4,21 @@ import meals.domain.*
 import meals.infrastructure.MealRow
 import org.mockito.Mockito.{mock, when}
 import org.scalatest.OptionValues.*
-import org.scalatest.concurrent.ScalaFutures.whenReady
+import org.scalatest.concurrent.Futures.scaled
+import org.scalatest.concurrent.{Eventually, ScalaFutures}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.*
+import org.scalatest.time.{Millis, Span}
 
 import java.time.*
 import java.util.UUID
 import scala.concurrent.ExecutionContext.global
 import scala.concurrent.{ExecutionContext, Future}
 
-class MealsServiceSpec extends AnyFlatSpec:
+class MealsServiceSpec extends AnyFlatSpec with Eventually with ScalaFutures:
 
-  implicit val ec: ExecutionContext = global
+  given ExecutionContext = global
+  override given patienceConfig: PatienceConfig = PatienceConfig(timeout = scaled(Span(300, Millis)))
 
   "Meals" should "be displayed for each day of current week" in new WithRepositoryAndService() {
     private val from = LocalDateTime.parse("2020-02-24T00:00")
