@@ -1,12 +1,13 @@
 package meals.application
 
 import meals.MealsPlaySpec
-import meals.domain.WeekMealsReads.*
+import meals.domain.WeekMealsReads.given
 import meals.domain.{Titles, WeekDay, WeekMeals, WeekReference}
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
-import meals.application.UnlinkMealWrites.*
+import meals.application.LinkOrInsertDataWrites.given
+import meals.application.UnlinkMealWrites.given
 
 import java.time.*
 

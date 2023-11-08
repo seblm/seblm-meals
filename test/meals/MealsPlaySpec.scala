@@ -11,8 +11,8 @@ import scala.concurrent.ExecutionContext
 
 trait MealsPlaySpec extends PlaySpec with OneAppPerSuiteWithComponents:
 
-  implicit lazy val materializer: Materializer = app.materializer
-  implicit lazy val ec: ExecutionContext = app.actorSystem.dispatcher
+  given Materializer = app.materializer
+  given ExecutionContext = app.actorSystem.dispatcher
 
   lazy val mealsComponents: MealsComponents =
     clock().fold(new MealsComponents(context))(clock => new MealsComponents(context, clock))

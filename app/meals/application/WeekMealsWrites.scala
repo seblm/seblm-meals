@@ -5,15 +5,14 @@ import play.api.libs.json.{JsObject, JsString, JsValue, Json, Writes}
 
 object WeekMealsWrites:
 
-  private implicit val titlesWrites: Writes[Titles] = (titles: Titles) =>
-    Json.obj("short" -> titles.short, "long" -> titles.long)
+  given Writes[Titles] = (titles: Titles) => Json.obj("short" -> titles.short, "long" -> titles.long)
 
-  private implicit val WeekReferenceWrites: Writes[WeekReference] = (weekReference: WeekReference) =>
+  given Writes[WeekReference] = (weekReference: WeekReference) =>
     Json.obj("year" -> weekReference.year.getValue, "week" -> weekReference.week, "isActive" -> weekReference.isActive)
 
-  private implicit val MealWrites: Writes[Meal] = Json.writes
+  given Writes[Meal] = Json.writes
 
-  private implicit val WeekDayWrites: Writes[WeekDay] = (weekDay: WeekDay) =>
+  given Writes[WeekDay] = (weekDay: WeekDay) =>
     JsObject(
       Vector(
         Some("reference" -> JsString(weekDay.reference.toString)),
@@ -22,7 +21,7 @@ object WeekMealsWrites:
       ).flatten
     )
 
-  implicit val weekMealsWrites: Writes[WeekMeals] = (weekMeals: WeekMeals) =>
+  given Writes[WeekMeals] = (weekMeals: WeekMeals) =>
     Json.obj(
       "titles" -> Json.toJson(weekMeals.titles),
       "previous" -> Json.toJson(weekMeals.previous),

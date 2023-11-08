@@ -8,27 +8,27 @@ import java.util.UUID
 
 object WeekMealsReads {
 
-  private implicit val TitlesReads: Reads[Titles] =
+  private given Reads[Titles] =
     ((JsPath \ "short").read[String] and
       (JsPath \ "long").read[String])((short, long) => Titles(short, long))
-  private implicit val WeekReferenceReads: Reads[WeekReference] =
+  private given Reads[WeekReference] =
     ((JsPath \ "year").read[Int] and
       (JsPath \ "week").read[Int] and
       (JsPath \ "isActive").read[Boolean])((year, week, isActive) => WeekReference(Year.of(year), week, isActive))
-  private implicit val MealReads: Reads[Meal] =
+  private given Reads[Meal] =
     ((JsPath \ "id").read[String] and
       (JsPath \ "time").read[String] and
       (JsPath \ "meal").read[String] and
       (JsPath \ "url").readNullable[String])((id, time, meal, url) =>
       Meal(UUID.fromString(id), LocalDateTime.parse(time), meal, url)
     )
-  private implicit val WeekDayReads: Reads[WeekDay] =
+  private given Reads[WeekDay] =
     ((JsPath \ "reference").read[String] and
       (JsPath \ "lunch").readNullable[Meal] and
       (JsPath \ "dinner").readNullable[Meal])((reference, lunch, dinner) =>
       WeekDay(LocalDate.parse(reference), lunch, dinner)
     )
-  implicit val WeekMealsReads: Reads[WeekMeals] =
+  given Reads[WeekMeals] =
     ((JsPath \ "titles").read[Titles] and
       (JsPath \ "previous").read[WeekReference] and
       (JsPath \ "now").read[WeekReference] and

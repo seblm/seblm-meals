@@ -10,13 +10,13 @@ import java.util.UUID
 import scala.Function.const
 import scala.concurrent.{ExecutionContext, Future}
 
-class MealsDAO(dbConfig1: DatabaseConfig[JdbcProfile])(implicit executionContext: ExecutionContext)
+class MealsDAO(dbConfig1: DatabaseConfig[JdbcProfile])(using ExecutionContext)
     extends HasDatabaseConfig[JdbcProfile]
     with MealRepository:
 
   protected override lazy val dbConfig: DatabaseConfig[JdbcProfile] = dbConfig1
 
-  import profile.api._
+  import profile.api.*
 
   private val meals = TableQuery[MealsTable]
 
@@ -35,10 +35,9 @@ class MealsDAO(dbConfig1: DatabaseConfig[JdbcProfile])(implicit executionContext
 
   private val meals_by_time = TableQuery[MealsByTimeTable]
 
-  implicit class MealsByTimeExtensions[C[_]](q: Query[MealsByTimeTable, MealsByTimeRow, C]) {
+  extension [C[_]](q: Query[MealsByTimeTable, MealsByTimeRow, C])
     def withMeal: Query[(MealsByTimeTable, MealsTable), (MealsByTimeRow, MealRow), C] =
       q.join(meals).on(_.mealId === _.id)
-  }
 
   private def toMeal(mealsByTime: MealsByTimeRow, meal: MealRow): Meal =
     Meal(mealsByTime.mealId, mealsByTime.time, meal.description, meal.url)

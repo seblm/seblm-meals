@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 
 class MealsDAOSpec extends MealsPlaySpec with Eventually with ScalaFutures:
 
-  implicit override val patienceConfig: PatienceConfig = PatienceConfig(timeout = scaled(Span(300, Millis)))
+  override given patienceConfig: PatienceConfig = PatienceConfig(timeout = scaled(Span(300, Millis)))
 
   "MealsDAO" must {
     "insert a new meal" in {
