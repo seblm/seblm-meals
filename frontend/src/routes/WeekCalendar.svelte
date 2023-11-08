@@ -59,6 +59,10 @@
 		let meal = isLunch ? dayMeals?.lunch?.meal ?? '' : dayMeals?.dinner?.meal;
 		return meal ? meal : '';
 	};
+	const getUrl = (dayString: string, isLunch: boolean): string | undefined => {
+		let dayMeals = getDay(dayString);
+		return isLunch ? dayMeals?.lunch?.url : dayMeals?.dinner?.url;
+	};
 
 	const getDay = (dayString: string): Day | null => {
 		let dayConfig = null;
@@ -224,6 +228,7 @@
 				<MealInput
 					value={weekMeals ? getMeal(day, true) : ''}
 					title={weekMeals ? getMeal(day, true) : null}
+					url={weekMeals ? getUrl(day, true) : undefined}
 					suggestions={suggestions.input === `${day}-${true}` ? suggestions.suggestions : null}
 					on:valueChange={(event) => onInputChange(event.detail.value, day, true)}
 					on:enterPressed={() => saveMeal(day, true)}
@@ -247,6 +252,7 @@
 				<MealInput
 					value={weekMeals ? getMeal(day, false) : ''}
 					title={weekMeals ? getMeal(day, false) : null}
+					url={weekMeals ? getUrl(day, false) : undefined}
 					suggestions={suggestions.input === `${day}-${false}` ? suggestions.suggestions : null}
 					on:valueChange={(event) => onInputChange(event.detail.value, day, false)}
 					on:enterPressed={() => saveMeal(day, false)}

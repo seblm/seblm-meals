@@ -167,6 +167,8 @@ components:
           type: string
         meal:
           type: string
+        url:
+          type: string
     SuggestResponse:
       type: object
       properties:

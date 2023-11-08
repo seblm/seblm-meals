@@ -26,12 +26,14 @@ class MealsServiceSpec extends AnyFlatSpec:
           Meal(
             id = UUID.fromString("8ffaf9c5-f9a4-4d7d-8358-d65f17882a2a"),
             time = LocalDateTime.parse("2020-02-27T12:00"),
-            meal = "saucisson brioché salade"
+            meal = "saucisson brioché salade",
+            url = Some("https://seblm.github.io")
           ),
           Meal(
             id = UUID.fromString("050aacbd-4de9-4d56-abbc-2e64d613e9f8"),
             time = LocalDateTime.parse("2020-02-28T20:00"),
-            meal = "chou-fleur pomme de terre lardons"
+            meal = "chou-fleur pomme de terre lardons",
+            url = None
           )
         )
       )
@@ -55,9 +57,11 @@ class MealsServiceSpec extends AnyFlatSpec:
       weekMeals.wednesday.lunch should not be defined
       weekMeals.wednesday.dinner should not be defined
       weekMeals.thursday.lunch.value.meal shouldBe "saucisson brioché salade"
+      weekMeals.thursday.lunch.value.url.value shouldBe "https://seblm.github.io"
       weekMeals.thursday.dinner should not be defined
       weekMeals.friday.lunch should not be defined
       weekMeals.friday.dinner.value.meal shouldBe "chou-fleur pomme de terre lardons"
+      weekMeals.friday.dinner.value.url shouldBe empty
       weekMeals.saturday.lunch should not be defined
       weekMeals.saturday.dinner should not be defined
       weekMeals.sunday.lunch should not be defined
@@ -75,27 +79,32 @@ class MealsServiceSpec extends AnyFlatSpec:
             Meal(
               id = UUID.fromString("40cd80f6-bb5a-4b87-bcd9-3f475f6e3e4d"),
               time = LocalDateTime.parse("2020-03-02T12:00"),
-              meal = "galettes de blé noir"
+              meal = "galettes de blé noir",
+              url = None
             ),
             Meal(
               id = UUID.fromString("ca73207d-f879-4ebf-9965-70ee732d136c"),
               time = LocalDateTime.parse("2020-03-03T20:00"),
-              meal = "chipolatas pâtes"
+              meal = "chipolatas pâtes",
+              url = None
             ),
             Meal(
               id = UUID.fromString("ca82f285-a88a-4e95-927a-a126f0de92d7"),
               time = LocalDateTime.parse("2020-03-04T20:00"),
-              meal = "ratatouille riz"
+              meal = "ratatouille riz",
+              url = None
             ),
             Meal(
               id = UUID.fromString("5480e229-6a56-4eb1-8271-d00dba2e72e0"),
               time = LocalDateTime.parse("2020-03-07T12:00"),
-              meal = "lentilles saucisses (Morteau, Montbelliard) carottes"
+              meal = "lentilles saucisses (Morteau, Montbelliard) carottes",
+              url = None
             ),
             Meal(
               id = UUID.fromString("28389f39-3772-4ac2-b992-565af57160c2"),
               time = LocalDateTime.parse("2020-03-08T12:00"),
-              meal = "quenelles riz sauce tomate"
+              meal = "quenelles riz sauce tomate",
+              url = None
             )
           )
         )
@@ -269,7 +278,7 @@ object MealsServiceSpec:
 
     private def toAllResponseMap(line: String): (MealRow, Seq[LocalDateTime]) = line.split("->") match
       case Array(description, dates) =>
-        MealRow(UUID.randomUUID(), description.trim()) -> dates
+        MealRow(UUID.randomUUID(), description.trim(), None) -> dates
           .split(",")
           .toIndexedSeq
           .map(x => LocalDateTime.parse(x.trim))
