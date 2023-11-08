@@ -6,7 +6,7 @@ import java.time.*
 import java.time.DayOfWeek.*
 import scala.concurrent.{ExecutionContext, Future}
 
-class MealsService(clock: Clock, repository: MealRepository)(implicit ec: ExecutionContext):
+class MealsService(clock: Clock, repository: MealRepository)(using ExecutionContext):
 
   def meals(year: Year, week: Int): Future[WeekMeals] =
     val (from, to) = DatesTransformations.range(year, week)

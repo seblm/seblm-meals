@@ -4,4 +4,4 @@ import play.api.libs.json.{Json, Writes}
 
 object UnlinkMealWrites:
 
-  implicit val unlinkMealWrites: Writes[UnlinkMeal] = Json.writes
+  given Writes[UnlinkMeal] = Json.writes

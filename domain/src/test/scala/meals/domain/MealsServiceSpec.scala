@@ -269,12 +269,12 @@ object MealsServiceSpec:
 
   case class AllResponse(all: Seq[String])
 
-  implicit class AllResponseOps(allResponse: AllResponse):
+  extension (allResponse: AllResponse)
 
     def toFuture: Future[Map[MealRow, Seq[LocalDateTime]]] =
       Future.successful(toAllResponseMap(allResponse))
 
-    private def toAllResponseMap(allResponse: AllResponse): Map[MealRow, Seq[LocalDateTime]] = allResponse.all match
+    private def toAllResponseMap(all: AllResponse): Map[MealRow, Seq[LocalDateTime]] = all.all match
       case Nil          => Map.empty
       case last :: Nil  => Map(toAllResponseMap(last))
       case head :: tail => Map(toAllResponseMap(head)) ++ toAllResponseMap(AllResponse(tail))
