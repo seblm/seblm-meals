@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { externalLink } from '$lib/images/external-link';
 	import type { SuggestionResponse } from '$lib/model/WeekMeals';
 	import { createEventDispatcher } from 'svelte';
 	import MealInputSpecialSuggestionItem from './MealInputSpecialSuggestionItem.svelte';
@@ -6,6 +7,7 @@
 
 	export let value: string;
 	export let title: string;
+	export let url: string | undefined;
 	export let suggestions: SuggestionResponse | null;
 	$: mostRecents = suggestions?.mostRecents;
 	$: yearAgo = suggestions?.fiftyTwoWeeksAgo;
@@ -37,6 +39,9 @@
 	on:keypress={handleEnterPress}
 	on:focus={handleInputChange}
 />
+{#if url}
+	<a href="{url}" target="_blank">{@html externalLink}</a>
+{/if}
 {#if showSuggestions}
 	<ul class="suggestions" class:suggestions-visible={showSuggestions}>
 		{#if yearAgo}

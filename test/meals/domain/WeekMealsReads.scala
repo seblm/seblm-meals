@@ -1,6 +1,6 @@
 package meals.domain
 
-import play.api.libs.functional.syntax._
+import play.api.libs.functional.syntax.*
 import play.api.libs.json.{JsPath, Reads}
 
 import java.time.{LocalDate, LocalDateTime, Year}
@@ -18,7 +18,10 @@ object WeekMealsReads {
   private implicit val MealReads: Reads[Meal] =
     ((JsPath \ "id").read[String] and
       (JsPath \ "time").read[String] and
-      (JsPath \ "meal").read[String])((id, time, meal) => Meal(UUID.fromString(id), LocalDateTime.parse(time), meal))
+      (JsPath \ "meal").read[String] and
+      (JsPath \ "url").readNullable[String])((id, time, meal, url) =>
+      Meal(UUID.fromString(id), LocalDateTime.parse(time), meal, url)
+    )
   private implicit val WeekDayReads: Reads[WeekDay] =
     ((JsPath \ "reference").read[String] and
       (JsPath \ "lunch").readNullable[Meal] and

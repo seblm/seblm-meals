@@ -1,8 +1,7 @@
 package meals.infrastructure
 
 import meals.domain.{Meal, MealRepository}
-import play.api.Play
-import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfig}
+import play.api.db.slick.HasDatabaseConfig
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 
@@ -29,8 +28,10 @@ class MealsDAO(dbConfig1: DatabaseConfig[JdbcProfile])(implicit executionContext
 
     def description = column[String]("description")
 
-    def * = (id, description) <> ({ case (id, description) => MealRow(id, description) },
-    (mealRow: MealRow) => Some((mealRow.id, mealRow.description)))
+    def url = column[Option[String]]("url")
+
+    def * = (id, description, url) <> ({ case (id, description, url) => MealRow(id, description, url) },
+    (mealRow: MealRow) => Some((mealRow.id, mealRow.description, mealRow.url)))
 
   private val meals_by_time = TableQuery[MealsByTimeTable]
 
@@ -40,7 +41,7 @@ class MealsDAO(dbConfig1: DatabaseConfig[JdbcProfile])(implicit executionContext
   }
 
   private def toMeal(mealsByTime: MealsByTimeRow, meal: MealRow): Meal =
-    Meal(mealsByTime.mealId, mealsByTime.time, meal.description)
+    Meal(mealsByTime.mealId, mealsByTime.time, meal.description, meal.url)
 
   override def meals(id: UUID): Future[Seq[Meal]] =
     db.run(meals_by_time.filter(meal => meal.mealId === id).withMeal.sortBy(_._1.time.desc).result)
@@ -58,7 +59,7 @@ class MealsDAO(dbConfig1: DatabaseConfig[JdbcProfile])(implicit executionContext
 
   private def link(meal: MealRow, at: LocalDateTime): Future[Meal] =
     db.run(meals_by_time.insertOrUpdate(MealsByTimeRow(at, meal.id))).flatMap {
-      case 1 => Future.successful(Meal(meal.id, at, meal.description))
+      case 1 => Future.successful(Meal(meal.id, at, meal.description, meal.url))
       case _ => Future.failed(new Exception("Error when link meal"))
     }
 
@@ -66,7 +67,7 @@ class MealsDAO(dbConfig1: DatabaseConfig[JdbcProfile])(implicit executionContext
     for {
       existingMealRow <- db.run(meals.filter(_.description === mealDescription).take(1).result.headOption)
       mealRow <- existingMealRow.fold {
-        val newMealRow = MealRow(UUID.randomUUID(), mealDescription)
+        val newMealRow = MealRow(UUID.randomUUID(), mealDescription, None)
         insert(newMealRow).map(const(newMealRow))
       }(Future.successful)
       newMeal <- link(mealRow, mealTime)

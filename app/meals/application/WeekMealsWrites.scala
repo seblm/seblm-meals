@@ -2,7 +2,6 @@ package meals.application
 
 import meals.domain.{Meal, Titles, WeekDay, WeekMeals, WeekReference}
 import play.api.libs.json.{JsObject, JsString, JsValue, Json, Writes}
-import play.api.libs.json.JsValue.*
 
 object WeekMealsWrites:
 
@@ -12,8 +11,7 @@ object WeekMealsWrites:
   private implicit val WeekReferenceWrites: Writes[WeekReference] = (weekReference: WeekReference) =>
     Json.obj("year" -> weekReference.year.getValue, "week" -> weekReference.week, "isActive" -> weekReference.isActive)
 
-  private implicit val MealWrites: Writes[Meal] = (meal: Meal) =>
-    Json.obj("id" -> meal.id.toString, "time" -> meal.time.toString, "meal" -> meal.meal)
+  private implicit val MealWrites: Writes[Meal] = Json.writes
 
   private implicit val WeekDayWrites: Writes[WeekDay] = (weekDay: WeekDay) =>
     JsObject(

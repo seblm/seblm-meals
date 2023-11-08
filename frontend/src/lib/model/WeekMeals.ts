@@ -13,6 +13,7 @@ export interface Meal {
 	id: string;
 	time: string;
 	meal: string;
+	url?: string;
 }
 
 export interface Day {
