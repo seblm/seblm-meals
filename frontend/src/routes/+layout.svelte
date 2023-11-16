@@ -1,11 +1,13 @@
 <script>
 	import './styles.css';
+	import Note from '$lib/component/Note.svelte'
 </script>
 
 <div class="app">
 	<main>
 		<slot />
 	</main>
+	<Note></Note>
 </div>
 
 <style>
