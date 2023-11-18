@@ -51,12 +51,10 @@ docker run --rm --tty \
   sbtscala/scala-sbt:eclipse-temurin-jammy-21_35_1.9.7_3.3.1 sbt "Docker / stage"
 ```
 
-Modify `compose.yaml` to build your image:
+Build with compose:
 
-```yaml
-services:
-  application:
-    build: target/docker/stage
+```shell
+docker compose build
 ```
 
 Then run compose:
