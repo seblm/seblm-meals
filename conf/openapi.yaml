@@ -79,6 +79,16 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UnlinkMeal'
+  /note:
+    get:
+      tags:
+        - Note
+      description: Get note content
+      operationId: getNote
+      responses:
+        '200':
+          content:
+
 components:
   schemas:
     WeekMeals:
