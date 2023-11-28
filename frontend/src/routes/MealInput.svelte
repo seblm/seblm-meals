@@ -40,7 +40,7 @@
 	on:focus={handleInputChange}
 />
 {#if url}
-	<a href="{url}" target="_blank">{@html externalLink}</a>
+	<a href={url} target="_blank">{@html externalLink}</a>
 {/if}
 {#if showSuggestions}
 	<ul class="suggestions" class:suggestions-visible={showSuggestions}>
