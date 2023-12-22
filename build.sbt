@@ -26,7 +26,7 @@ lazy val root = (project in file("."))
 
 lazy val domain = project
   .settings(
-    libraryDependencies += "org.mockito" % "mockito-core" % "5.7.0" % Test,
+    libraryDependencies += "org.mockito" % "mockito-core" % "5.8.0" % Test,
     libraryDependencies += "org.scalatest" %% "scalatest-flatspec" % "3.2.17" % Test,
     libraryDependencies += "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.17" % Test,
     scalaVersion := "3.3.1"
@@ -40,7 +40,7 @@ libraryDependencies += "org.playframework" %% "play-slick" % "6.0.0-M2"
 libraryDependencies += "org.playframework" %% "play-slick-evolutions" % "6.0.0-M2"
 libraryDependencies += "com.typesafe.slick" %% "slick" % "3.5.0-M4"
 
-libraryDependencies += "org.postgresql" % "postgresql" % "42.7.0" % Runtime
+libraryDependencies += "org.postgresql" % "postgresql" % "42.7.1" % Runtime
 
 libraryDependencies += "com.h2database" % "h2" % "2.2.224" % Test
 libraryDependencies += "org.scalatest" %% "scalatest-flatspec" % "3.2.17" % Test
