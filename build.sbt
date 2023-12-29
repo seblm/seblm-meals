@@ -33,8 +33,8 @@ lazy val domain = project
   )
 
 libraryDependencies += evolutions
-libraryDependencies += "org.playframework" %% "play" % "3.0.0"
-libraryDependencies += "org.playframework" %% "play-configuration" % "3.0.0"
+libraryDependencies += "org.playframework" %% "play" % "3.0.1"
+libraryDependencies += "org.playframework" %% "play-configuration" % "3.0.1"
 libraryDependencies += "org.playframework" %% "play-json" % "3.0.1"
 libraryDependencies += "org.playframework" %% "play-slick" % "6.0.0-M2"
 libraryDependencies += "org.playframework" %% "play-slick-evolutions" % "6.0.0-M2"
@@ -45,9 +45,9 @@ libraryDependencies += "org.postgresql" % "postgresql" % "42.7.1" % Runtime
 libraryDependencies += "com.h2database" % "h2" % "2.2.224" % Test
 libraryDependencies += "org.scalatest" %% "scalatest-flatspec" % "3.2.17" % Test
 libraryDependencies += "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.17" % Test
-libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.0" % Test
+libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.1" % Test
 
-// these three modules are declared by org.playframework:sbt-plugin with wrong scope Compile instead of Runtime
+// these modules are declared by org.playframework:sbt-plugin with wrong scope Compile instead of Runtime
 // raised by unusedCompileDependenciesTest
 unusedCompileDependenciesFilter -= moduleFilter("org.playframework", "play-logback")
 unusedCompileDependenciesFilter -= moduleFilter("org.playframework", "play-pekko-http-server")
