@@ -51,7 +51,7 @@
 			}
 		}
 	}
-	
+
 	@media (min-width: $screen-m) {
 		.calendar-nav {
 			margin-bottom: 0;
