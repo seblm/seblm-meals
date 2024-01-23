@@ -71,7 +71,7 @@ class StatsSuite extends CatsEffectSuite:
       s.request(1)
     override def onNext(value: Result): Unit =
       logger.debug("onNext {}", value)
-      value.map(_.get("description").asInstanceOf[String]).subscribe(new StringSubscriber(values.appended))
+      value.map(_.get("description", classOf[String])).subscribe(new StringSubscriber(values.appended))
     override def onError(throwable: Throwable): Unit =
       logger.error("onError", throwable)
       cb(throwable.asLeft)
@@ -90,7 +90,7 @@ class StatsSuite extends CatsEffectSuite:
     val db = Option(System.getenv("POSTGRESQL_ADDON_DB")).getOrElse("seblm-meals")
     val url = s"r2dbc:postgresql://$user:$password@$host/$db"
     val connectionResource = for {
-      factory <- Resource.eval(IO(ConnectionFactories.get(url)).map(_.create()))
+      factory <- IO(ConnectionFactories.get(url)).map(_.create()).toResource
       connection <- createConnection(factory)
     } yield connection
     val result = connectionResource.use { connection =>
@@ -108,5 +108,5 @@ class StatsSuite extends CatsEffectSuite:
       } yield result
     }
 
-    assertIO(result, Vector("first one", "second one"))
+    assertIO(result.guarantee(IO(logger.debug("end of result"))), Vector("first one", "second one"))
   }
