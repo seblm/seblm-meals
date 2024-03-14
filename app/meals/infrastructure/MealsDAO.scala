@@ -44,11 +44,11 @@ class MealsDAO(dbConfig1: DatabaseConfig[JdbcProfile])(using ExecutionContext)
 
   override def meals(id: UUID): Future[Seq[Meal]] =
     db.run(meals_by_time.filter(meal => meal.mealId === id).withMeal.sortBy(_._1.time.desc).result)
-      .map(_.map((toMeal _).tupled))
+      .map(_.map(toMeal.tupled))
 
   override def meals(from: LocalDateTime, to: LocalDateTime): Future[Seq[Meal]] =
     db.run(meals_by_time.filter(meal => meal.time > from && meal.time < to).withMeal.sortBy(_._1.time.asc).result)
-      .map(_.map((toMeal _).tupled))
+      .map(_.map(toMeal.tupled))
 
   override def all(): Future[Map[MealRow, Seq[LocalDateTime]]] =
     db.run(meals_by_time.withMeal.result)
@@ -84,6 +84,6 @@ class MealsDAO(dbConfig1: DatabaseConfig[JdbcProfile])(using ExecutionContext)
 
     def mealId = column[UUID]("meal_id")
 
-    def * = (time, mealId) <> ((MealsByTimeRow.apply _).tupled, MealsByTimeRow.unapply)
+    def * = (time, mealId) <> (MealsByTimeRow.apply.tupled, MealsByTimeRow.unapply)
 
     def meal = foreignKey("meal_fk", mealId, meals)(_.id)

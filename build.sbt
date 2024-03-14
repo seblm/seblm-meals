@@ -18,7 +18,7 @@ lazy val root = (project in file("."))
     ),
     routesImport += "meals.application.MealsBinders.given",
     routesImport += "java.time.{LocalDateTime, Year}",
-    scalaVersion := "3.3.3",
+    scalaVersion := "3.4.1",
     Test / javaOptions += "-Dconfig.file=test/resources/application-test.conf"
   )
   .aggregate(domain)
@@ -29,7 +29,7 @@ lazy val domain = project
     libraryDependencies += "org.mockito" % "mockito-core" % "5.11.0" % Test,
     libraryDependencies += "org.scalatest" %% "scalatest-flatspec" % "3.2.18" % Test,
     libraryDependencies += "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.18" % Test,
-    scalaVersion := "3.3.3"
+    scalaVersion := "3.4.1"
   )
 
 libraryDependencies += evolutions
@@ -40,7 +40,7 @@ libraryDependencies += "org.playframework" %% "play-slick" % "6.1.0"
 libraryDependencies += "org.playframework" %% "play-slick-evolutions" % "6.1.0"
 libraryDependencies += "com.typesafe.slick" %% "slick" % "3.5.0"
 
-libraryDependencies += "org.postgresql" % "postgresql" % "42.7.2" % Runtime
+libraryDependencies += "org.postgresql" % "postgresql" % "42.7.3" % Runtime
 
 libraryDependencies += "com.h2database" % "h2" % "2.2.224" % Test
 libraryDependencies += "org.scalatest" %% "scalatest-flatspec" % "3.2.18" % Test
