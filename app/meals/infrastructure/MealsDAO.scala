@@ -11,8 +11,8 @@ import scala.Function.const
 import scala.concurrent.{ExecutionContext, Future}
 
 class MealsDAO(dbConfig1: DatabaseConfig[JdbcProfile])(using ExecutionContext)
-    extends HasDatabaseConfig[JdbcProfile]
-    with MealRepository:
+    extends HasDatabaseConfig[JdbcProfile],
+      MealRepository:
 
   protected override lazy val dbConfig: DatabaseConfig[JdbcProfile] = dbConfig1
 
