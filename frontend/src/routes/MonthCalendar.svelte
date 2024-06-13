@@ -16,7 +16,6 @@
 	$: monthName = monthNames[selectedDate.getMonth()];
 	$: year = selectedDate.getFullYear();
 	$: firstDayOfMonthInWeek = firstDay.getDay();
-	$: lastDayOfMonthInWeek = lastDay.getDay();
 
 	const unsubscribe = date.subscribe((d) => {
 		selectedDate = d;
@@ -74,7 +73,7 @@
 					{#each Array(7)
 						.fill(null)
 						.map((_, index) => index) as weekDay}
-						<div
+						<button
 							class="month-calendar-grid-cell"
 							disabled={!isInMonth(weekDay, week)}
 							class:not-in-month={!isInMonth(weekDay, week)}
@@ -86,7 +85,7 @@
 								</div>
 							{/if}
 							<div class="month-calendar-grid-cell-meal" />
-						</div>
+						</button>
 					{/each}
 				</div>
 			{/each}
@@ -121,6 +120,8 @@
 				flex-direction: column;
 				position: relative;
 				cursor: pointer;
+				border: none;
+				background: transparent;
 				&-meal {
 					flex: 1;
 					width: 100%;
