@@ -30,8 +30,10 @@ class MealsDAO(dbConfig1: DatabaseConfig[JdbcProfile])(using ExecutionContext)
 
     def url = column[Option[String]]("url")
 
-    def * = (id, description, url) <> ({ case (id, description, url) => MealRow(id, description, url) },
-    (mealRow: MealRow) => Some((mealRow.id, mealRow.description, mealRow.url)))
+    def * = (id, description, url) <> (
+      (id, description, url) => MealRow(id, description, url),
+      mealRow => Some((mealRow.id, mealRow.description, mealRow.url))
+    )
 
   private val meals_by_time = TableQuery[MealsByTimeTable]
 
@@ -52,31 +54,32 @@ class MealsDAO(dbConfig1: DatabaseConfig[JdbcProfile])(using ExecutionContext)
 
   override def all(): Future[Map[MealRow, Seq[LocalDateTime]]] =
     db.run(meals_by_time.withMeal.result)
-      .map(_.foldLeft(Map.empty[MealRow, Seq[LocalDateTime]]) { case (acc, (mealsByType, mealRow)) =>
-        acc.updated(mealRow, acc.getOrElse(mealRow, Seq.empty[LocalDateTime]) :+ mealsByType.time)
-      })
+      .map(_.foldLeft(Map.empty[MealRow, Seq[LocalDateTime]]):
+        case (acc, (mealsByType, mealRow)) =>
+          acc.updated(mealRow, acc.getOrElse(mealRow, Seq.empty[LocalDateTime]) :+ mealsByType.time)
+      )
 
   private def link(meal: MealRow, at: LocalDateTime): Future[Meal] =
-    db.run(meals_by_time.insertOrUpdate(MealsByTimeRow(at, meal.id))).flatMap {
-      case 1 => Future.successful(Meal(meal.id, at, meal.description, meal.url))
-      case _ => Future.failed(new Exception("Error when link meal"))
-    }
+    db.run(meals_by_time.insertOrUpdate(MealsByTimeRow(at, meal.id)))
+      .flatMap:
+        case 1 => Future.successful(Meal(meal.id, at, meal.description, meal.url))
+        case _ => Future.failed(new Exception("Error when link meal"))
 
   override def linkOrInsert(mealTime: LocalDateTime, mealDescription: String): Future[Meal] =
-    for {
+    for
       existingMealRow <- db.run(meals.filter(_.description === mealDescription).take(1).result.headOption)
       mealRow <- existingMealRow.fold {
         val newMealRow = MealRow(UUID.randomUUID(), mealDescription, None)
         insert(newMealRow).map(const(newMealRow))
       }(Future.successful)
       newMeal <- link(mealRow, mealTime)
-    } yield newMeal
+    yield newMeal
 
   override def unlink(at: LocalDateTime): Future[Unit] =
-    db.run(meals_by_time.filter(meal => meal.time === at).delete).flatMap {
-      case 1 => Future.successful(())
-      case _ => Future.failed(new Exception("Error when unlink meal"))
-    }
+    db.run(meals_by_time.filter(meal => meal.time === at).delete)
+      .flatMap:
+        case 1 => Future.successful(())
+        case _ => Future.failed(new Exception("Error when unlink meal"))
 
   class MealsByTimeTable(tag: Tag) extends Table[MealsByTimeRow](tag, "meals_by_time"):
 
