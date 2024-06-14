@@ -30,8 +30,10 @@ class MealsDAO(dbConfig1: DatabaseConfig[JdbcProfile])(using ExecutionContext)
 
     def url = column[Option[String]]("url")
 
-    def * = (id, description, url) <> ({ case (id, description, url) => MealRow(id, description, url) },
-    (mealRow: MealRow) => Some((mealRow.id, mealRow.description, mealRow.url)))
+    def * = (id, description, url) <> (
+      { case (id, description, url) => MealRow(id, description, url) },
+      (mealRow: MealRow) => Some((mealRow.id, mealRow.description, mealRow.url))
+    )
 
   private val meals_by_time = TableQuery[MealsByTimeTable]
 
