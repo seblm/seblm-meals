@@ -7,6 +7,30 @@ tags:
 servers:
   - url: http://localhost:9000/api
 paths:
+  /meals/{day}:
+    get:
+      tags:
+        - Meal
+      description: Get all meals around a day
+      operationId: mealsDayApi
+      parameters:
+        - name: day
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealsDayResponse'
   /meals/{year}/{week}:
     get:
       tags:
@@ -169,6 +193,19 @@ components:
           type: string
         url:
           type: string
+    MealsDayResponse:
+      type: object
+      properties:
+        previous:
+          type: string
+          format: date
+        meals:
+          type: array
+          items:
+            $ref: '#/components/schemas/WeekDay'
+        next:
+          type: date
+          format: date
     SuggestResponse:
       type: object
       properties:

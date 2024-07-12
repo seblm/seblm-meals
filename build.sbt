@@ -17,7 +17,7 @@ lazy val root = (project in file("."))
       "POSTGRESQL_ADDON_DB" -> ""
     ),
     routesImport += "meals.application.MealsBinders.given",
-    routesImport += "java.time.{LocalDateTime, Year}",
+    routesImport += "java.time.{LocalDate, LocalDateTime, Year}",
     scalaVersion := "3.4.1",
     Test / javaOptions += "-Dconfig.file=test/resources/application-test.conf"
   )

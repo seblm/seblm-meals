@@ -8,6 +8,11 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class MealsService(clock: Clock, repository: MealRepository)(using ExecutionContext):
 
+  def mealsAround(date: LocalDate, limit: Int): Future[Seq[Meal]] =
+    val from = date.minusDays(limit).atStartOfDay()
+    val to = date.plusDays(limit + 1).atStartOfDay().minusNanos(1)
+    repository.meals(from, to)
+
   def meals(year: Year, week: Int): Future[WeekMeals] =
     val (from, to) = DatesTransformations.range(year, week)
     repository.meals(from, to).map(mealsByWeekDay(year, week, clock))

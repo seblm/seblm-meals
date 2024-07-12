@@ -1,18 +1,41 @@
 package meals.application
 
 import meals.application.WeekMealsWrites.given
-import meals.domain.{MealSuggest, MealsService, SuggestResponse}
+import meals.domain.{MealSuggest, MealsService, SuggestResponse, WeekDay}
 import play.api.Logging
 import play.api.libs.json.*
 import play.api.mvc.*
 
-import java.time.{LocalDateTime, Year}
+import java.time.{LocalDate, LocalDateTime, Year}
 import scala.Function.const
 import scala.concurrent.ExecutionContext
 
 class MealsController(cc: ControllerComponents, mealsService: MealsService) extends AbstractController(cc), Logging:
 
   given ExecutionContext = cc.executionContext
+
+  def mealsAround(date: LocalDate, limit: Int): Action[AnyContent] = Action.async:
+    mealsService
+      .mealsAround(date, limit)
+      .map: meals =>
+        Ok(
+          Json.toJson(
+            MealsDayResponse(
+              previous = None, // TODO
+              meals = meals
+                .groupBy(_.time.toLocalDate)
+                .map: (reference, meals) =>
+                  WeekDay(
+                    reference = reference,
+                    lunch = meals.find(_.time.getHour == 12),
+                    dinner = meals.find(_.time.getHour == 20)
+                  )
+                .toSeq
+                .sortBy(_.reference),
+              next = None // TODO
+            )
+          )
+        )
 
   def mealsApi(year: Year, week: Int): Action[AnyContent] = Action.async:
     mealsService.meals(year, week).map(meals => Ok(Json.toJson(meals)))

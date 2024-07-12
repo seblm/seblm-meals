@@ -21,6 +21,15 @@ object WeekMealsWrites:
       ).flatten
     )
 
+  given Writes[MealsDayResponse] = (mealsDayResponse: MealsDayResponse) =>
+    JsObject(
+      Vector(
+        mealsDayResponse.previous.map(previous => "previous" -> JsString(previous.toString)),
+        Some("meals" -> Json.toJson(mealsDayResponse.meals)),
+        mealsDayResponse.next.map(next => "next" -> JsString(next.toString))
+      ).flatten
+    )
+
   given Writes[WeekMeals] = (weekMeals: WeekMeals) =>
     Json.obj(
       "titles" -> Json.toJson(weekMeals.titles),
