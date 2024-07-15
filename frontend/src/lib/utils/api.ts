@@ -7,6 +7,17 @@ export async function getWeekMeals(year: number, weekNumber: number) {
 	);
 }
 
+export async function getRangeOfMeals(centerDay: string, dayCount?: number) {
+	let url = `/api/meals/${centerDay}`;
+	if (dayCount) {
+		url += `?limit=${dayCount}`
+	}
+	return await fetch(url).then(
+		(response) => response.json(),
+		(error) => console.error(error)
+	);
+}
+
 export async function getSuggestions(
 	refDate: string,
 	search: string,
@@ -53,3 +64,4 @@ export async function unlink(day: string, isLunch: boolean) {
 
 const getMealTime = (day: string, isLunch: boolean): string =>
 	`${day}T${isLunch ? '12' : '20'}:00:00.000Z`;
+

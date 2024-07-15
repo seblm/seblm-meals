@@ -1,45 +1,37 @@
 <script lang="ts">
-	import { calendarViewMode, date } from '$lib/stores';
-	import { CalendarMode } from '$lib/utils/enums';
+	import { date } from '$lib/stores';
 	import { onDestroy } from 'svelte';
-	import MonthCalendar from './MonthCalendar.svelte';
-	import WeekCalendar from './WeekCalendar.svelte';
+	import { getRangeOfMeals } from '$lib/utils/api';
+	import { addDays, format } from 'date-fns';
+	import DayCard from './DayCard.svelte';
 
-	let mode: CalendarMode = CalendarMode.MONTH;
+	$: visibleDays = getVisibleDays(selectedDate, 14)
 	let selectedDate: Date;
 
 	const dateUnsubscribe = date.subscribe((d) => {
 		selectedDate = d;
+		getRangeOfMeals(format(selectedDate, 'yyyy-MM-dd')).then(response => console.log(response))
 	});
 
-	const calendarModeUnsubscribe = calendarViewMode.subscribe((calendarMode) => {
-		mode = calendarMode;
-	});
-
-	const toggleCalendarMode = () =>
-		calendarViewMode.update((current) =>
-			current === CalendarMode.WEEK ? CalendarMode.MONTH : CalendarMode.WEEK
-		);
+	const getVisibleDays = (selectedDay: Date, count: number = 7) => {
+		const days: Date[] = [];
+		for (let i = 0; i < count; i++) {
+			days.push(addDays(selectedDate, i));
+		}
+		console.log(days);
+		return days;
+	}
 
 	onDestroy(() => {
 		dateUnsubscribe();
-		calendarModeUnsubscribe();
 	});
 </script>
 
 <div class="calendar">
-	<header class="calendar-header">
-		<h1>Votre {mode === CalendarMode.MONTH ? 'mois' : 'semaine'}</h1>
-		<button on:click={toggleCalendarMode}
-			>Aller à la vue {mode === CalendarMode.MONTH ? 'semaine' : 'mois'}</button
-		>
-	</header>
 	<main class="calendar-content">
-		{#if mode === CalendarMode.WEEK}
-			<WeekCalendar />
-		{:else}
-			<MonthCalendar />
-		{/if}
+		{#each visibleDays as day}
+			<DayCard day={day}/>
+		{/each}
 	</main>
 </div>
 
@@ -48,43 +40,11 @@
 
 	.calendar {
 		width: 100%;
-		&-header {
+		&-content {
 			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			margin: 24px 0;
-			h1 {
-				grid-column: 2 / span 1;
-				margin: 0;
-			}
-			button {
-				grid-column: 3 / span 1;
-				display: block;
-				background: transparent;
-				color: var(--color-theme-1);
-				border: none;
-				cursor: pointer;
-				transition: 0.2s ease-in;
-				font-size: 1rem;
-				font-weight: 700;
-				&:focus,
-				&:hover {
-					filter: brightness(0.7);
-				}
-			}
+			flex-direction: column;
+			gap: 1rem;
 		}
 	}
 
-	@media (min-width: $screen-m) {
-		.calendar {
-			&-header {
-				display: grid;
-				grid-template-columns: repeat(3, 1fr);
-
-				button {
-					font-size: 1.2rem;
-				}
-			}
-		}
-	}
 </style>

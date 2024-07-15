@@ -12,6 +12,7 @@
 	--color-text: #2f466c;
 	--column-width: 42rem;
 	--column-margin-top: 4rem;
+	--border-radius: 4px;
 	font-family: var(--font-body);
 	color: var(--color-text);
 }
