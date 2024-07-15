@@ -16,7 +16,7 @@ export interface Meal {
 	url?: string;
 }
 
-export interface Day {
+export interface MealDay {
 	reference: string;
 	lunch?: Meal;
 	dinner?: Meal;
@@ -27,13 +27,13 @@ export interface WeekMeals {
 	previous: WeekLink;
 	now: WeekLink;
 	next: WeekLink;
-	monday: Day;
-	tuesday: Day;
-	wednesday: Day;
-	thursday: Day;
-	friday: Day;
-	saturday: Day;
-	sunday: Day;
+	monday: MealDay;
+	tuesday: MealDay;
+	wednesday: MealDay;
+	thursday: MealDay;
+	friday: MealDay;
+	saturday: MealDay;
+	sunday: MealDay;
 }
 
 const emptyTitles: Titles = {
@@ -47,7 +47,7 @@ const emptyWeekLink: WeekLink = {
 	isActive: false
 };
 
-const emptyDay: Day = {
+const emptyDay: MealDay = {
 	reference: new Date().toDateString()
 };
 

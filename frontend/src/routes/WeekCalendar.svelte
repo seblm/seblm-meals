@@ -1,7 +1,7 @@
 <script lang="ts">
 	import bin from '$lib/images/bin';
 	import { check } from '$lib/images/check';
-	import type { Day, SuggestionResponse, WeekMeals } from '$lib/model/WeekMeals';
+	import type { MealDay, SuggestionResponse, WeekMeals } from '$lib/model/WeekMeals';
 	import { date } from '$lib/stores';
 	import { getSuggestions, getWeekMeals, linkOrInsert, unlink } from '$lib/utils/api';
 	import { clickOutside } from '$lib/utils/ClickOutside';
@@ -44,7 +44,6 @@
 		selectedDate = d;
 	});
 
-	$: weekNumber = getWeek(selectedDate);
 	$: weekDays = weekMeals ? getWeekDays() : [];
 
 	onMount(() => {
@@ -64,7 +63,7 @@
 		return isLunch ? dayMeals?.lunch?.url : dayMeals?.dinner?.url;
 	};
 
-	const getDay = (dayString: string): Day | null => {
+	const getDay = (dayString: string): MealDay | null => {
 		let dayConfig = null;
 		switch (dayString) {
 			case 'monday':

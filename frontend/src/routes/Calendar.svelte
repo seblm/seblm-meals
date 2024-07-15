@@ -4,13 +4,21 @@
 	import { getRangeOfMeals } from '$lib/utils/api';
 	import { addDays, format } from 'date-fns';
 	import DayCard from './DayCard.svelte';
+	import type { MealDay } from '$lib/model/WeekMeals';
+	import Spinner from '$lib/components/Spinner.svelte';
 
 	$: visibleDays = getVisibleDays(selectedDate, 14)
+	let availableMealDays: MealDay[] = [];
 	let selectedDate: Date;
+	let isLoading = true;
 
 	const dateUnsubscribe = date.subscribe((d) => {
 		selectedDate = d;
-		getRangeOfMeals(format(selectedDate, 'yyyy-MM-dd')).then(response => console.log(response))
+		isLoading = false;
+		isLoading = true;
+		getRangeOfMeals(format(selectedDate, 'yyyy-MM-dd')).then(response => {
+			availableMealDays = [...response.meals];
+		}).finally(() => isLoading = false);
 	});
 
 	const getVisibleDays = (selectedDay: Date, count: number = 7) => {
@@ -18,8 +26,14 @@
 		for (let i = 0; i < count; i++) {
 			days.push(addDays(selectedDate, i));
 		}
-		console.log(days);
 		return days;
+	}
+
+	const getMealDayForDate = (date: Date): MealDay | undefined => {
+		const reference = format(date, 'yyyy-MM-dd');
+		return availableMealDays.find(mealDay => {
+			return mealDay.reference === reference
+		});
 	}
 
 	onDestroy(() => {
@@ -28,11 +42,16 @@
 </script>
 
 <div class="calendar">
-	<main class="calendar-content">
-		{#each visibleDays as day}
-			<DayCard day={day}/>
-		{/each}
-	</main>
+	{#if (isLoading)}
+		<Spinner />
+	{:else}
+		<main class="calendar-content">
+			{#each visibleDays as day}
+				<DayCard day={day} meals={getMealDayForDate(day)}/>
+			{/each}
+		</main>
+	{/if}
+
 </div>
 
 <style lang="scss">
@@ -46,5 +65,4 @@
 			gap: 1rem;
 		}
 	}
-
 </style>
