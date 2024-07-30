@@ -42,7 +42,7 @@ libraryDependencies += "com.typesafe.slick" %% "slick" % "3.5.1"
 
 libraryDependencies += "org.postgresql" % "postgresql" % "42.7.3" % Runtime
 
-libraryDependencies += "com.h2database" % "h2" % "2.2.224" % Test
+libraryDependencies += "com.h2database" % "h2" % "2.3.230" % Test
 libraryDependencies += "org.scalatest" %% "scalatest-flatspec" % "3.2.19" % Test
 libraryDependencies += "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.19" % Test
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.1" % Test
