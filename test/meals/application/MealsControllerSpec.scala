@@ -1,13 +1,13 @@
 package meals.application
 
 import meals.MealsPlaySpec
+import meals.application.LinkOrInsertDataWrites.given
+import meals.application.UnlinkMealWrites.given
 import meals.domain.WeekMealsReads.given
 import meals.domain.{Titles, WeekDay, WeekMeals, WeekReference}
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
-import meals.application.LinkOrInsertDataWrites.given
-import meals.application.UnlinkMealWrites.given
 
 import java.time.*
 
@@ -39,7 +39,6 @@ class MealsControllerSpec extends MealsPlaySpec:
     }
 
     "insert, unlink and link a meal" in {
-      import meals.application.LinkOrInsertDataWrites._
 
       val mealTime = LocalDateTime.parse("2023-09-17T12:00:00")
       val pizza = FakeRequest().withBody(Json.toJson(LinkOrInsertData("pizza", mealTime)))

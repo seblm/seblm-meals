@@ -6,7 +6,7 @@ import play.api.libs.json.{JsPath, Reads}
 import java.time.{LocalDate, LocalDateTime, Year}
 import java.util.UUID
 
-object WeekMealsReads {
+object WeekMealsReads:
 
   private given Reads[Titles] =
     ((JsPath \ "short").read[String] and
@@ -54,5 +54,3 @@ object WeekMealsReads {
           sunday: WeekDay
       ) => WeekMeals(titles, previous, current, next, monday, tuesday, wednesday, thursday, friday, saturday, sunday)
     )
-
-}
