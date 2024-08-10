@@ -4,7 +4,7 @@ import meals.MealsPlaySpec
 import meals.application.LinkOrInsertDataWrites.given
 import meals.application.UnlinkMealWrites.given
 import meals.domain.WeekMealsReads.given
-import meals.domain.{Meal, Titles, WeekDay, WeekMeals, WeekReference}
+import meals.domain.{Titles, WeekDay, WeekMeals, WeekReference}
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
@@ -18,19 +18,22 @@ class MealsControllerSpec extends MealsPlaySpec:
 
   "MealsController" should:
     "get meals around a date" in:
-      val pizza =
-        FakeRequest().withBody(Json.toJson(LinkOrInsertData("pizza", LocalDateTime.parse("2023-01-16T12:00:00"))))
-      val pasta =
-        FakeRequest().withBody(Json.toJson(LinkOrInsertData("pasta", LocalDateTime.parse("2023-01-17T20:00:00"))))
+      val pizza = LinkOrInsertData("pizza", LocalDateTime.parse("2023-01-16T12:00:00"))
+      val pasta = LinkOrInsertData("pasta", LocalDateTime.parse("2023-01-17T20:00:00"))
 
       Vector(pizza, pasta).foreach: meal =>
-        val inserted = call(mealsComponents.mealsController.linkOrInsertApi(), meal)
-        status(inserted) must be(CREATED)
+        val result = call(mealsComponents.mealsController.linkOrInsertApi(), FakeRequest().withBody(Json.toJson(meal)))
+        status(result) must be(CREATED)
 
       val result = call(mealsComponents.mealsController.mealsAround(LocalDate.parse("2023-01-16"), 3), FakeRequest())
 
       val response = Json.fromJson[Vector[WeekDay]](contentAsJson(result)).asOpt.value
       response.map(_.reference) must contain only (LocalDate.parse("2023-01-16"), LocalDate.parse("2023-01-17"))
+
+      Vector(pizza, pasta).foreach: meal =>
+        val unlinkRequest = FakeRequest().withMethod("DELETE").withBody(Json.toJson(UnlinkMeal(meal.mealTime)))
+        val result = call(mealsComponents.mealsController.unlinkApi(), unlinkRequest)
+        status(result) must be(NO_CONTENT)
 
     "get meals for a week" in:
       val result = call(mealsComponents.mealsController.mealsApi(Year.of(2023), 3), FakeRequest())
