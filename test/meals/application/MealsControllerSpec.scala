@@ -4,7 +4,7 @@ import meals.MealsPlaySpec
 import meals.application.LinkOrInsertDataWrites.given
 import meals.application.UnlinkMealWrites.given
 import meals.domain.WeekMealsReads.given
-import meals.domain.{Titles, WeekDay, WeekMeals, WeekReference}
+import meals.domain.{Meal, Titles, WeekDay, WeekMeals, WeekReference}
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
@@ -16,8 +16,23 @@ class MealsControllerSpec extends MealsPlaySpec:
   override def clock(): Option[Clock] =
     Some(Clock.fixed(Instant.parse("2023-01-19T18:54:55.716650Z"), ZoneId.of("Europe/Paris")))
 
-  "MealsController" should {
-    "get meals for a week" in {
+  "MealsController" should:
+    "get meals around a date" in:
+      val pizza =
+        FakeRequest().withBody(Json.toJson(LinkOrInsertData("pizza", LocalDateTime.parse("2023-01-16T12:00:00"))))
+      val pasta =
+        FakeRequest().withBody(Json.toJson(LinkOrInsertData("pasta", LocalDateTime.parse("2023-01-17T20:00:00"))))
+
+      Vector(pizza, pasta).foreach: meal =>
+        val inserted = call(mealsComponents.mealsController.linkOrInsertApi(), meal)
+        status(inserted) must be(CREATED)
+
+      val result = call(mealsComponents.mealsController.mealsAround(LocalDate.parse("2023-01-16"), 3), FakeRequest())
+
+      val response = Json.fromJson[Vector[WeekDay]](contentAsJson(result)).asOpt.value
+      response.map(_.reference) must contain only (LocalDate.parse("2023-01-16"), LocalDate.parse("2023-01-17"))
+
+    "get meals for a week" in:
       val result = call(mealsComponents.mealsController.mealsApi(Year.of(2023), 3), FakeRequest())
 
       val response = Json.fromJson[WeekMeals](contentAsJson(result)).asOpt.value
@@ -36,10 +51,8 @@ class MealsControllerSpec extends MealsPlaySpec:
           sunday = WeekDay(LocalDate.parse("2023-01-22"), None, None)
         )
       )
-    }
 
-    "insert, unlink and link a meal" in {
-
+    "insert, unlink and link a meal" in:
       val mealTime = LocalDateTime.parse("2023-09-17T12:00:00")
       val pizza = FakeRequest().withBody(Json.toJson(LinkOrInsertData("pizza", mealTime)))
       val pasta = FakeRequest().withBody(Json.toJson(LinkOrInsertData("pasta", mealTime)))
@@ -64,6 +77,3 @@ class MealsControllerSpec extends MealsPlaySpec:
       status(otherInserted) must be(CREATED)
       val otherMealsLinked = call(mealsComponents.mealsController.mealsApi(Year.of(2023), 37), FakeRequest())
       Json.fromJson[WeekMeals](contentAsJson(otherMealsLinked)).asOpt.value.sunday.lunch.value.meal must be("pasta")
-    }
-
-  }

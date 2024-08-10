@@ -20,20 +20,16 @@ class MealsController(cc: ControllerComponents, mealsService: MealsService) exte
       .map: meals =>
         Ok(
           Json.toJson(
-            MealsDayResponse(
-              previous = None, // TODO
-              meals = meals
-                .groupBy(_.time.toLocalDate)
-                .map: (reference, meals) =>
-                  WeekDay(
-                    reference = reference,
-                    lunch = meals.find(_.time.getHour == 12),
-                    dinner = meals.find(_.time.getHour == 20)
-                  )
-                .toSeq
-                .sortBy(_.reference),
-              next = None // TODO
-            )
+            meals
+              .groupBy(_.time.toLocalDate)
+              .map: (reference, meals) =>
+                WeekDay(
+                  reference = reference,
+                  lunch = meals.find(_.time.getHour == 12),
+                  dinner = meals.find(_.time.getHour == 20)
+                )
+              .toSeq
+              .sortBy(_.reference)
           )
         )
 

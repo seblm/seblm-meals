@@ -22,7 +22,7 @@ object WeekMealsReads:
       (JsPath \ "url").readNullable[String])((id, time, meal, url) =>
       Meal(UUID.fromString(id), LocalDateTime.parse(time), meal, url)
     )
-  private given Reads[WeekDay] =
+  given Reads[WeekDay] =
     ((JsPath \ "reference").read[String] and
       (JsPath \ "lunch").readNullable[Meal] and
       (JsPath \ "dinner").readNullable[Meal])((reference, lunch, dinner) =>

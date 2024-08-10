@@ -194,18 +194,9 @@ components:
         url:
           type: string
     MealsDayResponse:
-      type: object
-      properties:
-        previous:
-          type: string
-          format: date
-        meals:
-          type: array
-          items:
-            $ref: '#/components/schemas/WeekDay'
-        next:
-          type: date
-          format: date
+      type: array
+      items:
+        $ref: '#/components/schemas/WeekDay'
     SuggestResponse:
       type: object
       properties:
