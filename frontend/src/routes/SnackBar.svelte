@@ -23,7 +23,9 @@
 		border-radius: 5px;
 		background: var(--color-theme-1);
 		color: #fff;
-		box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.1);
+		box-shadow:
+			0 2px 3px rgba(0, 0, 0, 0.2),
+			0 3px 6px rgba(0, 0, 0, 0.1);
 		&-success {
 			background: #95d061;
 		}

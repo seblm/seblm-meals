@@ -56,7 +56,7 @@
 	const getMeal = (dayString: string, isLunch: boolean): string => {
 		let dayMeals = getDay(dayString);
 
-		let meal = isLunch ? dayMeals?.lunch?.meal ?? '' : dayMeals?.dinner?.meal;
+		let meal = isLunch ? (dayMeals?.lunch?.meal ?? '') : dayMeals?.dinner?.meal;
 		return meal ? meal : '';
 	};
 	const getUrl = (dayString: string, isLunch: boolean): string | undefined => {
@@ -191,12 +191,12 @@
 
 	const getWeekDays = () => {
 		const weekDays = [];
-		days.forEach(dayString => {
+		days.forEach((dayString) => {
 			const dayReference = getDay(dayString)?.reference;
 			weekDays.push(dayReference?.substring(8, dayReference?.length));
-		})
+		});
 		return weekDays;
-	}
+	};
 
 	onDestroy(unsubscribe);
 </script>
@@ -398,7 +398,7 @@
 					}
 				}
 				&-cell {
-					&:nth-child(n+4) {
+					&:nth-child(n + 4) {
 						border-top: 1px solid var(--color-theme-1);
 					}
 				}
