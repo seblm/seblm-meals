@@ -34,11 +34,11 @@ Build frontend files:
 docker run --rm --tty \
   --volume ./frontend:/home/node/seblm-meals \
   --user node --workdir /home/node/seblm-meals \
-  node:18-alpine yarn
+  node:20-alpine npm install
 docker run --rm --tty \
   --volume ./frontend:/home/node/seblm-meals \
   --user node --workdir /home/node/seblm-meals \
-  node:18-alpine yarn build
+  node:20-alpine npm run build
 ```
 
 Generate a `Dockerfile` with sbt through Docker:
@@ -75,14 +75,14 @@ Please have a look to [specific documentation](backup/README.md).
 
 ## How to start application in dev mode
 
-You need to have `yarn` and `sbt` installed on your machine.
+You need to have `npm` and `sbt` installed on your machine.
 
 ### Frontend
 
 ```shell
 cd frontend
-yarn
-yarn dev
+npm install
+npm run dev
 ```
 
 ### Backend

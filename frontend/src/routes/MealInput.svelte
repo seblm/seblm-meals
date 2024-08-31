@@ -40,7 +40,7 @@
 	on:focus={handleInputChange}
 />
 {#if url}
-	<a href="{url}" target="_blank">{@html externalLink}</a>
+	<a href={url} target="_blank">{@html externalLink}</a>
 {/if}
 {#if showSuggestions}
 	<ul class="suggestions" class:suggestions-visible={showSuggestions}>
@@ -90,7 +90,9 @@
 		width: 100%;
 		background: #fff;
 		border-radius: 5px;
-		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 0, 0, 0.1);
+		box-shadow:
+			0 1px 3px rgba(0, 0, 0, 0.2),
+			0 2px 6px rgba(0, 0, 0, 0.1);
 		z-index: 9;
 		padding: 0;
 		max-height: 300px;
