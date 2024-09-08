@@ -48,7 +48,7 @@ docker run --rm --tty \
   --volume .:/home/sbtuser/seblm-meals \
   --volume ~/Library/Caches/Coursier:/home/sbtuser/.cache/coursier \
   --user sbtuser --workdir /home/sbtuser/seblm-meals \
-  sbtscala/scala-sbt:eclipse-temurin-jammy-21.0.2_13_1.10.1_3.4.2 sbt "Docker / stage"
+  sbtscala/scala-sbt:eclipse-temurin-jammy-21.0.2_13_1.10.1_3.5.0 sbt "Docker / stage"
 ```
 
 Build with compose:
@@ -103,6 +103,59 @@ export POSTGRESQL_ADDON_PASSWORD=seblm-database-password
 export POSTGRESQL_ADDON_HOST=localhost
 export POSTGRESQL_ADDON_DB=seblm-meals
 sbt run
+```
+
+## Development
+
+### Svelte
+
+```shell
+npm init svelte
+```
+
+```shell
+
+> frontend@0.0.1 npx
+> create-svelte
+
+
+create-svelte version 6.3.7
+
+┌  Welcome to SvelteKit!
+│
+◇  Where should we create your project?
+│    (hit Enter to use current directory)
+│
+◇  Which Svelte app template?
+│  ○ SvelteKit demo app (A demo app showcasing some of the features of SvelteKit - play a word guessing game that works without JavaScript!)
+│  ● Skeleton project (Barebones scaffolding for your new SvelteKit app)
+│  ○ Library project (Barebones scaffolding for your new Svelte library)
+│
+◇  Add type checking with TypeScript?
+│  ● Yes, using TypeScript syntax
+│  ○ Yes, using JavaScript with JSDoc comments
+│  ○ No
+│
+◇  Select additional options (use arrow keys/space bar)
+│  ◼ Add ESLint for code linting
+│  ◼ Add Prettier for code formatting
+│  ◻ Add Playwright for browser testing
+│  ◻ Add Vitest for unit testing
+│  ◻ Try the Svelte 5 preview (unstable!)
+│
+└  Your project is ready!
+
+Install more integrations with:
+  npx svelte-add
+
+Next steps:
+  1: npm install
+  2: git init && git add -A && git commit -m "Initial commit" (optional)
+  3: npm run dev -- --open
+
+To close the dev server, hit Ctrl-C
+
+Stuck? Visit us at https://svelte.dev/chat
 ```
 
 [docker-hub-postgres]: https://hub.docker.com/_/postgres
