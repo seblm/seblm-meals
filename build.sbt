@@ -18,7 +18,7 @@ lazy val root = (project in file("."))
     ),
     routesImport += "meals.application.MealsBinders.given",
     routesImport += "java.time.{LocalDate, LocalDateTime, Year}",
-    scalaVersion := "3.5.1",
+    scalaVersion := "3.5.2",
     Test / javaOptions += "-Dconfig.file=test/resources/application-test.conf"
   )
   .aggregate(domain)
@@ -26,10 +26,10 @@ lazy val root = (project in file("."))
 
 lazy val domain = project
   .settings(
-    libraryDependencies += "org.mockito" % "mockito-core" % "5.14.1" % Test,
+    libraryDependencies += "org.mockito" % "mockito-core" % "5.14.2" % Test,
     libraryDependencies += "org.scalatest" %% "scalatest-flatspec" % "3.2.19" % Test,
     libraryDependencies += "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.19" % Test,
-    scalaVersion := "3.5.1"
+    scalaVersion := "3.5.2"
   )
 
 libraryDependencies += evolutions
