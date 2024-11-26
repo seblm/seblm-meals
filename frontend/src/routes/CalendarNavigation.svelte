@@ -23,14 +23,14 @@
 </header>
 
 <style lang="scss">
-	@import '../lib/styles/variables';
+	@use '../lib/styles/variables';
 
 	.calendar-nav {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 		gap: 1rem;
-		margin-bottom: $spacing-m;
+		margin-bottom: variables.$spacing-m;
 		&-title {
 			text-align: center;
 		}
@@ -52,7 +52,7 @@
 		}
 	}
 
-	@media (min-width: $screen-m) {
+	@media (min-width: variables.$screen-m) {
 		.calendar-nav {
 			margin-bottom: 0;
 		}

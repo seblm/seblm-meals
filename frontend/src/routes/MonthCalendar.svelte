@@ -4,7 +4,7 @@
 	import { CalendarMode } from '$lib/utils/enums';
 	import { getWeeksInMonth, lastDayOfMonth } from 'date-fns';
 
-	import addMonths from 'date-fns/addMonths';
+	import { addMonths } from 'date-fns/addMonths';
 	import { onDestroy } from 'svelte';
 	import { blur } from 'svelte/transition';
 	import CalendarNavigation from './CalendarNavigation.svelte';
@@ -36,7 +36,7 @@
 	const getDayOfMonth = (weekDay: number, week: number) =>
 		week * 7 + weekDay - firstDayOfMonthInWeek + 1;
 
-	const selectDay = (day) => {
+	const selectDay = (day: number) => {
 		const newDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), day);
 		date.update(() => newDate);
 		calendarViewMode.update(() => CalendarMode.WEEK);
@@ -84,7 +84,7 @@
 									{getDayOfMonth(weekDay, week)}
 								</div>
 							{/if}
-							<div class="month-calendar-grid-cell-meal" />
+							<div class="month-calendar-grid-cell-meal"></div>
 						</button>
 					{/each}
 				</div>

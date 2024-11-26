@@ -208,11 +208,11 @@
 {/if}
 <div class="week-calendar-wrapper" in:blur={{ delay: 200 }} out:blur={{ duration: 200 }}>
 	<div class="week-calendar-day week-calendar-heading-row">
-		<div class="week-calendar-day-name week-calendar-day-cell week-calendar-heading-cell" />
+		<div class="week-calendar-day-name week-calendar-day-cell week-calendar-heading-cell"></div>
 		<div class="week-calendar-day-meal week-calendar-day-cell week-calendar-heading-cell">Midi</div>
-		<div class="week-calendar-day-cell week-calendar-day-actions week-calendar-heading-cell" />
+		<div class="week-calendar-day-cell week-calendar-day-actions week-calendar-heading-cell"></div>
 		<div class="week-calendar-day-meal week-calendar-day-cell week-calendar-heading-cell">Soir</div>
-		<div class="week-calendar-day-cell week-calendar-day-actions week-calendar-heading-cell" />
+		<div class="week-calendar-day-cell week-calendar-day-actions week-calendar-heading-cell"></div>
 	</div>
 	{#each days as day, index}
 		<div class="week-calendar-day">
@@ -276,7 +276,7 @@
 {/if}
 
 <style lang="scss">
-	@import '../lib/styles/variables';
+	@use '../lib/styles/variables';
 	.week-calendar {
 		&-wrapper {
 			width: 100%;
@@ -383,7 +383,7 @@
 			}
 		}
 	}
-	@media screen and (max-width: $screen-m) {
+	@media screen and (max-width: variables.$screen-m) {
 		.week-calendar {
 			&-day {
 				height: 140px;
