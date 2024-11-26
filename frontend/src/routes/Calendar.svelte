@@ -44,7 +44,7 @@
 </div>
 
 <style lang="scss">
-	@import '../lib/styles/variables';
+	@use '../lib/styles/variables';
 
 	.calendar {
 		width: 100%;
@@ -75,7 +75,7 @@
 		}
 	}
 
-	@media (min-width: $screen-m) {
+	@media (min-width: variables.$screen-m) {
 		.calendar {
 			&-header {
 				display: grid;

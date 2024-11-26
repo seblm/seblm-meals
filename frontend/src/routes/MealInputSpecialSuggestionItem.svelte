@@ -15,7 +15,7 @@
 <li on:click={handleClick}>
 	<span title={suggestion.description}>{@html suggestion.descriptionLabel} </span>
 	<span> ({suggestion.count})</span>
-	<div class="spacer" />
+	<div class="spacer"></div>
 	<span>{lastUsed}</span>
 </li>
 
