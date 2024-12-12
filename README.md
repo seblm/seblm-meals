@@ -34,11 +34,11 @@ Build frontend files:
 docker run --rm --tty \
   --volume ./frontend:/home/node/seblm-meals \
   --user node --workdir /home/node/seblm-meals \
-  node:20-alpine npm install
+  node:22-alpine npm install
 docker run --rm --tty \
   --volume ./frontend:/home/node/seblm-meals \
   --user node --workdir /home/node/seblm-meals \
-  node:20-alpine npm run build
+  node:22-alpine npm run build
 ```
 
 Generate a `Dockerfile` with sbt through Docker:
@@ -48,7 +48,7 @@ docker run --rm --tty \
   --volume .:/home/sbtuser/seblm-meals \
   --volume ~/Library/Caches/Coursier:/home/sbtuser/.cache/coursier \
   --user sbtuser --workdir /home/sbtuser/seblm-meals \
-  sbtscala/scala-sbt:eclipse-temurin-jammy-21.0.2_13_1.10.2_3.5.1 sbt "Docker / stage"
+  sbtscala/scala-sbt:eclipse-temurin-21.0.5_11_1.10.6_3.5.2 sbt "Docker / stage"
 ```
 
 Build with compose:

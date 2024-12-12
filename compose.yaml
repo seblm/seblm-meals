@@ -6,8 +6,6 @@ services:
       POSTGRES_USER: seblm-meals
     volumes:
       - data:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
   application:
     build: target/docker/stage
     image: seblm/seblm-meals
