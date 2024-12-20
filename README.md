@@ -110,52 +110,74 @@ sbt run
 ### Svelte
 
 ```shell
-npm init svelte
+nvm use --lts=jod
+npx sv create frontend
 ```
 
 ```shell
-
-> frontend@0.0.1 npx
-> create-svelte
-
-
-create-svelte version 6.3.7
-
-┌  Welcome to SvelteKit!
-│
-◇  Where should we create your project?
-│    (hit Enter to use current directory)
+┌  Welcome to SvelteKit CLI! (v0.6.8)
 │
 ◇  Which Svelte app template?
-│  ○ SvelteKit demo app (A demo app showcasing some of the features of SvelteKit - play a word guessing game that works without JavaScript!)
-│  ● Skeleton project (Barebones scaffolding for your new SvelteKit app)
-│  ○ Library project (Barebones scaffolding for your new Svelte library)
+│  ● Skeleton minimal (barebones scaffolding for your new app)
+│  ○ SvelteKit demo (showcase app with a word guessing game that works without JavaScript)
+│  ○ Svelte library (setup with svelte-package to help correctly package your library)
 │
 ◇  Add type checking with TypeScript?
 │  ● Yes, using TypeScript syntax
 │  ○ Yes, using JavaScript with JSDoc comments
 │  ○ No
 │
-◇  Select additional options (use arrow keys/space bar)
-│  ◼ Add ESLint for code linting
-│  ◼ Add Prettier for code formatting
-│  ◻ Add Playwright for browser testing
-│  ◻ Add Vitest for unit testing
-│  ◻ Try the Svelte 5 preview (unstable!)
+◇  Project created
 │
-└  Your project is ready!
-
-Install more integrations with:
-  npx svelte-add
-
-Next steps:
-  1: npm install
-  2: git init && git add -A && git commit -m "Initial commit" (optional)
-  3: npm run dev -- --open
-
-To close the dev server, hit Ctrl-C
-
-Stuck? Visit us at https://svelte.dev/chat
+◇  What would you like to add to your project? (use arrow keys / space bar)
+│
+│  ◼ prettier (formatter - https://prettier.io)
+│  ◼ eslint (linter - https://eslint.org)
+│  ◻ vitest (unit testing - https://vitest.dev)
+│  ◻ playwright (browser testing - https://playwright.dev)
+│  ◻ tailwindcss (css framework - https://tailwindcss.com)
+│  ◼ sveltekit-adapter (deployment - https://svelte.dev/docs/kit/adapters)
+│  ◻ drizzle (database orm - https://orm.drizzle.team)
+│  ◻ lucia (auth guide - https://lucia-auth.com)
+│  ◻ mdsvex (svelte + markdown - https://mdsvex.pngwn.io)
+│  ◻ paraglide (i18n - https://inlang.com)
+│  ◻ storybook (frontend workshop - https://storybook.js.org)
+│
+◇  sveltekit-adapter: Which SvelteKit adapter would you like use?
+│  ○ node
+│  ● static (@sveltejs/adapter-static)
+│  ○ vercel
+│  ○ cloudflare-pages
+│  ○ cloudflare-workers
+│  ○ netlify
+│
+◇  Which package manager do you want to install dependencies with?
+│  ○ None
+│  ● npm
+│  ○ yarn
+│  ○ pnpm
+│  ○ bun
+│  ○ deno
+│
+◇  Successfully setup add-ons
+│
+◇  Successfully installed dependencies
+│
+◇  Successfully formatted modified files
+│
+◇  Project next steps ─────────────────────────────────────────────────────╮
+│                                                                          │
+│  1: cd frontend1                                                         │
+│  2: git init && git add -A && git commit -m "Initial commit" (optional)  │
+│  3: npm run dev -- --open                                                │
+│                                                                          │
+│  To close the dev server, hit Ctrl-C                                     │
+│                                                                          │
+│  Stuck? Visit us at https://svelte.dev/chat                              │
+│                                                                          │
+├──────────────────────────────────────────────────────────────────────────╯
+│
+└  You're all set!
 ```
 
 [docker-hub-postgres]: https://hub.docker.com/_/postgres
