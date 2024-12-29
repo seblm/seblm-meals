@@ -19,6 +19,6 @@ services:
       POSTGRESQL_ADDON_HOST: database
       POSTGRESQL_ADDON_DB: seblm-meals
     ports:
-      - 9000:9000
+      - "9000:9000"
 volumes:
   data:

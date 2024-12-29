@@ -93,7 +93,7 @@ Expose database by adding exposed ports into `compose.yaml`:
 services:
   database:
     ports:
-      - 5432:5432
+      - "5432:5432"
 ```
 
 ```shell
