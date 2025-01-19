@@ -56,8 +56,7 @@ class MealsDAO(dbConfig1: DatabaseConfig[JdbcProfile])(using ExecutionContext)
     db.run(meals_by_time.withMeal.result)
       .map(_.foldLeft(Map.empty[MealRow, Seq[LocalDateTime]]):
         case (acc, (mealsByType, mealRow)) =>
-          acc.updated(mealRow, acc.getOrElse(mealRow, Seq.empty[LocalDateTime]) :+ mealsByType.time)
-      )
+          acc.updated(mealRow, acc.getOrElse(mealRow, Seq.empty[LocalDateTime]) :+ mealsByType.time))
 
   private def link(meal: MealRow, at: LocalDateTime): Future[Meal] =
     db.run(meals_by_time.insertOrUpdate(MealsByTimeRow(at, meal.id)))
