@@ -54,6 +54,7 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: 'sbt'
+      - uses: sbt/setup-sbt@v1
       - run: sbt scalafmtCheckAll undeclaredCompileDependenciesTest unusedCompileDependenciesTest test "Docker / stage"
       - uses: scalacenter/sbt-dependency-submission@v3
       - uses: actions/upload-artifact@v4
