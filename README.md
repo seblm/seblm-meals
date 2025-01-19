@@ -110,7 +110,7 @@ sbt run
 ### Svelte
 
 ```shell
-nvm use --lts=jod
+nvm install --lts=jod
 npx sv create frontend
 ```
 

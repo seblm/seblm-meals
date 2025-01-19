@@ -1,10 +1,12 @@
-<script>
+<script lang="ts">
 	import './styles.css';
+
+	let { children } = $props();
 </script>
 
 <div class="app">
 	<main>
-		<slot />
+		{@render children()}
 	</main>
 </div>
 
