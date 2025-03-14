@@ -38,7 +38,7 @@ libraryDependencies += "org.playframework" %% "play-configuration" % "3.0.6"
 libraryDependencies += "org.playframework" %% "play-json" % "3.0.4"
 libraryDependencies += "org.playframework" %% "play-slick" % "6.1.1"
 libraryDependencies += "org.playframework" %% "play-slick-evolutions" % "6.1.1"
-libraryDependencies += "com.typesafe.slick" %% "slick" % "3.5.2"
+libraryDependencies += "com.typesafe.slick" %% "slick" % "3.6.0"
 
 libraryDependencies += "org.postgresql" % "postgresql" % "42.7.5" % Runtime
 
