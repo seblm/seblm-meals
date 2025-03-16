@@ -24,12 +24,15 @@ lazy val root = (project in file("."))
   .aggregate(domain)
   .dependsOn(domain)
 
+val mockitoVersion = "5.16.1"
 lazy val domain = project
   .settings(
-    libraryDependencies += "org.mockito" % "mockito-core" % "5.16.0" % Test,
+    libraryDependencies += "org.mockito" % "mockito-core" % mockitoVersion % Test,
     libraryDependencies += "org.scalatest" %% "scalatest-flatspec" % "3.2.19" % Test,
     libraryDependencies += "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.19" % Test,
-    scalaVersion := "3.6.4"
+    scalaVersion := "3.6.4",
+    Test / fork := true,
+    Test / javaOptions += s"-javaagent:${csrCacheDirectory.value.getAbsolutePath}/https/repo1.maven.org/maven2/org/mockito/mockito-core/${mockitoVersion}/mockito-core-${mockitoVersion}.jar"
   )
 
 libraryDependencies += evolutions
