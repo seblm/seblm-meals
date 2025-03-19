@@ -9,13 +9,6 @@ lazy val root = (project in file("."))
     Assets / unmanagedResourceDirectories += baseDirectory.value / "frontend" / "build",
     dockerBaseImage := "eclipse-temurin:21",
     dockerExposedPorts := Seq(9000),
-    dockerEnvVars := Map(
-      "APPLICATION_SECRET" -> "",
-      "POSTGRESQL_ADDON_USER" -> "",
-      "POSTGRESQL_ADDON_PASSWORD" -> "",
-      "POSTGRESQL_ADDON_HOST" -> "",
-      "POSTGRESQL_ADDON_DB" -> ""
-    ),
     routesImport += "meals.application.MealsBinders.given",
     routesImport += "java.time.{LocalDate, LocalDateTime, Year}",
     scalaVersion := "3.6.4",
@@ -32,7 +25,7 @@ lazy val domain = project
     libraryDependencies += "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.19" % Test,
     scalaVersion := "3.6.4",
     Test / fork := true,
-    Test / javaOptions += s"-javaagent:${csrCacheDirectory.value.getAbsolutePath}/https/repo1.maven.org/maven2/org/mockito/mockito-core/${mockitoVersion}/mockito-core-${mockitoVersion}.jar"
+    Test / javaOptions += s"-javaagent:${csrCacheDirectory.value.getAbsolutePath}/https/repo1.maven.org/maven2/org/mockito/mockito-core/$mockitoVersion/mockito-core-$mockitoVersion.jar"
   )
 
 libraryDependencies += evolutions
