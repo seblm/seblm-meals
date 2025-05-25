@@ -11,19 +11,19 @@ lazy val root = (project in file("."))
     dockerExposedPorts := Seq(9000),
     routesImport += "meals.application.MealsBinders.given",
     routesImport += "java.time.{LocalDate, LocalDateTime, Year}",
-    scalaVersion := "3.6.4",
+    scalaVersion := "3.7.0",
     Test / javaOptions += "-Dconfig.file=test/resources/application-test.conf"
   )
   .aggregate(domain)
   .dependsOn(domain)
 
-val mockitoVersion = "5.17.0"
+val mockitoVersion = "5.18.0"
 lazy val domain = project
   .settings(
     libraryDependencies += "org.mockito" % "mockito-core" % mockitoVersion % Test,
     libraryDependencies += "org.scalatest" %% "scalatest-flatspec" % "3.2.19" % Test,
     libraryDependencies += "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.19" % Test,
-    scalaVersion := "3.6.4",
+    scalaVersion := "3.7.0",
     Test / fork := true,
     Test / javaOptions += s"-javaagent:${csrCacheDirectory.value.getAbsolutePath}/https/repo1.maven.org/maven2/org/mockito/mockito-core/$mockitoVersion/mockito-core-$mockitoVersion.jar"
   )
@@ -34,7 +34,7 @@ libraryDependencies += "org.playframework" %% "play-configuration" % "3.0.7"
 libraryDependencies += "org.playframework" %% "play-json" % "3.0.4"
 libraryDependencies += "org.playframework" %% "play-slick" % "6.2.0"
 libraryDependencies += "org.playframework" %% "play-slick-evolutions" % "6.2.0"
-libraryDependencies += "com.typesafe.slick" %% "slick" % "3.6.0"
+libraryDependencies += "com.typesafe.slick" %% "slick" % "3.6.1"
 
 libraryDependencies += "org.postgresql" % "postgresql" % "42.7.5" % Runtime
 
