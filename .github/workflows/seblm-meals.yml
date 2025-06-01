@@ -57,6 +57,7 @@ jobs:
       - uses: sbt/setup-sbt@v1
       - run: sbt scalafmtCheckAll undeclaredCompileDependenciesTest unusedCompileDependenciesTest test "Docker / stage"
       - uses: scalacenter/sbt-dependency-submission@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
       - uses: actions/upload-artifact@v4
         with:
           name: backend
