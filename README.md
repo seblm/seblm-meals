@@ -115,10 +115,10 @@ npx sv create frontend
 ```
 
 ```shell
-┌  Welcome to SvelteKit CLI! (v0.6.8)
+┌  Welcome to SvelteKit CLI! (v0.8.8)
 │
-◇  Which Svelte app template?
-│  ● Skeleton minimal (barebones scaffolding for your new app)
+◇  Which template whould you like?
+│  ● SvelteKit minimal (barebones scaffolding for your new app)
 │  ○ SvelteKit demo (showcase app with a word guessing game that works without JavaScript)
 │  ○ Svelte library (setup with svelte-package to help correctly package your library)
 │
@@ -140,16 +140,18 @@ npx sv create frontend
 │  ◻ drizzle (database orm - https://orm.drizzle.team)
 │  ◻ lucia (auth guide - https://lucia-auth.com)
 │  ◻ mdsvex (svelte + markdown - https://mdsvex.pngwn.io)
-│  ◻ paraglide (i18n - https://inlang.com)
+│  ◻ paraglide (i18n - https://inlang.com/m/gerre34r/library-inlang-paraglideJs)
 │  ◻ storybook (frontend workshop - https://storybook.js.org)
 │
 ◇  sveltekit-adapter: Which SvelteKit adapter would you like use?
+│  ○ auto
 │  ○ node
 │  ● static (@sveltejs/adapter-static)
 │  ○ vercel
-│  ○ cloudflare-pages
-│  ○ cloudflare-workers
+│  ○ cloudflare
 │  ○ netlify
+│
+◇  Successfully setup add-ons
 │
 ◇  Which package manager do you want to install dependencies with?
 │  ○ None
@@ -159,15 +161,13 @@ npx sv create frontend
 │  ○ bun
 │  ○ deno
 │
-◇  Successfully setup add-ons
-│
 ◇  Successfully installed dependencies
 │
 ◇  Successfully formatted modified files
 │
 ◇  Project next steps ─────────────────────────────────────────────────────╮
 │                                                                          │
-│  1: cd frontend1                                                         │
+│  1: cd frontend                                                          │
 │  2: git init && git add -A && git commit -m "Initial commit" (optional)  │
 │  3: npm run dev -- --open                                                │
 │                                                                          │
