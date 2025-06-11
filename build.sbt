@@ -36,7 +36,7 @@ libraryDependencies += "org.playframework" %% "play-slick" % "6.2.0"
 libraryDependencies += "org.playframework" %% "play-slick-evolutions" % "6.2.0"
 libraryDependencies += "com.typesafe.slick" %% "slick" % "3.6.1"
 
-libraryDependencies += "org.postgresql" % "postgresql" % "42.7.6" % Runtime
+libraryDependencies += "org.postgresql" % "postgresql" % "42.7.7" % Runtime
 
 libraryDependencies += "com.h2database" % "h2" % "2.3.232" % Test
 libraryDependencies += "org.scalatest" %% "scalatest-flatspec" % "3.2.19" % Test
