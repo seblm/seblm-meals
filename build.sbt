@@ -29,8 +29,8 @@ lazy val domain = project
   )
 
 libraryDependencies += evolutions
-libraryDependencies += "org.playframework" %% "play" % "3.0.7"
-libraryDependencies += "org.playframework" %% "play-configuration" % "3.0.7"
+libraryDependencies += "org.playframework" %% "play" % "3.0.8"
+libraryDependencies += "org.playframework" %% "play-configuration" % "3.0.8"
 libraryDependencies += "org.playframework" %% "play-json" % "3.0.4"
 libraryDependencies += "org.playframework" %% "play-slick" % "6.2.0"
 libraryDependencies += "org.playframework" %% "play-slick-evolutions" % "6.2.0"
