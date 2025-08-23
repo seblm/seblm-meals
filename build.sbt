@@ -11,19 +11,19 @@ lazy val root = (project in file("."))
     dockerExposedPorts := Seq(9000),
     routesImport += "meals.application.MealsBinders.given",
     routesImport += "java.time.{LocalDate, LocalDateTime, Year}",
-    scalaVersion := "3.7.1",
+    scalaVersion := "3.7.2",
     Test / javaOptions += "-Dconfig.file=test/resources/application-test.conf"
   )
   .aggregate(domain)
   .dependsOn(domain)
 
-val mockitoVersion = "5.18.0"
+val mockitoVersion = "5.19.0"
 lazy val domain = project
   .settings(
     libraryDependencies += "org.mockito" % "mockito-core" % mockitoVersion % Test,
     libraryDependencies += "org.scalatest" %% "scalatest-flatspec" % "3.2.19" % Test,
     libraryDependencies += "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.19" % Test,
-    scalaVersion := "3.7.1",
+    scalaVersion := "3.7.2",
     Test / fork := true,
     Test / javaOptions += s"-javaagent:${csrCacheDirectory.value.getAbsolutePath}/https/repo1.maven.org/maven2/org/mockito/mockito-core/$mockitoVersion/mockito-core-$mockitoVersion.jar"
   )
