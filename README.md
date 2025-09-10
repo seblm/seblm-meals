@@ -48,7 +48,7 @@ docker run --rm --tty \
   --volume .:/home/sbtuser/seblm-meals \
   --volume ~/Library/Caches/Coursier:/home/sbtuser/.cache/coursier \
   --user sbtuser --workdir /home/sbtuser/seblm-meals \
-  sbtscala/scala-sbt:eclipse-temurin-21.0.7_6_1.11.0_3.7.0 sbt "Docker / stage"
+  sbtscala/scala-sbt:eclipse-temurin-21.0.8_9_1.11.6_3.7.3 sbt "Docker / stage"
 ```
 
 Build with compose:
