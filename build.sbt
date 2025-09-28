@@ -31,12 +31,12 @@ lazy val domain = project
 lazy val catseffect = project
   .settings(
     scalaVersion := "3.3.1",
-    libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.4.14" % Runtime,
-    libraryDependencies += "org.postgresql" % "r2dbc-postgresql" % "1.0.4.RELEASE",
-    libraryDependencies += "org.slf4j" % "slf4j-api" % "2.0.9",
-    libraryDependencies += "org.typelevel" %% "cats-effect" % "3.5.3",
-    libraryDependencies += "org.scalameta" %% "munit" % "1.0.0-M10" % Test,
-    libraryDependencies += "org.typelevel" %% "munit-cats-effect" % "2.0.0-M4" % Test,
+    libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.5.18" % Runtime,
+    libraryDependencies += "org.postgresql" % "r2dbc-postgresql" % "1.0.7.RELEASE",
+    libraryDependencies += "org.slf4j" % "slf4j-api" % "2.0.17",
+    libraryDependencies += "org.typelevel" %% "cats-effect" % "3.6.3",
+    libraryDependencies += "org.scalameta" %% "munit" % "1.2.0" % Test,
+    libraryDependencies += "org.typelevel" %% "munit-cats-effect" % "2.1.0" % Test,
   )
 
 libraryDependencies += evolutions
