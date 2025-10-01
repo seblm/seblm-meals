@@ -31,11 +31,12 @@ lazy val domain = project
 lazy val catseffect = project
   .settings(
     scalaVersion := "3.3.1",
-    libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.5.18" % Runtime,
-    libraryDependencies += "org.postgresql" % "r2dbc-postgresql" % "1.0.7.RELEASE",
-    libraryDependencies += "org.slf4j" % "slf4j-api" % "2.0.17",
-    libraryDependencies += "org.typelevel" %% "cats-effect" % "3.6.3",
+    libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.5.18" % Runtime, // stick to 1.5.18 because of org.playframework:play-logback transitive dependency
     libraryDependencies += "org.scalameta" %% "munit" % "1.2.0" % Test,
+    libraryDependencies += "org.slf4j" % "slf4j-api" % "2.0.17" % Test,
+    libraryDependencies += "org.tpolecat" %% "natchez-core" % "0.3.8" % Test,
+    libraryDependencies += "org.tpolecat" %% "skunk-core" % "0.6.4" % Test,
+    libraryDependencies += "org.typelevel" %% "cats-effect" % "3.6.3" % Test,
     libraryDependencies += "org.typelevel" %% "munit-cats-effect" % "2.1.0" % Test,
   )
 
