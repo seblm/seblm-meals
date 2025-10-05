@@ -115,7 +115,7 @@ npx sv create frontend
 ```
 
 ```shell
-┌  Welcome to SvelteKit CLI! (v0.8.8)
+┌  Welcome to SvelteKit CLI! (v0.9.7)
 │
 ◇  Which template whould you like?
 │  ● SvelteKit minimal (barebones scaffolding for your new app)
@@ -137,6 +137,7 @@ npx sv create frontend
 │  ◻ playwright (browser testing - https://playwright.dev)
 │  ◻ tailwindcss (css framework - https://tailwindcss.com)
 │  ◼ sveltekit-adapter (deployment - https://svelte.dev/docs/kit/adapters)
+│  ◻ devtools-json (devtools json - https://github.com/ChromeDevTools/vite-plugin-devtools-json)
 │  ◻ drizzle (database orm - https://orm.drizzle.team)
 │  ◻ lucia (auth guide - https://lucia-auth.com)
 │  ◻ mdsvex (svelte + markdown - https://mdsvex.pngwn.io)
@@ -165,17 +166,18 @@ npx sv create frontend
 │
 ◇  Successfully formatted modified files
 │
-◇  Project next steps ─────────────────────────────────────────────────────╮
-│                                                                          │
-│  1: cd frontend                                                          │
-│  2: git init && git add -A && git commit -m "Initial commit" (optional)  │
-│  3: npm run dev -- --open                                                │
-│                                                                          │
-│  To close the dev server, hit Ctrl-C                                     │
-│                                                                          │
-│  Stuck? Visit us at https://svelte.dev/chat                              │
-│                                                                          │
-├──────────────────────────────────────────────────────────────────────────╯
+◇  What's next? ───────────────────────────────╮
+│                                              │
+│  📁 Project steps                            │
+│                                              │
+│    1: cd frontend1                           │
+│    2: npm run dev -- --open                  │
+│                                              │
+│  To close the dev server, hit Ctrl-C         │
+│                                              │
+│  Stuck? Visit us at https://svelte.dev/chat  │
+│                                              │
+├──────────────────────────────────────────────╯
 │
 └  You're all set!
 ```

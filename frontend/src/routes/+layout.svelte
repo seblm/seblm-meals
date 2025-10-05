@@ -1,30 +1,13 @@
 <script lang="ts">
-	import './styles.css';
+	import favicon from '$lib/assets/favicon.png';
 
 	let { children } = $props();
 </script>
 
-<div class="app">
-	<main>
-		{@render children()}
-	</main>
-</div>
+<svelte:head>
+	<link rel="icon" href={favicon} />
+	<title>Seb LM Meals</title>
+	<meta name="description" content="A yummy app for a relaxed meals planning" />
+</svelte:head>
 
-<style>
-	.app {
-		display: flex;
-		flex-direction: column;
-		min-height: 100vh;
-	}
-
-	main {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		padding: 1rem;
-		width: 100%;
-		max-width: 1400px;
-		margin: 0 auto;
-		box-sizing: border-box;
-	}
-</style>
+{@render children?.()}
