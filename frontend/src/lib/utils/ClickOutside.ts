@@ -1,7 +1,11 @@
-export function clickOutside(node) {
-	const handleClick = (event) => {
-		if (node && !node.contains(event.target) && !event.defaultPrevented) {
-			node.dispatchEvent(new CustomEvent('click_outside', node));
+import type { ActionReturn } from 'svelte/action';
+
+export function clickOutside(node: HTMLElement): ActionReturn {
+	const handleClick = (event: Event) => {
+		console.log(`node: ${node}; event.target: ${event.target}`);
+		const target = event.target as Node;
+		if (node && (node === target || !node.contains(target)) && !event.defaultPrevented) {
+			node.dispatchEvent(new CustomEvent('click_outside'));
 		}
 	};
 
