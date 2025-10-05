@@ -20,7 +20,7 @@
 		dispatch('valueChange', { value });
 	}
 
-	function handleEnterPress(keyEvent) {
+	function handleEnterPress(keyEvent: KeyboardEvent) {
 		if (keyEvent.code === 'Enter') {
 			dispatch('enterPressed');
 		}
@@ -58,7 +58,7 @@
 				lastUsed="Il y a 1 mois"
 			/>
 		{/if}
-		{#each suggestions.mostRecents ?? [] as suggestion}
+		{#each suggestions?.mostRecents ?? [] as suggestion}
 			<MealInputSuggestionItem
 				{suggestion}
 				on:select={() => onSelectSuggestion(suggestion.description)}

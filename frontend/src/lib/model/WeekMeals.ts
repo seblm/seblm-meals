@@ -36,35 +36,6 @@ export interface WeekMeals {
 	sunday: Day;
 }
 
-const emptyTitles: Titles = {
-	short: '',
-	long: ''
-};
-
-const emptyWeekLink: WeekLink = {
-	year: 0,
-	week: 0,
-	isActive: false
-};
-
-const emptyDay: Day = {
-	reference: new Date().toDateString()
-};
-
-export const emptyWeekMeals: WeekMeals = {
-	titles: emptyTitles,
-	previous: emptyWeekLink,
-	now: emptyWeekLink,
-	next: emptyWeekLink,
-	monday: emptyDay,
-	tuesday: emptyDay,
-	wednesday: emptyDay,
-	thursday: emptyDay,
-	friday: emptyDay,
-	saturday: emptyDay,
-	sunday: emptyDay
-};
-
 export interface SearchSuggestion {
 	count: number;
 	description: string;

@@ -44,7 +44,6 @@
 		selectedDate = d;
 	});
 
-	$: weekNumber = getWeek(selectedDate);
 	$: weekDays = weekMeals ? getWeekDays() : [];
 
 	onMount(() => {
@@ -130,7 +129,7 @@
 		}
 	};
 
-	const onInputChange = (mealDescription: string, day, isLunch) => {
+	const onInputChange = (mealDescription: string, day: string, isLunch: boolean) => {
 		const recordKey = `${day}-${isLunch}`;
 		const ref = getDay(day)!.reference;
 
@@ -190,10 +189,13 @@
 	};
 
 	const getWeekDays = () => {
-		const weekDays = [];
+		const weekDays: string[] = [];
 		days.forEach((dayString) => {
 			const dayReference = getDay(dayString)?.reference;
-			weekDays.push(dayReference?.substring(8, dayReference?.length));
+			const weekDay = dayReference?.substring(8, dayReference?.length);
+			if (weekDay) {
+				weekDays.push(weekDay);
+			}
 		});
 		return weekDays;
 	};
@@ -227,7 +229,7 @@
 			>
 				<MealInput
 					value={weekMeals ? getMeal(day, true) : ''}
-					title={weekMeals ? getMeal(day, true) : null}
+					title={weekMeals ? getMeal(day, true) : ''}
 					url={weekMeals ? getUrl(day, true) : undefined}
 					suggestions={suggestions.input === `${day}-${true}` ? suggestions.suggestions : null}
 					on:valueChange={(event) => onInputChange(event.detail.value, day, true)}
@@ -251,7 +253,7 @@
 			>
 				<MealInput
 					value={weekMeals ? getMeal(day, false) : ''}
-					title={weekMeals ? getMeal(day, false) : null}
+					title={weekMeals ? getMeal(day, false) : ''}
 					url={weekMeals ? getUrl(day, false) : undefined}
 					suggestions={suggestions.input === `${day}-${false}` ? suggestions.suggestions : null}
 					on:valueChange={(event) => onInputChange(event.detail.value, day, false)}
