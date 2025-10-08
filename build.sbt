@@ -7,7 +7,7 @@ lazy val root = (project in file("."))
   .enablePlugins(DockerPlugin, PlayScala)
   .settings(
     Assets / unmanagedResourceDirectories += baseDirectory.value / "frontend" / "build",
-    dockerBaseImage := "eclipse-temurin:21",
+    dockerBaseImage := "eclipse-temurin:25",
     dockerExposedPorts := Seq(9000),
     routesImport += "meals.application.MealsBinders.given",
     routesImport += "java.time.{LocalDate, LocalDateTime, Year}",
