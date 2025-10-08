@@ -1,25 +1,19 @@
 <script lang="ts">
 	import { arrowLeft } from '$lib/images/arrow-left.js';
 	import { arrowRight } from '$lib/images/arrow-right.js';
-	import { createEventDispatcher } from 'svelte';
 
-	export let title: string;
-
-	const dispatch = createEventDispatcher();
-
-	function onNext() {
-		dispatch('next');
+	interface Props {
+		title: string;
+		onPrev: () => void;
+		onNext: () => void;
 	}
-
-	function onPrev() {
-		dispatch('previous');
-	}
+	let { title, onPrev, onNext }: Props = $props();
 </script>
 
 <header class="calendar-nav">
-	<button class="calendar-nav-action" on:click={onPrev}>{@html arrowLeft}</button>
+	<button class="calendar-nav-action" onclick={onPrev}>{@html arrowLeft}</button>
 	<h2 class="calendar-nav-title">{title}</h2>
-	<button class="calendar-nav-action" on:click={onNext}>{@html arrowRight}</button>
+	<button class="calendar-nav-action" onclick={onNext}>{@html arrowRight}</button>
 </header>
 
 <style lang="scss">

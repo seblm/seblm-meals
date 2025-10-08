@@ -1,17 +1,14 @@
 <script lang="ts">
 	import type { SearchSuggestion } from '$lib/model/WeekMeals';
-	import { createEventDispatcher } from 'svelte';
 
-	export let suggestion: SearchSuggestion;
-
-	const dispatch = createEventDispatcher();
-
-	function handleClick() {
-		dispatch('select');
+	interface Props {
+		onclick: () => void;
+		suggestion: SearchSuggestion;
 	}
+	let { onclick, suggestion }: Props = $props();
 </script>
 
-<li on:click={handleClick}>
+<li {onclick}>
 	<span title={suggestion.description}>{@html suggestion.descriptionLabel} </span>
 	<span> ({suggestion.count})</span>
 	<div class="spacer"></div>

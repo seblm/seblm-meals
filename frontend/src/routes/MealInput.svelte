@@ -1,44 +1,34 @@
 <script lang="ts">
 	import { externalLink } from '$lib/images/external-link';
 	import type { SuggestionResponse } from '$lib/model/WeekMeals';
-	import { createEventDispatcher } from 'svelte';
 	import MealInputSpecialSuggestionItem from './MealInputSpecialSuggestionItem.svelte';
 	import MealInputSuggestionItem from './MealInputSuggestionItem.svelte';
+	import type { FormEventHandler } from 'svelte/elements';
 
-	export let value: string;
-	export let title: string;
-	export let url: string | undefined;
-	export let suggestions: SuggestionResponse | null;
-	$: mostRecents = suggestions?.mostRecents;
-	$: yearAgo = suggestions?.fiftyTwoWeeksAgo;
-	$: monthAgo = suggestions?.fourWeeksAgo;
-	$: showSuggestions = suggestions;
-
-	const dispatch = createEventDispatcher();
-	function handleInputChange(event: Event) {
-		const value = (event.target as HTMLInputElement).value;
-		dispatch('valueChange', { value });
+	interface Props {
+		value: string;
+		title: string;
+		url: string | undefined;
+		suggestions: SuggestionResponse | null;
+		oninput: FormEventHandler<HTMLInputElement>;
+		onEnterPressed: () => void;
+		onSelectSuggestion: (description: string) => void;
 	}
+	let { value, title, url, suggestions, oninput, onEnterPressed, onSelectSuggestion }: Props =
+		$props();
+	let mostRecents = $derived(suggestions?.mostRecents);
+	let yearAgo = $derived(suggestions?.fiftyTwoWeeksAgo);
+	let monthAgo = $derived(suggestions?.fourWeeksAgo);
+	let showSuggestions = $derived(suggestions);
 
 	function handleEnterPress(keyEvent: KeyboardEvent) {
 		if (keyEvent.code === 'Enter') {
-			dispatch('enterPressed');
+			onEnterPressed();
 		}
-	}
-
-	function onSelectSuggestion(description: string) {
-		dispatch('selectSuggestion', { description });
 	}
 </script>
 
-<input
-	type="text"
-	{value}
-	{title}
-	on:input={handleInputChange}
-	on:keypress={handleEnterPress}
-	on:focus={handleInputChange}
-/>
+<input type="text" {value} {title} {oninput} onkeypress={handleEnterPress} onfocus={oninput} />
 {#if url}
 	<a href={url} target="_blank">{@html externalLink}</a>
 {/if}
@@ -47,21 +37,21 @@
 		{#if yearAgo}
 			<MealInputSpecialSuggestionItem
 				suggestion={yearAgo}
-				on:select={() => onSelectSuggestion(yearAgo.description)}
+				onclick={() => onSelectSuggestion(yearAgo.description)}
 				lastUsed="Il y a 1 an"
 			/>
 		{/if}
 		{#if monthAgo}
 			<MealInputSpecialSuggestionItem
 				suggestion={monthAgo}
-				on:select={() => onSelectSuggestion(monthAgo.description)}
+				onclick={() => onSelectSuggestion(monthAgo.description)}
 				lastUsed="Il y a 1 mois"
 			/>
 		{/if}
-		{#each suggestions?.mostRecents ?? [] as suggestion}
+		{#each mostRecents ?? [] as suggestion (suggestion.description)}
 			<MealInputSuggestionItem
 				{suggestion}
-				on:select={() => onSelectSuggestion(suggestion.description)}
+				onclick={() => onSelectSuggestion(suggestion.description)}
 			/>
 		{/each}
 	</ul>

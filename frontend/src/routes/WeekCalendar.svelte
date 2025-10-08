@@ -205,7 +205,7 @@
 
 {#if weekMeals}
 	<div in:blur={{ delay: 200 }} out:blur={{ duration: 200 }}>
-		<CalendarNavigation title={weekMeals.titles.long} on:previous={prevWeek} on:next={nextWeek} />
+		<CalendarNavigation title={weekMeals.titles.long} onPrev={prevWeek} onNext={nextWeek} />
 	</div>
 {/if}
 <div class="week-calendar-wrapper" in:blur={{ delay: 200 }} out:blur={{ duration: 200 }}>
@@ -216,7 +216,7 @@
 		<div class="week-calendar-day-meal week-calendar-day-cell week-calendar-heading-cell">Soir</div>
 		<div class="week-calendar-day-cell week-calendar-day-actions week-calendar-heading-cell"></div>
 	</div>
-	{#each days as day, index}
+	{#each days as day, index (index)}
 		<div class="week-calendar-day">
 			<div class="week-calendar-day-name week-calendar-day-cell week-calendar-heading-cell">
 				<p>{getDayName(day)}</p>
@@ -225,23 +225,23 @@
 			<div
 				class="week-calendar-day-meal week-calendar-day-cell"
 				use:clickOutside
-				on:click_outside={() => handleClickOutsideCell(`${day}-${true}`)}
+				onclick_outside={() => handleClickOutsideCell(`${day}-${true}`)}
 			>
 				<MealInput
 					value={weekMeals ? getMeal(day, true) : ''}
 					title={weekMeals ? getMeal(day, true) : ''}
 					url={weekMeals ? getUrl(day, true) : undefined}
 					suggestions={suggestions.input === `${day}-${true}` ? suggestions.suggestions : null}
-					on:valueChange={(event) => onInputChange(event.detail.value, day, true)}
-					on:enterPressed={() => saveMeal(day, true)}
-					on:selectSuggestion={(event) => onSelectSuggestion(day, true, event.detail.description)}
+					oninput={(event) => onInputChange(event.currentTarget.value, day, true)}
+					onEnterPressed={() => saveMeal(day, true)}
+					onSelectSuggestion={(description) => onSelectSuggestion(day, true, description)}
 				/>
-				<button class="week-calendar-day-cell-save" on:click={() => saveMeal(day, true)}>
+				<button class="week-calendar-day-cell-save" onclick={() => saveMeal(day, true)}>
 					{@html check}
 				</button>
 			</div>
 			<div class="week-calendar-day-cell week-calendar-day-actions">
-				<button on:click={() => unlinkMeal(day, true)}>
+				<button onclick={() => unlinkMeal(day, true)}>
 					{@html bin}
 				</button>
 			</div>
@@ -249,23 +249,23 @@
 			<div
 				class="week-calendar-day-meal week-calendar-day-cell"
 				use:clickOutside
-				on:click_outside={() => handleClickOutsideCell(`${day}-${false}`)}
+				onclick_outside={() => handleClickOutsideCell(`${day}-${false}`)}
 			>
 				<MealInput
 					value={weekMeals ? getMeal(day, false) : ''}
 					title={weekMeals ? getMeal(day, false) : ''}
 					url={weekMeals ? getUrl(day, false) : undefined}
 					suggestions={suggestions.input === `${day}-${false}` ? suggestions.suggestions : null}
-					on:valueChange={(event) => onInputChange(event.detail.value, day, false)}
-					on:enterPressed={() => saveMeal(day, false)}
-					on:selectSuggestion={(event) => onSelectSuggestion(day, false, event.detail.description)}
+					oninput={(event) => onInputChange(event.currentTarget.value, day, false)}
+					onEnterPressed={() => saveMeal(day, false)}
+					onSelectSuggestion={(description) => onSelectSuggestion(day, false, description)}
 				/>
-				<button class="week-calendar-day-cell-save" on:click={() => saveMeal(day, false)}>
+				<button class="week-calendar-day-cell-save" onclick={() => saveMeal(day, false)}>
 					{@html check}
 				</button>
 			</div>
 			<div class="week-calendar-day-cell week-calendar-day-actions">
-				<button on:click={() => unlinkMeal(day, false)}>
+				<button onclick={() => unlinkMeal(day, false)}>
 					{@html bin}
 				</button>
 			</div>
