@@ -4,7 +4,10 @@ import meals.infrastructure.MealRow
 
 import java.time.*
 import java.time.DayOfWeek.*
+import java.util.regex.Pattern
+import java.util.regex.Pattern.CASE_INSENSITIVE
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.matching.RegexCreator
 
 class MealsService(clock: Clock, repository: MealRepository)(using ExecutionContext):
 
@@ -65,10 +68,12 @@ class MealsService(clock: Clock, repository: MealRepository)(using ExecutionCont
   ): MealSuggest = MealSuggest(
     count = dates.length,
     description = meal.description,
-    descriptionLabel = search.fold(meal.description) { token =>
-      val highlighted = s"<strong>$token</strong>"
-      meal.description.split(token).mkString(highlighted) + (if (meal.description.endsWith(token)) highlighted else "")
-    },
+    descriptionLabel = search.fold(meal.description): token =>
+      val caseInsensitiveToken = RegexCreator.create(Pattern.compile(s"(.*)($token)(.*)", CASE_INSENSITIVE))
+      meal.description match
+        case caseInsensitiveToken(prefix, matchedToken, suffix) => s"$prefix<strong>$matchedToken</strong>$suffix"
+        case _                                                  => meal.description
+    ,
     lastused = Duration.between(dates.max, reference).toDays.toInt
   )
 
