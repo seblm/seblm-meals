@@ -174,24 +174,31 @@ components:
           type: string
           format: date
         lunch:
-          $ref: '#/components/schemas/Meal'
+          $ref: '#/components/schemas/MealEntry'
         dinner:
-          $ref: '#/components/schemas/Meal'
+          $ref: '#/components/schemas/MealEntry'
     Meal:
       required:
+        - description
         - id
-        - time
-        - meal
       type: object
       properties:
+        description:
+          type: string
         id:
           type: string
           format: uuid
-        time:
-          type: string
-        meal:
-          type: string
         url:
+          type: string
+    MealEntry:
+      required:
+        - meal
+        - time
+      type: object
+      properties:
+        meal:
+          $ref: '#/components/schemas/Meal'
+        time:
           type: string
     MealsDayResponse:
       type: array

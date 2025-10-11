@@ -9,25 +9,26 @@ import java.util.UUID
 object WeekMealsReads:
 
   private given Reads[Titles] =
-    ((JsPath \ "short").read[String] and
-      (JsPath \ "long").read[String])((short, long) => Titles(short, long))
+    ((JsPath \ "short").read[String] and (JsPath \ "long").read[String]): (short, long) =>
+      Titles(short, long)
   private given Reads[WeekReference] =
     ((JsPath \ "year").read[Int] and
       (JsPath \ "week").read[Int] and
-      (JsPath \ "isActive").read[Boolean])((year, week, isActive) => WeekReference(Year.of(year), week, isActive))
+      (JsPath \ "isActive").read[Boolean]): (year, week, isActive) =>
+      WeekReference(Year.of(year), week, isActive)
   private given Reads[Meal] =
     ((JsPath \ "id").read[String] and
-      (JsPath \ "time").read[String] and
-      (JsPath \ "meal").read[String] and
-      (JsPath \ "url").readNullable[String])((id, time, meal, url) =>
-      Meal(UUID.fromString(id), LocalDateTime.parse(time), meal, url)
-    )
+      (JsPath \ "description").read[String] and
+      (JsPath \ "url").readNullable[String]): (id, description, url) =>
+      Meal(UUID.fromString(id), description, url)
+  private given Reads[MealEntry] =
+    ((JsPath \ "meal").read[Meal] and (JsPath \ "time").read[String]): (meal, time) =>
+      MealEntry(meal, LocalDateTime.parse(time))
   given Reads[WeekDay] =
     ((JsPath \ "reference").read[String] and
-      (JsPath \ "lunch").readNullable[Meal] and
-      (JsPath \ "dinner").readNullable[Meal])((reference, lunch, dinner) =>
+      (JsPath \ "lunch").readNullable[MealEntry] and
+      (JsPath \ "dinner").readNullable[MealEntry]): (reference, lunch, dinner) =>
       WeekDay(LocalDate.parse(reference), lunch, dinner)
-    )
   given Reads[WeekMeals] =
     ((JsPath \ "titles").read[Titles] and
       (JsPath \ "previous").read[WeekReference] and
@@ -39,7 +40,7 @@ object WeekMealsReads:
       (JsPath \ "thursday").read[WeekDay] and
       (JsPath \ "friday").read[WeekDay] and
       (JsPath \ "saturday").read[WeekDay] and
-      (JsPath \ "sunday").read[WeekDay])(
+      (JsPath \ "sunday").read[WeekDay]):
       (
           titles: Titles,
           previous: WeekReference,
@@ -53,4 +54,3 @@ object WeekMealsReads:
           saturday: WeekDay,
           sunday: WeekDay
       ) => WeekMeals(titles, previous, current, next, monday, tuesday, wednesday, thursday, friday, saturday, sunday)
-    )

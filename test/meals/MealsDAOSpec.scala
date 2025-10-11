@@ -1,7 +1,6 @@
 package meals
 
-import meals.domain.MealRepository
-import meals.infrastructure.MealRow
+import meals.domain.{Meal, MealRepository}
 import org.scalatest.concurrent.{Eventually, ScalaFutures}
 import org.scalatest.time.{Millis, Span}
 
@@ -21,5 +20,5 @@ class MealsDAOSpec extends MealsPlaySpec with Eventually with ScalaFutures:
       eventually:
         inserts.value.value must be(Symbol("Success"))
 
-      whenReady(mealsDAO.all()): (allMeals: Map[MealRow, Seq[LocalDateTime]]) =>
+      whenReady(mealsDAO.all()): (allMeals: Map[Meal, Seq[LocalDateTime]]) =>
         allMeals.values must contain only Seq(time)

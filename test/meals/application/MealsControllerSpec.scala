@@ -63,7 +63,8 @@ class MealsControllerSpec extends MealsPlaySpec:
       val inserted = call(mealsComponents.mealsController.linkOrInsertApi(), pizza)
       status(inserted) must be(CREATED)
       val mealsInserted = call(mealsComponents.mealsController.mealsApi(Year.of(2023), 37), FakeRequest())
-      Json.fromJson[WeekMeals](contentAsJson(mealsInserted)).asOpt.value.sunday.lunch.value.meal must be("pizza")
+      Json.fromJson[WeekMeals](contentAsJson(mealsInserted)).asOpt.value.sunday.lunch.value.meal.description must
+        be("pizza")
 
       val deleted =
         call(mealsComponents.mealsController.unlinkApi(), FakeRequest().withBody(Json.toJson(UnlinkMeal(mealTime))))
@@ -74,9 +75,11 @@ class MealsControllerSpec extends MealsPlaySpec:
       val linked = call(mealsComponents.mealsController.linkOrInsertApi(), pizza)
       status(linked) must be(CREATED)
       val mealsLinked = call(mealsComponents.mealsController.mealsApi(Year.of(2023), 37), FakeRequest())
-      Json.fromJson[WeekMeals](contentAsJson(mealsLinked)).asOpt.value.sunday.lunch.value.meal must be("pizza")
+      Json.fromJson[WeekMeals](contentAsJson(mealsLinked)).asOpt.value.sunday.lunch.value.meal.description must
+        be("pizza")
 
       val otherInserted = call(mealsComponents.mealsController.linkOrInsertApi(), pasta)
       status(otherInserted) must be(CREATED)
       val otherMealsLinked = call(mealsComponents.mealsController.mealsApi(Year.of(2023), 37), FakeRequest())
-      Json.fromJson[WeekMeals](contentAsJson(otherMealsLinked)).asOpt.value.sunday.lunch.value.meal must be("pasta")
+      Json.fromJson[WeekMeals](contentAsJson(otherMealsLinked)).asOpt.value.sunday.lunch.value.meal.description must
+        be("pasta")

@@ -1,7 +1,6 @@
 package meals.domain
 
 import meals.domain.*
-import meals.infrastructure.MealRow
 import org.mockito.Mockito.{mock, when}
 import org.scalatest.OptionValues.*
 import org.scalatest.concurrent.Futures.scaled
@@ -26,17 +25,21 @@ class MealsServiceSpec extends AnyFlatSpec with Eventually with ScalaFutures:
     when(mealRepository.meals(from, to)).thenReturn(
       Future.successful(
         Seq(
-          Meal(
-            id = UUID.fromString("8ffaf9c5-f9a4-4d7d-8358-d65f17882a2a"),
-            time = LocalDateTime.parse("2020-02-27T12:00"),
-            meal = "saucisson brioché salade",
-            url = Some("https://seblm.github.io")
+          MealEntry(
+            meal = Meal(
+              id = UUID.fromString("8ffaf9c5-f9a4-4d7d-8358-d65f17882a2a"),
+              description = "saucisson brioché salade",
+              url = Some("https://seblm.github.io")
+            ),
+            time = LocalDateTime.parse("2020-02-27T12:00")
           ),
-          Meal(
-            id = UUID.fromString("050aacbd-4de9-4d56-abbc-2e64d613e9f8"),
-            time = LocalDateTime.parse("2020-02-28T20:00"),
-            meal = "chou-fleur pomme de terre lardons",
-            url = None
+          MealEntry(
+            meal = Meal(
+              id = UUID.fromString("050aacbd-4de9-4d56-abbc-2e64d613e9f8"),
+              description = "chou-fleur pomme de terre lardons",
+              url = None
+            ),
+            time = LocalDateTime.parse("2020-02-28T20:00")
           )
         )
       )
@@ -59,12 +62,12 @@ class MealsServiceSpec extends AnyFlatSpec with Eventually with ScalaFutures:
       weekMeals.tuesday.dinner should not be defined
       weekMeals.wednesday.lunch should not be defined
       weekMeals.wednesday.dinner should not be defined
-      weekMeals.thursday.lunch.value.meal shouldBe "saucisson brioché salade"
-      weekMeals.thursday.lunch.value.url.value shouldBe "https://seblm.github.io"
+      weekMeals.thursday.lunch.value.meal.description shouldBe "saucisson brioché salade"
+      weekMeals.thursday.lunch.value.meal.url.value shouldBe "https://seblm.github.io"
       weekMeals.thursday.dinner should not be defined
       weekMeals.friday.lunch should not be defined
-      weekMeals.friday.dinner.value.meal shouldBe "chou-fleur pomme de terre lardons"
-      weekMeals.friday.dinner.value.url shouldBe empty
+      weekMeals.friday.dinner.value.meal.description shouldBe "chou-fleur pomme de terre lardons"
+      weekMeals.friday.dinner.value.meal.url shouldBe empty
       weekMeals.saturday.lunch should not be defined
       weekMeals.saturday.dinner should not be defined
       weekMeals.sunday.lunch should not be defined
@@ -79,35 +82,45 @@ class MealsServiceSpec extends AnyFlatSpec with Eventually with ScalaFutures:
       Future
         .successful(
           Seq(
-            Meal(
-              id = UUID.fromString("40cd80f6-bb5a-4b87-bcd9-3f475f6e3e4d"),
-              time = LocalDateTime.parse("2020-03-02T12:00"),
-              meal = "galettes de blé noir",
-              url = None
+            MealEntry(
+              meal = Meal(
+                id = UUID.fromString("40cd80f6-bb5a-4b87-bcd9-3f475f6e3e4d"),
+                description = "galettes de blé noir",
+                url = None
+              ),
+              time = LocalDateTime.parse("2020-03-02T12:00")
             ),
-            Meal(
-              id = UUID.fromString("ca73207d-f879-4ebf-9965-70ee732d136c"),
-              time = LocalDateTime.parse("2020-03-03T20:00"),
-              meal = "chipolatas pâtes",
-              url = None
+            MealEntry(
+              meal = Meal(
+                id = UUID.fromString("ca73207d-f879-4ebf-9965-70ee732d136c"),
+                description = "chipolatas pâtes",
+                url = None
+              ),
+              time = LocalDateTime.parse("2020-03-03T20:00")
             ),
-            Meal(
-              id = UUID.fromString("ca82f285-a88a-4e95-927a-a126f0de92d7"),
-              time = LocalDateTime.parse("2020-03-04T20:00"),
-              meal = "ratatouille riz",
-              url = None
+            MealEntry(
+              meal = Meal(
+                id = UUID.fromString("ca82f285-a88a-4e95-927a-a126f0de92d7"),
+                description = "ratatouille riz",
+                url = None
+              ),
+              time = LocalDateTime.parse("2020-03-04T20:00")
             ),
-            Meal(
-              id = UUID.fromString("5480e229-6a56-4eb1-8271-d00dba2e72e0"),
-              time = LocalDateTime.parse("2020-03-07T12:00"),
-              meal = "lentilles saucisses (Morteau, Montbelliard) carottes",
-              url = None
+            MealEntry(
+              meal = Meal(
+                id = UUID.fromString("5480e229-6a56-4eb1-8271-d00dba2e72e0"),
+                description = "lentilles saucisses (Morteau, Montbelliard) carottes",
+                url = None
+              ),
+              time = LocalDateTime.parse("2020-03-07T12:00")
             ),
-            Meal(
-              id = UUID.fromString("28389f39-3772-4ac2-b992-565af57160c2"),
-              time = LocalDateTime.parse("2020-03-08T12:00"),
-              meal = "quenelles riz sauce tomate",
-              url = None
+            MealEntry(
+              meal = Meal(
+                id = UUID.fromString("28389f39-3772-4ac2-b992-565af57160c2"),
+                description = "quenelles riz sauce tomate",
+                url = None
+              ),
+              time = LocalDateTime.parse("2020-03-08T12:00")
             )
           )
         )
@@ -125,19 +138,19 @@ class MealsServiceSpec extends AnyFlatSpec with Eventually with ScalaFutures:
       weekMeals.next.year shouldBe Year.of(2020)
       weekMeals.next.week shouldBe 10
       weekMeals.next.isActive shouldBe true
-      weekMeals.monday.lunch.value.meal shouldBe "galettes de blé noir"
+      weekMeals.monday.lunch.value.meal.description shouldBe "galettes de blé noir"
       weekMeals.monday.dinner should not be defined
       weekMeals.tuesday.lunch should not be defined
-      weekMeals.tuesday.dinner.value.meal shouldBe "chipolatas pâtes"
+      weekMeals.tuesday.dinner.value.meal.description shouldBe "chipolatas pâtes"
       weekMeals.wednesday.lunch should not be defined
-      weekMeals.wednesday.dinner.value.meal shouldBe "ratatouille riz"
+      weekMeals.wednesday.dinner.value.meal.description shouldBe "ratatouille riz"
       weekMeals.thursday.lunch should not be defined
       weekMeals.thursday.dinner should not be defined
       weekMeals.friday.lunch should not be defined
       weekMeals.friday.dinner should not be defined
-      weekMeals.saturday.lunch.value.meal shouldBe "lentilles saucisses (Morteau, Montbelliard) carottes"
+      weekMeals.saturday.lunch.value.meal.description shouldBe "lentilles saucisses (Morteau, Montbelliard) carottes"
       weekMeals.saturday.dinner should not be defined
-      weekMeals.sunday.lunch.value.meal shouldBe "quenelles riz sauce tomate"
+      weekMeals.sunday.lunch.value.meal.description shouldBe "quenelles riz sauce tomate"
       weekMeals.sunday.dinner should not be defined
     }
   }
@@ -271,17 +284,17 @@ object MealsServiceSpec:
 
   extension (allResponse: AllResponse)
 
-    def toFuture: Future[Map[MealRow, Seq[LocalDateTime]]] =
+    def toFuture: Future[Map[Meal, Seq[LocalDateTime]]] =
       Future.successful(toAllResponseMap(allResponse))
 
-    private def toAllResponseMap(all: AllResponse): Map[MealRow, Seq[LocalDateTime]] = all.all match
+    private def toAllResponseMap(all: AllResponse): Map[Meal, Seq[LocalDateTime]] = all.all match
       case Nil          => Map.empty
       case last :: Nil  => Map(toAllResponseMap(last))
       case head :: tail => Map(toAllResponseMap(head)) ++ toAllResponseMap(AllResponse(tail))
 
-    private def toAllResponseMap(line: String): (MealRow, Seq[LocalDateTime]) = line.split("->") match
+    private def toAllResponseMap(line: String): (Meal, Seq[LocalDateTime]) = line.split("->") match
       case Array(description, dates) =>
-        MealRow(UUID.randomUUID(), description.trim(), None) -> dates
+        Meal(UUID.randomUUID(), description.trim(), None) -> dates
           .split(",")
           .toIndexedSeq
           .map(x => LocalDateTime.parse(x.trim))

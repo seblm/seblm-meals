@@ -52,15 +52,16 @@
 
 	const updateWeekMeals = () =>
 		getWeekMeals(getYear(selectedDate), getWeek(selectedDate)).then((meals) => (weekMeals = meals));
-	const getMeal = (dayString: string, isLunch: boolean): string => {
+	const getMealDescription = (dayString: string, isLunch: boolean): string => {
 		let dayMeals = getDay(dayString);
-
-		let meal = isLunch ? (dayMeals?.lunch?.meal ?? '') : dayMeals?.dinner?.meal;
-		return meal ? meal : '';
+		let description = isLunch
+			? (dayMeals?.lunch?.meal.description ?? '')
+			: dayMeals?.dinner?.meal.description;
+		return description ? description : '';
 	};
 	const getUrl = (dayString: string, isLunch: boolean): string | undefined => {
 		let dayMeals = getDay(dayString);
-		return isLunch ? dayMeals?.lunch?.url : dayMeals?.dinner?.url;
+		return isLunch ? dayMeals?.lunch?.meal.url : dayMeals?.dinner?.meal.url;
 	};
 
 	const getDay = (dayString: string): Day | null => {
@@ -228,8 +229,8 @@
 				onclick_outside={() => handleClickOutsideCell(`${day}-${true}`)}
 			>
 				<MealInput
-					value={weekMeals ? getMeal(day, true) : ''}
-					title={weekMeals ? getMeal(day, true) : ''}
+					value={weekMeals ? getMealDescription(day, true) : ''}
+					title={weekMeals ? getMealDescription(day, true) : ''}
 					url={weekMeals ? getUrl(day, true) : undefined}
 					suggestions={suggestions.input === `${day}-${true}` ? suggestions.suggestions : null}
 					oninput={(event) => onInputChange(event.currentTarget.value, day, true)}
@@ -252,8 +253,8 @@
 				onclick_outside={() => handleClickOutsideCell(`${day}-${false}`)}
 			>
 				<MealInput
-					value={weekMeals ? getMeal(day, false) : ''}
-					title={weekMeals ? getMeal(day, false) : ''}
+					value={weekMeals ? getMealDescription(day, false) : ''}
+					title={weekMeals ? getMealDescription(day, false) : ''}
 					url={weekMeals ? getUrl(day, false) : undefined}
 					suggestions={suggestions.input === `${day}-${false}` ? suggestions.suggestions : null}
 					oninput={(event) => onInputChange(event.currentTarget.value, day, false)}

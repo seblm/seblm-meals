@@ -1,7 +1,5 @@
 package meals.domain
 
-import meals.infrastructure.MealRow
-
 import java.time.*
 import java.time.DayOfWeek.*
 import java.util.regex.Pattern
@@ -11,7 +9,7 @@ import scala.util.matching.RegexCreator
 
 class MealsService(clock: Clock, repository: MealRepository)(using ExecutionContext):
 
-  def mealsAround(date: LocalDate, limit: Int): Future[Seq[Meal]] =
+  def mealsAround(date: LocalDate, limit: Int): Future[Seq[MealEntry]] =
     val from = date.minusDays(limit).atStartOfDay()
     val to = date.plusDays(limit + 1).atStartOfDay().minusNanos(1)
     repository.meals(from, to)
@@ -20,12 +18,12 @@ class MealsService(clock: Clock, repository: MealRepository)(using ExecutionCont
     val (from, to) = DatesTransformations.range(year, week)
     repository.meals(from, to).map(mealsByWeekDay(year, week, clock))
 
-  def linkOrInsert(mealTime: LocalDateTime, mealDescription: String): Future[Meal] =
+  def linkOrInsert(mealTime: LocalDateTime, mealDescription: String): Future[MealEntry] =
     repository.linkOrInsert(mealTime, mealDescription)
 
   private def moreRecent(
       reference: LocalDateTime
-  )(first: (MealRow, Seq[LocalDateTime]), second: (MealRow, Seq[LocalDateTime])): Boolean =
+  )(first: (Meal, Seq[LocalDateTime]), second: (Meal, Seq[LocalDateTime])): Boolean =
     sumScores(reference)(first._2) > sumScores(reference)(second._2)
 
   private def sumScores(reference: LocalDateTime)(dates: Seq[LocalDateTime]) =
@@ -63,7 +61,7 @@ class MealsService(clock: Clock, repository: MealRepository)(using ExecutionCont
     }
 
   private def createMealSuggest(reference: LocalDateTime, search: Option[String])(
-      meal: MealRow,
+      meal: Meal,
       dates: Seq[LocalDateTime]
   ): MealSuggest = MealSuggest(
     count = dates.length,
@@ -79,8 +77,8 @@ class MealsService(clock: Clock, repository: MealRepository)(using ExecutionCont
 
   def delete(mealTime: LocalDateTime): Future[Unit] = repository.unlink(mealTime)
 
-  private def mealsByWeekDay(year: Year, week: Int, clock: Clock)(meals: Seq[Meal]): WeekMeals =
-    meals.foldLeft(WeekMeals(year, week, clock))((weekMeals: WeekMeals, meal: Meal) =>
+  private def mealsByWeekDay(year: Year, week: Int, clock: Clock)(meals: Seq[MealEntry]): WeekMeals =
+    meals.foldLeft(WeekMeals(year, week, clock))((weekMeals: WeekMeals, meal: MealEntry) =>
       (meal.time.getDayOfWeek, meal.time.getHour) match {
         case (MONDAY, 12)    => weekMeals.copy(monday = weekMeals.monday.copy(lunch = Some(meal)))
         case (MONDAY, 20)    => weekMeals.copy(monday = weekMeals.monday.copy(dinner = Some(meal)))

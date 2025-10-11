@@ -20,7 +20,7 @@ case class WeekMeals(
     sunday: WeekDay
 ):
 
-  def allByDate: Map[LocalDateTime, Option[Meal]] = ListMap(
+  def allByDate: Map[LocalDateTime, Option[MealEntry]] = ListMap(
     monday.reference.atTime(12, 0) -> monday.lunch,
     monday.reference.atTime(20, 0) -> monday.dinner,
     tuesday.reference.atTime(12, 0) -> tuesday.lunch,
@@ -37,7 +37,7 @@ case class WeekMeals(
     sunday.reference.atTime(20, 0) -> sunday.dinner
   )
 
-case class WeekDay(reference: LocalDate, lunch: Option[Meal], dinner: Option[Meal])
+case class WeekDay(reference: LocalDate, lunch: Option[MealEntry], dinner: Option[MealEntry])
 
 object WeekMeals:
 
@@ -69,7 +69,7 @@ object WeekMeals:
       sunday = WeekDay(reference.`with`(SUNDAY), None, None)
     )
 
-  def allWeekMeals(weekMeals: WeekMeals): Seq[Meal] =
+  def allWeekMeals(weekMeals: WeekMeals): Seq[MealEntry] =
     Seq(
       weekMeals.monday.lunch,
       weekMeals.monday.dinner,

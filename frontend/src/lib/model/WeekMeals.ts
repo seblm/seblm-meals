@@ -9,17 +9,21 @@ export interface WeekLink {
 	isActive: boolean;
 }
 
+export interface MealEntry {
+	meal: Meal;
+	time: string;
+}
+
 export interface Meal {
 	id: string;
-	time: string;
-	meal: string;
+	description: string;
 	url?: string;
 }
 
 export interface Day {
 	reference: string;
-	lunch?: Meal;
-	dinner?: Meal;
+	lunch?: MealEntry;
+	dinner?: MealEntry;
 }
 
 export interface WeekMeals {

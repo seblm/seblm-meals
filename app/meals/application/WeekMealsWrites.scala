@@ -1,6 +1,6 @@
 package meals.application
 
-import meals.domain.{Meal, Titles, WeekDay, WeekMeals, WeekReference}
+import meals.domain.{Meal, MealEntry, Titles, WeekDay, WeekMeals, WeekReference}
 import play.api.libs.json.{JsObject, JsString, JsValue, Json, Writes}
 
 object WeekMealsWrites:
@@ -11,6 +11,8 @@ object WeekMealsWrites:
     Json.obj("year" -> weekReference.year.getValue, "week" -> weekReference.week, "isActive" -> weekReference.isActive)
 
   given Writes[Meal] = Json.writes
+
+  given Writes[MealEntry] = Json.writes
 
   given Writes[WeekDay] = (weekDay: WeekDay) =>
     JsObject(
