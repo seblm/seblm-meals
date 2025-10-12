@@ -20,6 +20,13 @@ export interface Meal {
 	url?: string;
 }
 
+export interface MealStatistics {
+	count: number;
+	first: string;
+	last: string;
+	meal: Meal;
+}
+
 export interface Day {
 	reference: string;
 	lunch?: MealEntry;

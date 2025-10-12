@@ -4,12 +4,13 @@ import meals.MealsPlaySpec
 import meals.application.LinkOrInsertDataWrites.given
 import meals.application.UnlinkMealWrites.given
 import meals.domain.WeekMealsReads.given
-import meals.domain.{Titles, WeekDay, WeekMeals, WeekReference}
+import meals.domain.*
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 
 import java.time.*
+import java.util.UUID
 
 class MealsControllerSpec extends MealsPlaySpec:
 
@@ -17,13 +18,25 @@ class MealsControllerSpec extends MealsPlaySpec:
     Some(Clock.fixed(Instant.parse("2023-01-19T18:54:55.716650Z"), ZoneId.of("Europe/Paris")))
 
   "MealsController" should:
-    "get meals around a date" in:
-      val pizza = LinkOrInsertData("pizza", LocalDateTime.parse("2023-01-16T12:00:00"))
-      val pasta = LinkOrInsertData("pasta", LocalDateTime.parse("2023-01-17T20:00:00"))
+    "get all meals and around a date" in:
+      val pizzaTime = LocalDateTime.parse("2023-01-16T12:00:00")
+      val pizza = LinkOrInsertData("pizza", pizzaTime)
+      val pastaTime = LocalDateTime.parse("2023-01-17T20:00:00")
+      val pasta = LinkOrInsertData("pasta", pastaTime)
 
       Vector(pizza, pasta).foreach: meal =>
         val result = call(mealsComponents.mealsController.linkOrInsertApi(), FakeRequest().withBody(Json.toJson(meal)))
         status(result) must be(CREATED)
+
+      val id = UUID.fromString("7f209aff-2aae-4bf4-ba5d-f7741cfe7c07")
+      val all = call(mealsComponents.mealsController.meals(), FakeRequest())
+      val allResponse = Json.fromJson[Vector[MealStatistics]](contentAsJson(all)).asOpt.value
+      val allResponseWithoutMealIds =
+        allResponse.map(mealStatistics => mealStatistics.copy(meal = mealStatistics.meal.copy(id = id)))
+      allResponseWithoutMealIds must contain inOrderOnly (
+        MealStatistics(1, pastaTime, pastaTime, Meal(id, "pasta", None)),
+        MealStatistics(1, pizzaTime, pizzaTime, Meal(id, "pizza", None))
+      )
 
       val result = call(mealsComponents.mealsController.mealsAround(LocalDate.parse("2023-01-16"), 3), FakeRequest())
 

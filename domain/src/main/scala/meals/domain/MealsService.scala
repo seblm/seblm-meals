@@ -9,6 +9,16 @@ import scala.util.matching.RegexCreator
 
 class MealsService(clock: Clock, repository: MealRepository)(using ExecutionContext):
 
+  def allMeals(): Future[Seq[MealStatistics]] =
+    repository
+      .all()
+      .map: meals =>
+        meals
+          .map((meal, value) => MealStatistics(value.length, value.min, value.max, meal))
+          .toSeq
+          .sortWith((a, b) => if (a.count == b.count) a.last.isBefore(b.last) else a.count < b.count)
+          .reverse
+
   def mealsAround(date: LocalDate, limit: Int): Future[Seq[MealEntry]] =
     val from = date.minusDays(limit).atStartOfDay()
     val to = date.plusDays(limit + 1).atStartOfDay().minusNanos(1)

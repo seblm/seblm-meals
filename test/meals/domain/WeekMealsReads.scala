@@ -24,6 +24,12 @@ object WeekMealsReads:
   private given Reads[MealEntry] =
     ((JsPath \ "meal").read[Meal] and (JsPath \ "time").read[String]): (meal, time) =>
       MealEntry(meal, LocalDateTime.parse(time))
+  given Reads[MealStatistics] =
+    ((JsPath \ "count").read[Int] and
+      (JsPath \ "first").read[String] and
+      (JsPath \ "last").read[String] and
+      (JsPath \ "meal").read[Meal]): (count, first, last, meal) =>
+      MealStatistics(count, LocalDateTime.parse(first), LocalDateTime.parse(last), meal)
   given Reads[WeekDay] =
     ((JsPath \ "reference").read[String] and
       (JsPath \ "lunch").readNullable[MealEntry] and

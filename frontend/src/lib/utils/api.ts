@@ -1,4 +1,19 @@
-import type { LinkOrInsert, SuggestionResponse, UnlinkMeal } from '$lib/model/WeekMeals';
+import type {
+	LinkOrInsert,
+	MealStatistics,
+	SuggestionResponse,
+	UnlinkMeal
+} from '$lib/model/WeekMeals';
+
+export async function getMeals() {
+	return await fetch(`/api/meals`).then(
+		(response) => response.json() as unknown as MealStatistics[],
+		(error) => {
+			console.error(error);
+			return [] as MealStatistics[];
+		}
+	);
+}
 
 export async function getWeekMeals(year: number, weekNumber: number) {
 	return await fetch(`/api/meals/${year}/${weekNumber}`).then(

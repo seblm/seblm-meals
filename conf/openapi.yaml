@@ -7,6 +7,18 @@ tags:
 servers:
   - url: http://localhost:9000/api
 paths:
+  /meals:
+    get:
+      tags:
+        - Meal
+      description: Get all meals
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealStatisticsResponse'
+          description: All meals
   /meals/{day}:
     get:
       tags:
@@ -107,6 +119,23 @@ paths:
               $ref: '#/components/schemas/UnlinkMeal'
 components:
   schemas:
+    MealStatistics:
+      type: object
+      required:
+        - count
+      properties:
+        count:
+          type: number
+        first:
+          type: string
+        last:
+          type: string
+        meal:
+          $ref: '#/components/schemas/Meal'
+    MealStatisticsResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/MealStatistics'
     WeekMeals:
       required:
         - titles

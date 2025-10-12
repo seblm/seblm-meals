@@ -14,6 +14,9 @@ class MealsController(cc: ControllerComponents, mealsService: MealsService) exte
 
   given ExecutionContext = cc.executionContext
 
+  def meals(): Action[AnyContent] = Action.async:
+    mealsService.allMeals().map(meals => Ok(Json.toJson(meals)))
+
   def mealsAround(date: LocalDate, limit: Int): Action[AnyContent] = Action.async:
     mealsService
       .mealsAround(date, limit)

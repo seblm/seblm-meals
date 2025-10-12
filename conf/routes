@@ -1,6 +1,7 @@
 GET    /                                               controllers.Assets.at(file="/200.html")
 GET    /api/meals/$date<[0-9]{4}-[01][0-9]-[0-3][0-9]> meals.application.MealsController.mealsAround(date: LocalDate, limit: Int ?= 7)
 GET    /api/meals/$year<[0-9]+>/$week<[0-9]+>          meals.application.MealsController.mealsApi(year: Year, week: Int)
+GET    /api/meals                                      meals.application.MealsController.meals()
 GET    /api/suggest                                    meals.application.MealsController.suggest(reference: LocalDateTime, search: Option[String])
  + nocsrf
 POST   /api/link-or-insert                             meals.application.MealsController.linkOrInsertApi()
