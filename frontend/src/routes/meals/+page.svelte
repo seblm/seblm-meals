@@ -1,7 +1,9 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import { onMount } from 'svelte';
 	import { getMeals } from '$lib/utils/api';
 	import type { MealStatistics } from '$lib/model/WeekMeals';
+	import MealDate from '$lib/MealDate.svelte';
 
 	let meals = $state([] as MealStatistics[]);
 
@@ -34,15 +36,11 @@
 					<!-- renaming meal.meal.url to href only to avoid no-navigation-without-resolve error -->
 					<tr>
 						<td>{meal.count}</td>
-						<td>{meal.meal.description}</td>
 						<td>
-							{meal.last.toLocaleDateString('fr-FR')}
-							{#if meal.last.getHours() === 12}midi{:else}soir{/if}
+							<a href={resolve(`/meal/[id]`, { id: meal.meal.id })}>{meal.meal.description}</a>
 						</td>
-						<td>
-							{meal.first.toLocaleDateString('fr-FR')}
-							{#if meal.first.getHours() === 12}midi{:else}soir{/if}
-						</td>
+						<td><MealDate date={meal.last} /></td>
+						<td><MealDate date={meal.first} /></td>
 						<td>
 							{#if href}<a {href}>recipe</a>{/if}
 						</td>

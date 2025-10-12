@@ -11,6 +11,7 @@ lazy val root = (project in file("."))
     dockerExposedPorts := Seq(9000),
     routesImport += "meals.application.MealsBinders.given",
     routesImport += "java.time.{LocalDate, LocalDateTime, Year}",
+    routesImport += "java.util.UUID",
     scalaVersion := "3.7.3",
     Test / javaOptions += "-Dconfig.file=test/resources/application-test.conf"
   )

@@ -7,12 +7,16 @@ import play.api.libs.json.*
 import play.api.mvc.*
 
 import java.time.{LocalDate, LocalDateTime, Year}
+import java.util.UUID
 import scala.Function.const
 import scala.concurrent.ExecutionContext
 
 class MealsController(cc: ControllerComponents, mealsService: MealsService) extends AbstractController(cc), Logging:
 
   given ExecutionContext = cc.executionContext
+
+  def meal(id: UUID): Action[AnyContent] = Action.async:
+    mealsService.allMeals().map(meals => meals.find(_.meal.id == id).fold(NotFound)(meal => Ok(Json.toJson(meal))))
 
   def meals(): Action[AnyContent] = Action.async:
     mealsService.allMeals().map(meals => Ok(Json.toJson(meals)))

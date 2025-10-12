@@ -5,20 +5,30 @@ import type {
 	UnlinkMeal
 } from '$lib/model/WeekMeals';
 
+function mealStatisticsReviver(key: String, value: any) {
+	if (key === 'first' || key === 'last') {
+		let date = new Date(Date.parse(`${value}.000Z`));
+		date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+		return date;
+	} else {
+		return value;
+	}
+}
+
+export async function getMeal(id: string) {
+	return await fetch(`/api/meal/${id}`)
+		.then((response) => response.text())
+		.then((mealStatistics) => {
+			return JSON.parse(mealStatistics, mealStatisticsReviver) as unknown as MealStatistics;
+		});
+}
+
 export async function getMeals() {
 	return await fetch(`/api/meals`)
 		.then((response) => response.text())
 		.then(
 			(mealsStatistics) => {
-				return JSON.parse(mealsStatistics, (key, value) => {
-					if (key === 'first' || key === 'last') {
-						let date = new Date(Date.parse(`${value}.000Z`));
-						date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
-						return date;
-					} else {
-						return value;
-					}
-				}) as unknown as MealStatistics[];
+				return JSON.parse(mealsStatistics, mealStatisticsReviver) as unknown as MealStatistics[];
 			},
 			(error) => {
 				console.error(error);
