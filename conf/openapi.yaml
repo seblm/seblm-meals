@@ -31,6 +31,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MealsDayResponse'
+          description: All meals around a day
   /meals/{year}/{week}:
     get:
       tags:
@@ -79,6 +80,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuggestResponse'
+          description: Meal suggestions
   /link-or-insert:
     post:
       tags:
