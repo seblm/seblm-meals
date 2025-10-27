@@ -6,13 +6,25 @@ import type {
 } from '$lib/model/WeekMeals';
 
 export async function getMeals() {
-	return await fetch(`/api/meals`).then(
-		(response) => response.json() as unknown as MealStatistics[],
-		(error) => {
-			console.error(error);
-			return [] as MealStatistics[];
-		}
-	);
+	return await fetch(`/api/meals`)
+		.then((response) => response.text())
+		.then(
+			(mealsStatistics) => {
+				return JSON.parse(mealsStatistics, (key, value) => {
+					if (key === 'first' || key === 'last') {
+						let date = new Date(Date.parse(`${value}.000Z`));
+						date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+						return date;
+					} else {
+						return value;
+					}
+				}) as unknown as MealStatistics[];
+			},
+			(error) => {
+				console.error(error);
+				return [] as MealStatistics[];
+			}
+		);
 }
 
 export async function getWeekMeals(year: number, weekNumber: number) {

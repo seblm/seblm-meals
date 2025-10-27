@@ -22,8 +22,8 @@ export interface Meal {
 
 export interface MealStatistics {
 	count: number;
-	first: string;
-	last: string;
+	first: Date;
+	last: Date;
 	meal: Meal;
 }
 

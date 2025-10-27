@@ -11,7 +11,11 @@
 </script>
 
 <main class="container">
-	<h1>All Meals</h1>
+	<nav aria-label="breadcrumb">
+		<ul>
+			<li>All Meals</li>
+		</ul>
+	</nav>
 
 	<div class="overflow-auto">
 		<table class="striped">
@@ -19,8 +23,8 @@
 				<tr>
 					<th>Count</th>
 					<th>Description</th>
-					<th>First usage</th>
 					<th>Last usage</th>
+					<th>First usage</th>
 					<th>Recipe</th>
 				</tr>
 			</thead>
@@ -31,11 +35,17 @@
 					<tr>
 						<td>{meal.count}</td>
 						<td>{meal.meal.description}</td>
-						<td>{meal.first}</td>
-						<td>{meal.last}</td>
-						<td
-							>{#if href}<a {href}>recipe</a>{/if}</td
-						>
+						<td>
+							{meal.last.toLocaleDateString('fr-FR')}
+							{#if meal.last.getHours() === 12}midi{:else}soir{/if}
+						</td>
+						<td>
+							{meal.first.toLocaleDateString('fr-FR')}
+							{#if meal.first.getHours() === 12}midi{:else}soir{/if}
+						</td>
+						<td>
+							{#if href}<a {href}>recipe</a>{/if}
+						</td>
 					</tr>
 				{/each}
 			</tbody>
