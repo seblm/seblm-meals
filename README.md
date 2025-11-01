@@ -115,7 +115,7 @@ npx sv create frontend
 ```
 
 ```shell
-┌  Welcome to SvelteKit CLI! (v0.9.7)
+┌  Welcome to SvelteKit CLI! (v0.9.11)
 │
 ◇  Which template whould you like?
 │  ● SvelteKit minimal (barebones scaffolding for your new app)
@@ -130,7 +130,6 @@ npx sv create frontend
 ◇  Project created
 │
 ◇  What would you like to add to your project? (use arrow keys / space bar)
-│
 │  ◼ prettier (formatter - https://prettier.io)
 │  ◼ eslint (linter - https://eslint.org)
 │  ◻ vitest (unit testing - https://vitest.dev)
@@ -143,6 +142,7 @@ npx sv create frontend
 │  ◻ mdsvex (svelte + markdown - https://mdsvex.pngwn.io)
 │  ◻ paraglide (i18n - https://inlang.com/m/gerre34r/library-inlang-paraglideJs)
 │  ◻ storybook (frontend workshop - https://storybook.js.org)
+│  ◻ mcp (Svelte MCP - https://svelte.dev/docs/mcp)
 │
 ◇  sveltekit-adapter: Which SvelteKit adapter would you like use?
 │  ○ auto
@@ -170,7 +170,7 @@ npx sv create frontend
 │                                              │
 │  📁 Project steps                            │
 │                                              │
-│    1: cd frontend1                           │
+│    1: cd frontend                            │
 │    2: npm run dev -- --open                  │
 │                                              │
 │  To close the dev server, hit Ctrl-C         │
