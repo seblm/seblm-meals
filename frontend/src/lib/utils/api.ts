@@ -2,12 +2,13 @@ import type {
 	LinkOrInsert,
 	MealStatistics,
 	SuggestionResponse,
-	UnlinkMeal
+	UnlinkMeal,
+	WeekMeals
 } from '$lib/model/WeekMeals';
 
-function mealStatisticsReviver(key: String, value: any) {
+function mealStatisticsReviver(key: string, value: unknown) {
 	if (key === 'first' || key === 'last') {
-		let date = new Date(Date.parse(`${value}.000Z`));
+		const date = new Date(Date.parse(`${value}.000Z`));
 		date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
 		return date;
 	} else {
@@ -39,8 +40,7 @@ export async function getMeals() {
 
 export async function getWeekMeals(year: number, weekNumber: number) {
 	return await fetch(`/api/meals/${year}/${weekNumber}`).then(
-		(response) => response.json(),
-		(error) => console.error(error)
+		(response) => response.json() as unknown as WeekMeals
 	);
 }
 

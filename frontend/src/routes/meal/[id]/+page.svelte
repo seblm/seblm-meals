@@ -1,33 +1,23 @@
 <script lang="ts">
-	import { page } from '$app/state';
-	import type { MealStatistics } from '$lib/model/WeekMeals';
-	import { onMount } from 'svelte';
-	import { getMeal } from '$lib/utils/api';
+	import { externalLink } from '$lib/images/external-link';
 	import MealDate from '$lib/MealDate.svelte';
+	import MealMenu from '$lib/MealMenu.svelte';
+	import type { PageProps } from './$types';
 
-	let meal = $state({} as { meal?: MealStatistics });
-
-	onMount(() => {
-		let id = page?.params.id;
-		if (id) {
-			getMeal(id).then((mealFromServer) => {
-				meal = { meal: mealFromServer };
-			});
-		}
-	});
+	let { data }: PageProps = $props();
 </script>
 
-<main class="container">
-	<nav aria-label="breadcrumb">
-		<ul>
-			<li><a href="/meals">All Meals</a></li>
-			<li>{meal.meal?.meal.description}</li>
-		</ul>
-	</nav>
-	<h2>{meal.meal?.meal.description} ({meal.meal?.count})</h2>
+<main class="container" data-sveltekit-preload-data="tap">
+	<MealMenu year={2025} week={44} />
+	<h2>
+		{data.meal.description} ({data.count})
+		{#if data.meal.url}
+			{@const href = data.meal.url}
+			<a {href} target="_blank">{@html externalLink}</a>
+		{/if}
+	</h2>
 	<ul>
-		{#if meal.meal?.meal.url}<li><a href={meal.meal?.meal.url}>Recipe</a></li>{/if}
-		<li>Last usage: <MealDate date={meal.meal?.last} /></li>
-		<li>First usage: <MealDate date={meal.meal?.first} /></li>
+		<li>Last usage: <MealDate date={data.last} /></li>
+		<li>First usage: <MealDate date={data.first} /></li>
 	</ul>
 </main>
