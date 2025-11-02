@@ -34,11 +34,11 @@ Build frontend files:
 docker run --rm --tty \
   --volume ./frontend:/home/node/seblm-meals \
   --user node --workdir /home/node/seblm-meals \
-  node:22-alpine npm install
+  node:24-alpine npm install
 docker run --rm --tty \
   --volume ./frontend:/home/node/seblm-meals \
   --user node --workdir /home/node/seblm-meals \
-  node:22-alpine npm run build
+  node:24-alpine npm run build
 ```
 
 Generate a `Dockerfile` with sbt through Docker:
