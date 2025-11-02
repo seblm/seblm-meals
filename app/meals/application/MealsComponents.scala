@@ -27,8 +27,9 @@ class MealsComponents(context: Context, clock: Clock = Clock.system(ZoneId.of("E
     new MealsDAO(slickApi.dbConfig[JdbcProfile](DbName(configuration.get[String](SlickModule.DefaultDbName))))
   private lazy val mealsService = new MealsService(clock, mealRepository)
   lazy val mealsController: MealsController = new MealsController(controllerComponents, mealsService)
+  private lazy val spaController: SPARouter = new SPARouter(assets)
 
-  lazy val router: Router = new Routes(httpErrorHandler, assets, mealsController)
+  lazy val router: Router = new Routes(httpErrorHandler, assets, mealsController, spaController)
 
   // this will actually run the database migrations on startup
   applicationEvolutions
