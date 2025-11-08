@@ -21,25 +21,6 @@ class MealsController(cc: ControllerComponents, mealsService: MealsService) exte
   def meals(): Action[AnyContent] = Action.async:
     mealsService.allMeals().map(meals => Ok(Json.toJson(meals)))
 
-  def mealsAround(date: LocalDate, limit: Int): Action[AnyContent] = Action.async:
-    mealsService
-      .mealsAround(date, limit)
-      .map: meals =>
-        Ok(
-          Json.toJson(
-            meals
-              .groupBy(_.time.toLocalDate)
-              .map: (reference, meals) =>
-                WeekDay(
-                  reference = reference,
-                  lunch = meals.find(_.time.getHour == 12),
-                  dinner = meals.find(_.time.getHour == 20)
-                )
-              .toSeq
-              .sortBy(_.reference)
-          )
-        )
-
   def mealsApi(year: Year, week: Int): Action[AnyContent] = Action.async:
     mealsService.meals(year, week).map(meals => Ok(Json.toJson(meals)))
 

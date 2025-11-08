@@ -18,7 +18,7 @@ class MealsControllerSpec extends MealsPlaySpec:
     Some(Clock.fixed(Instant.parse("2023-01-19T18:54:55.716650Z"), ZoneId.of("Europe/Paris")))
 
   "MealsController" should:
-    "get all meals and around a date" in:
+    "get all meals" in:
       val pizzaTime = LocalDateTime.parse("2023-01-16T12:00:00")
       val pizza = LinkOrInsertData("pizza", pizzaTime)
       val pastaTime = LocalDateTime.parse("2023-01-17T20:00:00")
@@ -37,11 +37,6 @@ class MealsControllerSpec extends MealsPlaySpec:
         MealStatistics(1, pastaTime, pastaTime, Meal(id, "pasta", None)),
         MealStatistics(1, pizzaTime, pizzaTime, Meal(id, "pizza", None))
       )
-
-      val result = call(mealsComponents.mealsController.mealsAround(LocalDate.parse("2023-01-16"), 3), FakeRequest())
-
-      val response = Json.fromJson[Vector[WeekDay]](contentAsJson(result)).asOpt.value
-      response.map(_.reference) must contain only (LocalDate.parse("2023-01-16"), LocalDate.parse("2023-01-17"))
 
       Vector(pizza, pasta).foreach: meal =>
         val unlinkRequest = FakeRequest().withMethod("DELETE").withBody(Json.toJson(UnlinkMeal(meal.mealTime)))

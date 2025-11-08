@@ -39,31 +39,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/MealStatisticsResponse'
           description: All meals
-  /meals/{day}:
-    get:
-      tags:
-        - Meal
-      description: Get all meals around a day
-      operationId: mealsDayApi
-      parameters:
-        - name: day
-          in: path
-          required: true
-          schema:
-            type: string
-            format: date
-        - name: limit
-          in: query
-          required: false
-          schema:
-            type: integer
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MealsDayResponse'
-          description: All meals around a day
   /meals/{year}/{week}:
     get:
       tags:
@@ -251,10 +226,6 @@ components:
           $ref: '#/components/schemas/Meal'
         time:
           type: string
-    MealsDayResponse:
-      type: array
-      items:
-        $ref: '#/components/schemas/WeekDay'
     SuggestResponse:
       type: object
       properties:

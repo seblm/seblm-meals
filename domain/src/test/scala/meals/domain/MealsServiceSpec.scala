@@ -3,7 +3,6 @@ package meals.domain
 import meals.domain.*
 import org.mockito.Mockito.{mock, when}
 import org.scalatest.OptionValues.*
-import org.scalatest.concurrent.Futures.scaled
 import org.scalatest.concurrent.{Eventually, ScalaFutures}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.*
