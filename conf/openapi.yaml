@@ -7,6 +7,26 @@ tags:
 servers:
   - url: http://localhost:9000/api
 paths:
+  /meal/{id}:
+    get:
+      tags:
+        - Meal
+      description: Get meal by id
+      parameters:
+        - name: id
+          description: Unique identifier of the meal
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealStatistics'
+          description: Meal statistics
   /meals:
     get:
       tags:
