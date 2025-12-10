@@ -18,7 +18,7 @@ lazy val root = (project in file("."))
   .aggregate(domain)
   .dependsOn(domain)
 
-val mockitoVersion = "5.20.0"
+val mockitoVersion = "5.21.0"
 lazy val domain = project
   .settings(
     libraryDependencies += "org.mockito" % "mockito-core" % mockitoVersion % Test,
