@@ -4,6 +4,8 @@ services:
     environment:
       POSTGRES_PASSWORD: seblm-database-password
       POSTGRES_USER: seblm-meals
+    ports:
+      - "5432:5432"
     volumes:
       - data:/var/lib/postgresql
   application:
