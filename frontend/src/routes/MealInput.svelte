@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
+	import { circleInfo } from '$lib/images/circle-info';
 	import { externalLink } from '$lib/images/external-link';
 	import type { SuggestionResponse } from '$lib/model/WeekMeals';
 	import MealInputSpecialSuggestionItem from './MealInputSpecialSuggestionItem.svelte';
@@ -6,6 +8,7 @@
 	import type { FormEventHandler } from 'svelte/elements';
 
 	interface Props {
+		id: string | undefined;
 		value: string;
 		url: string | undefined;
 		suggestions: SuggestionResponse | null;
@@ -13,7 +16,8 @@
 		onEnterPressed: () => void;
 		onSelectSuggestion: (description: string) => void;
 	}
-	let { value, url, suggestions, oninput, onEnterPressed, onSelectSuggestion }: Props = $props();
+	let { id, value, url, suggestions, oninput, onEnterPressed, onSelectSuggestion }: Props =
+		$props();
 	let title = $derived(value);
 	let mostRecents = $derived(suggestions?.mostRecents);
 	let yearAgo = $derived(suggestions?.fiftyTwoWeeksAgo);
@@ -27,6 +31,9 @@
 	}
 </script>
 
+{#if id}
+	<a href={resolve('/meal/[id]', { id })} class="info">{@html circleInfo}</a>
+{/if}
 <input type="text" {value} {title} {oninput} onkeypress={handleEnterPress} onfocus={oninput} />
 {#if url}
 	{@const href = url}
@@ -58,6 +65,9 @@
 {/if}
 
 <style lang="scss">
+	.info {
+		margin: auto 1rem;
+	}
 	input[type='text'] {
 		width: 100%;
 		margin: auto 1rem;

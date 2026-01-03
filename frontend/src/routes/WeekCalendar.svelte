@@ -52,6 +52,11 @@
 
 	const updateWeekMeals = () =>
 		getWeekMeals(getYear(selectedDate), getWeek(selectedDate)).then((meals) => (weekMeals = meals));
+	const getMealId = (dayString: string, isLunch: boolean): string => {
+		let dayMeals = getDay(dayString);
+		let id = isLunch ? (dayMeals?.lunch?.meal.id ?? '') : dayMeals?.dinner?.meal.id;
+		return id ? id : '';
+	};
 	const getMealDescription = (dayString: string, isLunch: boolean): string => {
 		let dayMeals = getDay(dayString);
 		let description = isLunch
@@ -229,6 +234,7 @@
 				onclick_outside={() => handleClickOutsideCell(`${day}-${true}`)}
 			>
 				<MealInput
+					id={weekMeals ? getMealId(day, true) : undefined}
 					value={weekMeals ? getMealDescription(day, true) : ''}
 					url={weekMeals ? getUrl(day, true) : undefined}
 					suggestions={suggestions.input === `${day}-${true}` ? suggestions.suggestions : null}
@@ -252,6 +258,7 @@
 				onclick_outside={() => handleClickOutsideCell(`${day}-${false}`)}
 			>
 				<MealInput
+					id={weekMeals ? getMealId(day, false) : undefined}
 					value={weekMeals ? getMealDescription(day, false) : ''}
 					url={weekMeals ? getUrl(day, false) : undefined}
 					suggestions={suggestions.input === `${day}-${false}` ? suggestions.suggestions : null}
