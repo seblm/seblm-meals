@@ -230,7 +230,6 @@
 			>
 				<MealInput
 					value={weekMeals ? getMealDescription(day, true) : ''}
-					title={weekMeals ? getMealDescription(day, true) : ''}
 					url={weekMeals ? getUrl(day, true) : undefined}
 					suggestions={suggestions.input === `${day}-${true}` ? suggestions.suggestions : null}
 					oninput={(event) => onInputChange(event.currentTarget.value, day, true)}
@@ -254,7 +253,6 @@
 			>
 				<MealInput
 					value={weekMeals ? getMealDescription(day, false) : ''}
-					title={weekMeals ? getMealDescription(day, false) : ''}
 					url={weekMeals ? getUrl(day, false) : undefined}
 					suggestions={suggestions.input === `${day}-${false}` ? suggestions.suggestions : null}
 					oninput={(event) => onInputChange(event.currentTarget.value, day, false)}

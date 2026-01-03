@@ -7,15 +7,14 @@
 
 	interface Props {
 		value: string;
-		title: string;
 		url: string | undefined;
 		suggestions: SuggestionResponse | null;
 		oninput: FormEventHandler<HTMLInputElement>;
 		onEnterPressed: () => void;
 		onSelectSuggestion: (description: string) => void;
 	}
-	let { value, title, url, suggestions, oninput, onEnterPressed, onSelectSuggestion }: Props =
-		$props();
+	let { value, url, suggestions, oninput, onEnterPressed, onSelectSuggestion }: Props = $props();
+	let title = $derived(value);
 	let mostRecents = $derived(suggestions?.mostRecents);
 	let yearAgo = $derived(suggestions?.fiftyTwoWeeksAgo);
 	let monthAgo = $derived(suggestions?.fourWeeksAgo);
