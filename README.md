@@ -115,34 +115,32 @@ npx sv create frontend
 ```
 
 ```shell
-┌  Welcome to SvelteKit CLI! (v0.10.7)
+┌  Welcome to SvelteKit CLI! (v0.11.2)
 │
 ◇  Which template whould you like?
 │  ● SvelteKit minimal (barebones scaffolding for your new app)
-│  ○ SvelteKit demo (showcase app with a word guessing game that works without JavaScript)
-│  ○ Svelte library (setup with svelte-package to help correctly package your library)
+│  ○ SvelteKit demo
+│  ○ Svelte library
 │
 ◇  Add type checking with TypeScript?
 │  ● Yes, using TypeScript syntax
 │  ○ Yes, using JavaScript with JSDoc comments
 │  ○ No
 │
-◇  Project created
-│
 ◇  What would you like to add to your project? (use arrow keys / space bar)
 │  ◼ prettier (formatter - https://prettier.io)
 │  ◼ eslint (linter - https://eslint.org)
-│  ◻ vitest (unit testing - https://vitest.dev)
-│  ◻ playwright (browser testing - https://playwright.dev)
-│  ◻ tailwindcss (css framework - https://tailwindcss.com)
+│  ◻ vitest
+│  ◻ playwright
+│  ◻ tailwindcss
 │  ◼ sveltekit-adapter (deployment - https://svelte.dev/docs/kit/adapters)
-│  ◻ devtools-json (devtools json - https://github.com/ChromeDevTools/vite-plugin-devtools-json)
-│  ◻ drizzle (database orm - https://orm.drizzle.team)
-│  ◻ lucia (auth guide - https://lucia-auth.com)
-│  ◻ mdsvex (svelte + markdown - https://mdsvex.pngwn.io)
-│  ◻ paraglide (i18n - https://inlang.com/m/gerre34r/library-inlang-paraglideJs)
-│  ◻ storybook (frontend workshop - https://storybook.js.org)
-│  ◻ mcp (Svelte MCP - https://svelte.dev/docs/mcp)
+│  ◻ devtools-json
+│  ◻ drizzle
+│  ◻ lucia
+│  ◻ mdsvex
+│  ◻ paraglide
+│  ◻ storybook
+│  ◻ mcp
 │
 ◇  sveltekit-adapter: Which SvelteKit adapter would you like use?
 │  ○ auto
@@ -164,7 +162,7 @@ npx sv create frontend
 │  ○ bun
 │  ○ deno
 │
-│  npx sv create --template minimal --types ts --add prettier eslint sveltekit-adapter="adapter:static" --install npm frontend1
+│  npx sv create --template minimal --types ts --add prettier eslint sveltekit-adapter="adapter:static" --install npm frontend
 │
 │
 ◆  Successfully installed dependencies with npm
