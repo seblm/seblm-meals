@@ -12,7 +12,7 @@ lazy val root = (project in file("."))
     routesImport += "meals.application.MealsBinders.given",
     routesImport += "java.time.{LocalDate, LocalDateTime, Year}",
     routesImport += "java.util.UUID",
-    scalaVersion := "3.7.4",
+    scalaVersion := "3.8.1",
     Test / javaOptions += "-Dconfig.file=test/resources/application-test.conf"
   )
   .aggregate(domain)
@@ -24,7 +24,7 @@ lazy val domain = project
     libraryDependencies += "org.mockito" % "mockito-core" % mockitoVersion % Test,
     libraryDependencies += "org.scalatest" %% "scalatest-flatspec" % "3.2.19" % Test,
     libraryDependencies += "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.19" % Test,
-    scalaVersion := "3.7.4",
+    scalaVersion := "3.8.1",
     Test / fork := true,
     Test / javaOptions += s"-javaagent:${csrCacheDirectory.value.getAbsolutePath}/https/repo1.maven.org/maven2/org/mockito/mockito-core/$mockitoVersion/mockito-core-$mockitoVersion.jar"
   )
