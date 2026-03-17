@@ -28,11 +28,11 @@
 	}
 
 	let selectedDate: Date;
-	let weekMeals: WeekMeals;
+	let weekMeals: WeekMeals | null = $state(null);
 	let inputValues: Record<string, InputValue> = {};
-	let snackBarVisible = false;
-	let snackBarContent = '';
-	let snackBarStatus: 'success' | 'error' = 'success';
+	let snackBarVisible = $state(false);
+	let snackBarContent = $state('');
+	let snackBarStatus: 'success' | 'error' = $state('success');
 	const suggestions: InputSuggestions = {
 		input: '',
 		suggestions: {
@@ -43,8 +43,6 @@
 	const unsubscribe = date.subscribe((d) => {
 		selectedDate = d;
 	});
-
-	$: weekDays = weekMeals ? getWeekDays() : [];
 
 	onMount(() => {
 		updateWeekMeals();
@@ -70,34 +68,24 @@
 	};
 
 	const getDay = (dayString: string): Day | null => {
-		let dayConfig = null;
 		switch (dayString) {
 			case 'monday':
-				dayConfig = weekMeals.monday;
-				break;
+				return weekMeals?.monday ?? null;
 			case 'tuesday':
-				dayConfig = weekMeals.tuesday;
-				break;
+				return weekMeals?.tuesday ?? null;
 			case 'wednesday':
-				dayConfig = weekMeals.wednesday;
-				break;
+				return weekMeals?.wednesday ?? null;
 			case 'thursday':
-				dayConfig = weekMeals.thursday;
-				break;
+				return weekMeals?.thursday ?? null;
 			case 'friday':
-				dayConfig = weekMeals.friday;
-				break;
+				return weekMeals?.friday ?? null;
 			case 'saturday':
-				dayConfig = weekMeals.saturday;
-				break;
+				return weekMeals?.saturday ?? null;
 			case 'sunday':
-				dayConfig = weekMeals.sunday;
-				break;
+				return weekMeals?.sunday ?? null;
 			default:
 				return null;
 		}
-
-		return dayConfig;
 	};
 
 	const saveMeal = (day: string, isLunch: boolean) => {
@@ -205,6 +193,8 @@
 		});
 		return weekDays;
 	};
+
+	const weekDays = $derived(weekMeals ? getWeekDays() : []);
 
 	onDestroy(unsubscribe);
 </script>

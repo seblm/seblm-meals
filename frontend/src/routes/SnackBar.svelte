@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { fly } from 'svelte/transition';
-	export let message: string;
-	export let status: 'success' | 'error';
+	let { message, status } = $props();
 </script>
 
 <div
