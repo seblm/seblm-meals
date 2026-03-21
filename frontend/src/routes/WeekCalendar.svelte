@@ -33,12 +33,12 @@
 	let snackBarVisible = $state(false);
 	let snackBarContent = $state('');
 	let snackBarStatus: 'success' | 'error' = $state('success');
-	const suggestions: InputSuggestions = {
+	let suggestions: InputSuggestions = $state({
 		input: '',
 		suggestions: {
 			mostRecents: []
 		}
-	};
+	});
 
 	const unsubscribe = date.subscribe((d) => {
 		selectedDate = d;
