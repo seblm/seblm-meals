@@ -15,7 +15,7 @@
 	<span>{suggestion.lastused} jours</span>
 </li>
 
-<style lang="scss">
+<style>
 	li {
 		list-style: none;
 		margin: 0;

@@ -273,17 +273,14 @@
 	<SnackBar message={snackBarContent} status={snackBarStatus} />
 {/if}
 
-<style lang="scss">
-	@use '../lib/styles/variables';
-	.week-calendar {
-		&-wrapper {
-			width: 100%;
-			border: 1px solid #96bbea;
-			box-shadow: 0 2px 6px rgba(var(--color-theme-1), 0.5);
-			border-radius: 4px;
-			background: #fff;
-		}
-		&-day {
+<style>
+	.week-calendar-wrapper {
+		width: 100%;
+		border: 1px solid #96bbea;
+		box-shadow: 0 2px 6px rgba(var(--color-theme-1), 0.5);
+		border-radius: 4px;
+		background: #fff;
+		.week-calendar-day {
 			display: flex;
 			width: 100%;
 			border-bottom: 1px solid var(--color-theme-1);
@@ -292,7 +289,7 @@
 				border-bottom: none;
 			}
 
-			&-cell {
+			.week-calendar-day-cell {
 				height: 100%;
 				flex: 5;
 				display: flex;
@@ -301,7 +298,7 @@
 				border-left: 1px solid var(--color-theme-1);
 				position: relative;
 
-				&-save {
+				.week-calendar-day-cell-save {
 					opacity: 0;
 					pointer-events: none;
 					margin-right: 1rem;
@@ -332,7 +329,7 @@
 					}
 				}
 			}
-			&-name {
+			.week-calendar-day-name {
 				flex: 0 0 150px;
 				display: flex;
 				flex-direction: column;
@@ -341,11 +338,11 @@
 					margin: 0 0 0.25rem 0;
 				}
 			}
-			&-number {
+			.week-calendar-day-number {
 				font-weight: bold;
 				font-size: 1.1em;
 			}
-			&-actions {
+			.week-calendar-day-actions {
 				flex: 1;
 				min-width: 50px;
 				button {
@@ -371,37 +368,35 @@
 				}
 			}
 		}
-		&-heading {
-			&-cell {
+		.week-calendar-heading-row {
+			.week-calendar-heading-cell {
 				background: var(--color-theme-1);
 				color: #fff;
 			}
-			&-row {
-				max-height: 50px;
-			}
+			max-height: 50px;
 		}
 	}
-	@media screen and (max-width: variables.$screen-m) {
-		.week-calendar {
-			&-day {
+	@media screen and (max-width: 769px) {
+		.week-calendar-wrapper {
+			.week-calendar-day {
 				height: 140px;
 				display: grid;
 				grid-template-rows: repeat(2, 70px);
 				grid-template-columns: 80px 1fr 50px;
-				&-name {
+				.week-calendar-day-name {
 					grid-column: 1 / span 1;
 					grid-row: 1 / span 2;
 					&:not(:last-of-type) {
 						border-bottom: 1px solid var(--color-text);
 					}
 				}
-				&-cell {
+				.week-calendar-day-cell {
 					&:nth-child(n + 4) {
 						border-top: 1px solid var(--color-theme-1);
 					}
 				}
 			}
-			&-heading-row {
+			.week-calendar-heading-row {
 				display: none;
 			}
 		}

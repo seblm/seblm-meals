@@ -12,7 +12,7 @@
 	{message}
 </div>
 
-<style lang="scss">
+<style>
 	.snackbar {
 		position: fixed;
 		bottom: 1rem;
@@ -25,10 +25,10 @@
 		box-shadow:
 			0 2px 3px rgba(0, 0, 0, 0.2),
 			0 3px 6px rgba(0, 0, 0, 0.1);
-		&-success {
+		.snackbar-success {
 			background: #95d061;
 		}
-		&-error {
+		.snackbar-error {
 			background: #cc505e;
 		}
 	}

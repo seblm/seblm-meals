@@ -16,19 +16,17 @@
 	<button class="calendar-nav-action" onclick={onNext}>{@html arrowRight}</button>
 </header>
 
-<style lang="scss">
-	@use '../lib/styles/variables';
-
+<style>
 	.calendar-nav {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 		gap: 1rem;
-		margin-bottom: variables.$spacing-m;
-		&-title {
+		margin-bottom: 1.6rem;
+		.calendar-nav-title {
 			text-align: center;
 		}
-		&-action {
+		.calendar-nav-action {
 			color: var(--color-theme-1);
 			cursor: pointer;
 			border: none;
@@ -46,7 +44,7 @@
 		}
 	}
 
-	@media (min-width: variables.$screen-m) {
+	@media (min-width: 769px) {
 		.calendar-nav {
 			margin-bottom: 0;
 		}

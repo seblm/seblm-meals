@@ -11,12 +11,10 @@
 	</main>
 </div>
 
-<style lang="scss">
-	@use '../lib/styles/variables';
-
+<style>
 	.calendar {
 		width: 100%;
-		&-header {
+		header {
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
@@ -28,9 +26,9 @@
 		}
 	}
 
-	@media (min-width: variables.$screen-m) {
+	@media (min-width: 769px) {
 		.calendar {
-			&-header {
+			header {
 				display: grid;
 				grid-template-columns: repeat(3, 1fr);
 			}

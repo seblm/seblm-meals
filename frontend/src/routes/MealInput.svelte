@@ -64,7 +64,7 @@
 	</ul>
 {/if}
 
-<style lang="scss">
+<style>
 	.info {
 		margin: auto 1rem;
 	}
@@ -98,8 +98,8 @@
 		max-height: 300px;
 		overflow-y: auto;
 		transform: translateY(-2.5rem);
-		&-visible {
-			display: block;
-		}
+	}
+	.suggestions-visible {
+		display: block;
 	}
 </style>
