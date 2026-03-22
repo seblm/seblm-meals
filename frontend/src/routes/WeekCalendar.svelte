@@ -1,5 +1,4 @@
 <script lang="ts">
-	import bin from '$lib/images/bin';
 	import { check } from '$lib/images/check';
 	import type { Day, SuggestionResponse, WeekMeals } from '$lib/model/WeekMeals';
 	import { date } from '$lib/stores';
@@ -237,8 +236,7 @@
 				</button>
 			</div>
 			<div class="week-calendar-day-cell week-calendar-day-actions">
-				<button onclick={() => unlinkMeal(day, true)}>
-					{@html bin}
+				<button onclick={() => unlinkMeal(day, true)} class="fa7-regular--trash-can" title="remove">
 				</button>
 			</div>
 
@@ -261,9 +259,8 @@
 				</button>
 			</div>
 			<div class="week-calendar-day-cell week-calendar-day-actions">
-				<button onclick={() => unlinkMeal(day, false)}>
-					{@html bin}
-				</button>
+				<button onclick={() => unlinkMeal(day, false)} class="fa7-regular--trash-can" title="remove"
+				></button>
 			</div>
 		</div>
 	{/each}
@@ -274,6 +271,7 @@
 {/if}
 
 <style>
+	@import './icon-trash-can.css';
 	.week-calendar-wrapper {
 		width: 100%;
 		border: 1px solid #96bbea;

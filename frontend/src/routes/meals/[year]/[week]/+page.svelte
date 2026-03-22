@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { externalLink } from '$lib/images/external-link';
 	import type { PageProps } from './$types';
 	import MealMenu from '$lib/MealMenu.svelte';
 	import { resolve } from '$app/paths';
@@ -18,8 +17,14 @@
 					{data.monday.lunch.meal.description}
 				</a>
 				{#if data.monday.lunch.meal.url}
-					{@const href = data.monday.lunch.meal.url}
-					<a {href} target="_blank">{@html externalLink}</a>
+					<a
+						class="fa7-regular--share-square"
+						href={data.monday.lunch.meal.url}
+						rel="external"
+						target="_blank"
+						title="externalUrl"
+					>
+					</a>
 				{/if}
 			{/if}
 		</p>
@@ -29,8 +34,14 @@
 					{data.monday.dinner.meal.description}
 				</a>
 				{#if data.monday.dinner.meal.url}
-					{@const href = data.monday.dinner.meal.url}
-					<a {href} target="_blank">{@html externalLink}</a>
+					<a
+						class="fa7-regular--share-square"
+						href={data.monday.dinner.meal.url}
+						rel="external"
+						target="_blank"
+						title="externalUrl"
+					>
+					</a>
 				{/if}
 			{/if}
 		</p>
@@ -41,8 +52,14 @@
 					{data.tuesday.lunch.meal.description}
 				</a>
 				{#if data.tuesday.lunch.meal.url}
-					{@const href = data.tuesday.lunch.meal.url}
-					<a {href} target="_blank">{@html externalLink}</a>
+					<a
+						class="fa7-regular--share-square"
+						href={data.tuesday.lunch.meal.url}
+						rel="external"
+						target="_blank"
+						title="externalUrl"
+					>
+					</a>
 				{/if}
 			{/if}
 		</p>
@@ -52,8 +69,14 @@
 					{data.tuesday.dinner.meal.description}
 				</a>
 				{#if data.tuesday.dinner.meal.url}
-					{@const href = data.tuesday.dinner.meal.url}
-					<a {href} target="_blank">{@html externalLink}</a>
+					<a
+						class="fa7-regular--share-square"
+						href={data.tuesday.dinner.meal.url}
+						rel="external"
+						target="_blank"
+						title="externalUrl"
+					>
+					</a>
 				{/if}
 			{/if}
 		</p>
@@ -64,8 +87,14 @@
 					{data.wednesday.lunch.meal.description}
 				</a>
 				{#if data.wednesday.lunch.meal.url}
-					{@const href = data.wednesday.lunch.meal.url}
-					<a {href} target="_blank">{@html externalLink}</a>
+					<a
+						class="fa7-regular--share-square"
+						href={data.wednesday.lunch.meal.url}
+						rel="external"
+						target="_blank"
+						title="externalUrl"
+					>
+					</a>
 				{/if}
 			{/if}
 		</p>
@@ -75,8 +104,14 @@
 					{data.wednesday.dinner.meal.description}
 				</a>
 				{#if data.wednesday.dinner.meal.url}
-					{@const href = data.wednesday.dinner.meal.url}
-					<a {href} target="_blank">{@html externalLink}</a>
+					<a
+						class="fa7-regular--share-square"
+						href={data.wednesday.dinner.meal.url}
+						rel="external"
+						target="_blank"
+						title="externalUrl"
+					>
+					</a>
 				{/if}
 			{/if}
 		</p>
@@ -87,8 +122,14 @@
 					{data.thursday.lunch.meal.description}
 				</a>
 				{#if data.thursday.lunch.meal.url}
-					{@const href = data.thursday.lunch.meal.url}
-					<a {href} target="_blank">{@html externalLink}</a>
+					<a
+						class="fa7-regular--share-square"
+						href={data.thursday.lunch.meal.url}
+						rel="external"
+						target="_blank"
+						title="externalUrl"
+					>
+					</a>
 				{/if}
 			{/if}
 		</p>
@@ -98,8 +139,14 @@
 					{data.thursday.dinner.meal.description}
 				</a>
 				{#if data.thursday.dinner.meal.url}
-					{@const href = data.thursday.dinner.meal.url}
-					<a {href} target="_blank">{@html externalLink}</a>
+					<a
+						class="fa7-regular--share-square"
+						href={data.thursday.dinner.meal.url}
+						rel="external"
+						target="_blank"
+						title="externalUrl"
+					>
+					</a>
 				{/if}
 			{/if}
 		</p>
@@ -110,8 +157,14 @@
 					{data.friday.lunch.meal.description}
 				</a>
 				{#if data.friday.lunch.meal.url}
-					{@const href = data.friday.lunch.meal.url}
-					<a {href} target="_blank">{@html externalLink}</a>
+					<a
+						class="fa7-regular--share-square"
+						href={data.friday.lunch.meal.url}
+						rel="external"
+						target="_blank"
+						title="externalUrl"
+					>
+					</a>
 				{/if}
 			{/if}
 		</p>
@@ -121,8 +174,14 @@
 					{data.friday.dinner.meal.description}
 				</a>
 				{#if data.friday.dinner.meal.url}
-					{@const href = data.friday.dinner.meal.url}
-					<a {href} target="_blank">{@html externalLink}</a>
+					<a
+						class="fa7-regular--share-square"
+						href={data.friday.dinner.meal.url}
+						rel="external"
+						target="_blank"
+						title="externalUrl"
+					>
+					</a>
 				{/if}
 			{/if}
 		</p>
@@ -133,8 +192,14 @@
 					{data.saturday.lunch.meal.description}
 				</a>
 				{#if data.saturday.lunch.meal.url}
-					{@const href = data.saturday.lunch.meal.url}
-					<a {href} target="_blank">{@html externalLink}</a>
+					<a
+						class="fa7-regular--share-square"
+						href={data.saturday.lunch.meal.url}
+						rel="external"
+						target="_blank"
+						title="externalUrl"
+					>
+					</a>
 				{/if}
 			{/if}
 		</p>
@@ -144,8 +209,14 @@
 					{data.saturday.dinner.meal.description}
 				</a>
 				{#if data.saturday.dinner.meal.url}
-					{@const href = data.saturday.dinner.meal.url}
-					<a {href} target="_blank">{@html externalLink}</a>
+					<a
+						class="fa7-regular--share-square"
+						href={data.saturday.dinner.meal.url}
+						rel="external"
+						target="_blank"
+						title="externalUrl"
+					>
+					</a>
 				{/if}
 			{/if}
 		</p>
@@ -156,8 +227,14 @@
 					{data.sunday.lunch.meal.description}
 				</a>
 				{#if data.sunday.lunch.meal.url}
-					{@const href = data.sunday.lunch.meal.url}
-					<a {href} target="_blank">{@html externalLink}</a>
+					<a
+						class="fa7-regular--share-square"
+						href={data.sunday.lunch.meal.url}
+						rel="external"
+						target="_blank"
+						title="externalUrl"
+					>
+					</a>
 				{/if}
 			{/if}
 		</p>
@@ -167,8 +244,14 @@
 					{data.sunday.dinner.meal.description}
 				</a>
 				{#if data.sunday.dinner.meal.url}
-					{@const href = data.sunday.dinner.meal.url}
-					<a {href} target="_blank">{@html externalLink}</a>
+					<a
+						class="fa7-regular--share-square"
+						href={data.sunday.dinner.meal.url}
+						rel="external"
+						target="_blank"
+						title="externalUrl"
+					>
+					</a>
 				{/if}
 			{/if}
 		</p>
@@ -217,6 +300,7 @@
 </main>
 
 <style>
+	@import '../../../icon-share-square.css';
 	.week {
 		grid-template-columns: 1fr 3fr 3fr;
 	}

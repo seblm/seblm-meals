@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { externalLink } from '$lib/images/external-link';
 	import MealDate from '$lib/MealDate.svelte';
 	import MealMenu from '$lib/MealMenu.svelte';
 	import type { PageProps } from './$types';
@@ -12,8 +11,14 @@
 	<h2>
 		{data.meal.description} ({data.count})
 		{#if data.meal.url}
-			{@const href = data.meal.url}
-			<a {href} target="_blank">{@html externalLink}</a>
+			<a
+				class="fa7-regular--share-square"
+				href={data.meal.url}
+				rel="external"
+				target="_blank"
+				title="externalLink"
+			>
+			</a>
 		{/if}
 	</h2>
 	<ul>
@@ -21,3 +26,7 @@
 		<li>First usage: <MealDate date={data.first} /></li>
 	</ul>
 </main>
+
+<style>
+	@import '../../icon-share-square.css';
+</style>

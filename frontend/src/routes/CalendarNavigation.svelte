@@ -1,7 +1,4 @@
 <script lang="ts">
-	import { arrowLeft } from '$lib/images/arrow-left.js';
-	import { arrowRight } from '$lib/images/arrow-right.js';
-
 	interface Props {
 		title: string;
 		onPrev: () => void;
@@ -11,12 +8,22 @@
 </script>
 
 <header class="calendar-nav">
-	<button class="calendar-nav-action" onclick={onPrev}>{@html arrowLeft}</button>
+	<button
+		class="calendar-nav-action fa7-regular--arrow-alt-circle-left"
+		onclick={onPrev}
+		title="previous"
+	></button>
 	<h2 class="calendar-nav-title">{title}</h2>
-	<button class="calendar-nav-action" onclick={onNext}>{@html arrowRight}</button>
+	<button
+		class="calendar-nav-action fa7-regular--arrow-alt-circle-right"
+		onclick={onNext}
+		title="next"
+	></button>
 </header>
 
 <style>
+	@import 'icon-arrow-left.css';
+	@import 'icon-arrow-right.css';
 	.calendar-nav {
 		display: flex;
 		justify-content: space-between;

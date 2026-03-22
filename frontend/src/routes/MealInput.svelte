@@ -1,7 +1,5 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { circleInfo } from '$lib/images/circle-info';
-	import { externalLink } from '$lib/images/external-link';
 	import type { SuggestionResponse } from '$lib/model/WeekMeals';
 	import MealInputSpecialSuggestionItem from './MealInputSpecialSuggestionItem.svelte';
 	import MealInputSuggestionItem from './MealInputSuggestionItem.svelte';
@@ -32,13 +30,10 @@
 </script>
 
 {#if id}
-	<a href={resolve('/meal/[id]', { id })} class="info">{@html circleInfo}</a>
+	<a href={resolve('/meal/[id]', { id })} class="info fa7-regular--file-lines" title="details"></a>
 {/if}
 <input type="text" {value} {title} {oninput} onkeypress={handleEnterPress} onfocus={oninput} />
-{#if url}
-	{@const href = url}
-	<a {href} target="_blank">{@html externalLink}</a>
-{/if}
+{#if url}<a href={url} rel="external" target="_blank" title="externalLink"></a>{/if}
 {#if showSuggestions}
 	<ul class="suggestions" class:suggestions-visible={showSuggestions}>
 		{#if yearAgo}
