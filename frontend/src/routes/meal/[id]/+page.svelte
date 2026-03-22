@@ -8,7 +8,7 @@
 </script>
 
 <main class="container" data-sveltekit-preload-data="tap">
-	<MealMenu year={2025} week={44} />
+	<MealMenu year={2026} week={12} />
 	<h2>
 		{data.meal.description} ({data.count})
 		{#if data.meal.url}

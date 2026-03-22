@@ -1,10 +1,11 @@
 <script lang="ts">
 	import WeekCalendar from './WeekCalendar.svelte';
+	import { resolve } from '$app/paths';
 </script>
 
 <div class="calendar">
 	<header class="calendar-header">
-		<h1>Votre semaine</h1>
+		<h1>Votre semaine <a href={resolve('/meals/2026/12')}>seblm-meals</a></h1>
 	</header>
 	<main class="calendar-content">
 		<WeekCalendar />
