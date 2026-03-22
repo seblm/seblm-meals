@@ -1,7 +1,7 @@
 import type { PageLoad } from './$types';
-import { getMeals } from '$lib/utils/api';
+import { getMealsStatistics } from '$lib/utils/api';
 
 export const load: PageLoad = async () => {
-	const mealsStatistics = await getMeals();
+	const mealsStatistics = await getMealsStatistics();
 	return { mealsStatistics };
 };

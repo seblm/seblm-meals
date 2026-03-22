@@ -23,6 +23,6 @@
 		</li>
 	</ul>
 	<ul>
-		<li><a href={resolve('/meals')} class="contrast">Tous les repas</a></li>
+		<li><a href={resolve('/meals/statistics')} class="contrast">Tous les repas</a></li>
 	</ul>
 </nav>

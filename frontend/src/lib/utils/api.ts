@@ -24,8 +24,8 @@ export async function getMeal(id: string) {
 		});
 }
 
-export async function getMeals() {
-	return await fetch(`/api/meals`)
+export async function getMealsStatistics() {
+	return await fetch(`/api/meals/statistics`)
 		.then((response) => response.text())
 		.then(
 			(mealsStatistics) => {

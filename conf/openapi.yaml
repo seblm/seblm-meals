@@ -27,7 +27,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/MealStatistics'
           description: Meal statistics
-  /meals:
+  /meals/statistics:
     get:
       tags:
         - Meal

@@ -1,12 +1,12 @@
 package meals.application
 
 import meals.application.WeekMealsWrites.given
-import meals.domain.{MealSuggest, MealsService, SuggestResponse, WeekDay}
+import meals.domain.{MealSuggest, MealsService, SuggestResponse}
 import play.api.Logging
 import play.api.libs.json.*
 import play.api.mvc.*
 
-import java.time.{LocalDate, LocalDateTime, Year}
+import java.time.{LocalDateTime, Year}
 import java.util.UUID
 import scala.Function.const
 import scala.concurrent.ExecutionContext
@@ -18,7 +18,7 @@ class MealsController(cc: ControllerComponents, mealsService: MealsService) exte
   def meal(id: UUID): Action[AnyContent] = Action.async:
     mealsService.allMeals().map(meals => meals.find(_.meal.id == id).fold(NotFound)(meal => Ok(Json.toJson(meal))))
 
-  def meals(): Action[AnyContent] = Action.async:
+  def mealsStatistics(): Action[AnyContent] = Action.async:
     mealsService.allMeals().map(meals => Ok(Json.toJson(meals)))
 
   def mealsApi(year: Year, week: Int): Action[AnyContent] = Action.async:

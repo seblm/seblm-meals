@@ -18,7 +18,7 @@ class MealsControllerSpec extends MealsPlaySpec:
     Some(Clock.fixed(Instant.parse("2023-01-19T18:54:55.716650Z"), ZoneId.of("Europe/Paris")))
 
   "MealsController" should:
-    "get all meals" in:
+    "get meals statistics" in:
       val pizzaTime = LocalDateTime.parse("2023-01-16T12:00:00")
       val pizza = LinkOrInsertData("pizza", pizzaTime)
       val pastaTime = LocalDateTime.parse("2023-01-17T20:00:00")
@@ -29,7 +29,7 @@ class MealsControllerSpec extends MealsPlaySpec:
         status(result) must be(CREATED)
 
       val id = UUID.fromString("7f209aff-2aae-4bf4-ba5d-f7741cfe7c07")
-      val all = call(mealsComponents.mealsController.meals(), FakeRequest())
+      val all = call(mealsComponents.mealsController.mealsStatistics(), FakeRequest())
       val allResponse = Json.fromJson[Vector[MealStatistics]](contentAsJson(all)).asOpt.value
       val allResponseWithoutMealIds =
         allResponse.map(mealStatistics => mealStatistics.copy(meal = mealStatistics.meal.copy(id = id)))
