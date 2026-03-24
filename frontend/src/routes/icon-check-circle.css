@@ -1,0 +1,14 @@
+/* copied from https://icon-sets.iconify.design/fa7-regular */
+.fa7-regular--check-circle {
+	display: inline-block;
+	width: 640px;
+	height: 640px;
+	--svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 640'%3E%3Cpath fill='%23000' d='M320 576C178.6 576 64 461.4 64 320S178.6 64 320 64s256 114.6 256 256s-114.6 256-256 256m0-464c-114.9 0-208 93.1-208 208s93.1 208 208 208s208-93.1 208-208s-93.1-208-208-208m70.7 121.9c7.8-10.7 22.8-13.1 33.5-5.3s13.1 22.8 5.3 33.5l-122.1 168c-4.1 5.7-10.5 9.3-17.5 9.8s-13.9-2-18.8-6.9l-55.9-55.9c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l36 36L390.7 234z'/%3E%3C/svg%3E");
+	background-color: currentColor;
+	-webkit-mask-image: var(--svg);
+	mask-image: var(--svg);
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-size: 100% 100%;
+	mask-size: 100% 100%;
+}

@@ -1,6 +1,4 @@
 <script lang="ts">
-	import bin from '$lib/images/bin';
-	import { check } from '$lib/images/check';
 	import type { Day, SuggestionResponse, WeekMeals } from '$lib/model/WeekMeals';
 	import { date } from '$lib/stores';
 	import { getSuggestions, getWeekMeals, linkOrInsert, unlink } from '$lib/utils/api';
@@ -232,13 +230,14 @@
 					onEnterPressed={() => saveMeal(day, true)}
 					onSelectSuggestion={(description) => onSelectSuggestion(day, true, description)}
 				/>
-				<button class="week-calendar-day-cell-save" onclick={() => saveMeal(day, true)}>
-					{@html check}
-				</button>
+				<button
+					class="week-calendar-day-cell-save fa7-regular--check-circle"
+					onclick={() => saveMeal(day, true)}
+					title="save"
+				></button>
 			</div>
 			<div class="week-calendar-day-cell week-calendar-day-actions">
-				<button onclick={() => unlinkMeal(day, true)}>
-					{@html bin}
+				<button onclick={() => unlinkMeal(day, true)} class="fa7-regular--trash-can" title="remove">
 				</button>
 			</div>
 
@@ -256,14 +255,15 @@
 					onEnterPressed={() => saveMeal(day, false)}
 					onSelectSuggestion={(description) => onSelectSuggestion(day, false, description)}
 				/>
-				<button class="week-calendar-day-cell-save" onclick={() => saveMeal(day, false)}>
-					{@html check}
-				</button>
+				<button
+					class="week-calendar-day-cell-save fa7-regular--check-circle"
+					onclick={() => saveMeal(day, false)}
+					title="save"
+				></button>
 			</div>
 			<div class="week-calendar-day-cell week-calendar-day-actions">
-				<button onclick={() => unlinkMeal(day, false)}>
-					{@html bin}
-				</button>
+				<button onclick={() => unlinkMeal(day, false)} class="fa7-regular--trash-can" title="remove"
+				></button>
 			</div>
 		</div>
 	{/each}
@@ -274,6 +274,8 @@
 {/if}
 
 <style>
+	@import 'icon-trash-can.css';
+	@import 'icon-check-circle.css';
 	.week-calendar-wrapper {
 		width: 100%;
 		border: 1px solid #96bbea;
@@ -303,11 +305,9 @@
 					pointer-events: none;
 					margin-right: 1rem;
 					color: var(--color-theme-1);
-					background: transparent;
 					border: none;
-					height: 32px;
-					width: 32px;
-					border-radius: 32px;
+					height: 35px;
+					width: 35px;
 					cursor: pointer;
 					visibility: hidden;
 					display: flex;
@@ -346,23 +346,22 @@
 				flex: 1;
 				min-width: 50px;
 				button {
-					background: transparent;
 					border-radius: 50px;
 					color: var(--color-theme-1);
 					border: none;
 					transition: 0.2s ease-in;
-					height: 50px;
-					width: 50px;
+					height: 35px;
+					width: 35px;
 					cursor: pointer;
 					display: inline-flex;
 					justify-content: center;
 					align-items: center;
 					&:focus,
 					&:hover {
-						background: rgba(var(--color-theme-1), 0.2);
+						color: rgba(var(--color-theme-1), 0.2);
 					}
 					&:active {
-						background: rgba(var(--color-theme-1), 0.5);
+						color: rgba(var(--color-theme-1), 0.5);
 						color: #fff;
 					}
 				}

@@ -1,0 +1,14 @@
+/* copied from https://icon-sets.iconify.design/fa7-regular */
+.fa7-regular--file-lines {
+	display: inline-block;
+	width: 640px;
+	height: 640px;
+	--svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 640'%3E%3Cpath fill='%23000' d='M192 112h112v88c0 39.8 32.2 72 72 72h88v240c0 8.8-7.2 16-16 16H192c-8.8 0-16-7.2-16-16V128c0-8.8 7.2-16 16-16m160 19.9l92.1 92.1H376c-13.3 0-24-10.7-24-24zM192 64c-35.3 0-64 28.7-64 64v384c0 35.3 28.7 64 64 64h256c35.3 0 64-28.7 64-64V250.5c0-17-6.7-33.3-18.7-45.3L370.7 82.7c-12-12-28.2-18.7-45.2-18.7zm56 256c-13.3 0-24 10.7-24 24s10.7 24 24 24h144c13.3 0 24-10.7 24-24s-10.7-24-24-24zm0 96c-13.3 0-24 10.7-24 24s10.7 24 24 24h144c13.3 0 24-10.7 24-24s-10.7-24-24-24z'/%3E%3C/svg%3E");
+	background-color: currentColor;
+	-webkit-mask-image: var(--svg);
+	mask-image: var(--svg);
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-size: 100% 100%;
+	mask-size: 100% 100%;
+}

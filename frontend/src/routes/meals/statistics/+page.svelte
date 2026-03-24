@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { externalLink } from '$lib/images/external-link';
 	import MealDate from '$lib/MealDate.svelte';
 	import type { PageProps } from './$types';
 	import { resolve } from '$app/paths';
@@ -33,7 +32,15 @@
 						<td><MealDate date={meal.last} /></td>
 						<td><MealDate date={meal.first} /></td>
 						<td>
-							{#if href}<a {href} target="_blank">{@html externalLink}</a>{/if}
+							{#if href}
+								<a
+									class="fa7-regular--share-square icon"
+									{href}
+									rel="external"
+									target="_blank"
+									title="externalLink"
+								></a>
+							{/if}
 						</td>
 					</tr>
 				{/each}
@@ -41,3 +48,11 @@
 		</table>
 	</div>
 </main>
+
+<style>
+	@import '../../icon-share-square.css';
+	.icon {
+		height: 35px;
+		width: 35px;
+	}
+</style>

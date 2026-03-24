@@ -1,7 +1,5 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { circleInfo } from '$lib/images/circle-info';
-	import { externalLink } from '$lib/images/external-link';
 	import type { SuggestionResponse } from '$lib/model/WeekMeals';
 	import MealInputSpecialSuggestionItem from './MealInputSpecialSuggestionItem.svelte';
 	import MealInputSuggestionItem from './MealInputSuggestionItem.svelte';
@@ -32,15 +30,20 @@
 </script>
 
 {#if id}
-	<a href={resolve('/meal/[id]', { id })} class="info">{@html circleInfo}</a>
+	<a href={resolve('/meal/[id]', { id })} class="info fa7-regular--file-lines" title="details"></a>
 {/if}
 <input type="text" {value} {title} {oninput} onkeypress={handleEnterPress} onfocus={oninput} />
 {#if url}
-	{@const href = url}
-	<a {href} target="_blank">{@html externalLink}</a>
+	<a
+		class="externalLink fa7-regular--share-square"
+		href={url}
+		rel="external"
+		target="_blank"
+		title="externalLink"
+	></a>
 {/if}
 {#if showSuggestions}
-	<ul class="suggestions" class:suggestions-visible={showSuggestions}>
+	<ul class="suggestions">
 		{#if yearAgo}
 			<MealInputSpecialSuggestionItem
 				suggestion={yearAgo}
@@ -65,8 +68,16 @@
 {/if}
 
 <style>
+	@import 'icon-file-lines.css';
+	@import 'icon-share-square.css';
+	.externalLink {
+		height: 56px;
+		width: 56px;
+	}
 	.info {
-		margin: auto 1rem;
+		margin-left: 1rem;
+		width: 56px;
+		height: 35px;
 	}
 	input[type='text'] {
 		width: 100%;
@@ -83,7 +94,6 @@
 		}
 	}
 	.suggestions {
-		display: none;
 		position: absolute;
 		left: 0;
 		top: 100%;
@@ -98,8 +108,5 @@
 		max-height: 300px;
 		overflow-y: auto;
 		transform: translateY(-2.5rem);
-	}
-	.suggestions-visible {
-		display: block;
 	}
 </style>
