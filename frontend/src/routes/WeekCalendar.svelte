@@ -219,7 +219,7 @@
 			<div
 				class="week-calendar-day-meal week-calendar-day-cell"
 				use:clickOutside
-				onclick_outside={() => handleClickOutsideCell(`${day}-${true}`)}
+				onoutclick={() => handleClickOutsideCell(`${day}-${true}`)}
 			>
 				<MealInput
 					id={weekMeals ? getMealId(day, true) : undefined}
@@ -244,7 +244,7 @@
 			<div
 				class="week-calendar-day-meal week-calendar-day-cell"
 				use:clickOutside
-				onclick_outside={() => handleClickOutsideCell(`${day}-${false}`)}
+				onoutclick={() => handleClickOutsideCell(`${day}-${false}`)}
 			>
 				<MealInput
 					id={weekMeals ? getMealId(day, false) : undefined}
