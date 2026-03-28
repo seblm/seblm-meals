@@ -22,8 +22,8 @@ val mockitoVersion = "5.23.0"
 lazy val domain = project
   .settings(
     libraryDependencies += "org.mockito" % "mockito-core" % mockitoVersion % Test,
-    libraryDependencies += "org.scalatest" %% "scalatest-flatspec" % "3.2.19" % Test,
-    libraryDependencies += "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.19" % Test,
+    libraryDependencies += "org.scalatest" %% "scalatest-flatspec" % "3.2.20" % Test,
+    libraryDependencies += "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.20" % Test,
     scalaVersion := "3.8.2",
     Test / fork := true,
     Test / javaOptions += s"-javaagent:${csrCacheDirectory.value.getAbsolutePath}/https/repo1.maven.org/maven2/org/mockito/mockito-core/$mockitoVersion/mockito-core-$mockitoVersion.jar"
@@ -40,8 +40,8 @@ libraryDependencies += "com.typesafe.slick" %% "slick" % "3.6.1"
 libraryDependencies += "org.postgresql" % "postgresql" % "42.7.10" % Runtime
 
 libraryDependencies += "com.h2database" % "h2" % "2.4.240" % Test
-libraryDependencies += "org.scalatest" %% "scalatest-flatspec" % "3.2.19" % Test
-libraryDependencies += "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.19" % Test
+libraryDependencies += "org.scalatest" %% "scalatest-flatspec" % "3.2.20" % Test
+libraryDependencies += "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.20" % Test
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.2" % Test
 
 // these modules are declared by org.playframework:sbt-plugin with wrong scope Compile instead of Runtime
