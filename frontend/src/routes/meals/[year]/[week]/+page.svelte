@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
 	import MealMenu from '$lib/MealMenu.svelte';
+	import Meal from '$lib/meal/Meal.svelte';
 	import { resolve } from '$app/paths';
 
 	let { data }: PageProps = $props();
@@ -12,243 +13,52 @@
 	<div class="grid week">
 		<p>lundi</p>
 		<p>
-			{#if data.monday.lunch}
-				<a href={resolve('/meal/[id]', { id: data.monday.lunch.meal.id })}>
-					{data.monday.lunch.meal.description}
-				</a>
-				{#if data.monday.lunch.meal.url}
-					<a
-						class="icon fa7-regular--share-square"
-						href={data.monday.lunch.meal.url}
-						rel="external"
-						target="_blank"
-						title="externalUrl"
-					>
-					</a>
-				{/if}
-			{/if}
+			{#if data.monday.lunch}<Meal meal={data.monday.lunch.meal} />{/if}
 		</p>
 		<p>
-			{#if data.monday.dinner}
-				<a href={resolve('/meal/[id]', { id: data.monday.dinner.meal.id })}>
-					{data.monday.dinner.meal.description}
-				</a>
-				{#if data.monday.dinner.meal.url}
-					<a
-						class="icon fa7-regular--share-square"
-						href={data.monday.dinner.meal.url}
-						rel="external"
-						target="_blank"
-						title="externalUrl"
-					>
-					</a>
-				{/if}
-			{/if}
+			{#if data.monday.dinner}<Meal meal={data.monday.dinner.meal} />{/if}
 		</p>
 		<p>mardi</p>
 		<p>
-			{#if data.tuesday.lunch}
-				<a href={resolve('/meal/[id]', { id: data.tuesday.lunch.meal.id })}>
-					{data.tuesday.lunch.meal.description}
-				</a>
-				{#if data.tuesday.lunch.meal.url}
-					<a
-						class="icon fa7-regular--share-square"
-						href={data.tuesday.lunch.meal.url}
-						rel="external"
-						target="_blank"
-						title="externalUrl"
-					>
-					</a>
-				{/if}
-			{/if}
+			{#if data.tuesday.lunch}<Meal meal={data.tuesday.lunch.meal} />{/if}
 		</p>
 		<p>
-			{#if data.tuesday.dinner}
-				<a href={resolve('/meal/[id]', { id: data.tuesday.dinner.meal.id })}>
-					{data.tuesday.dinner.meal.description}
-				</a>
-				{#if data.tuesday.dinner.meal.url}
-					<a
-						class="icon fa7-regular--share-square"
-						href={data.tuesday.dinner.meal.url}
-						rel="external"
-						target="_blank"
-						title="externalUrl"
-					>
-					</a>
-				{/if}
-			{/if}
+			{#if data.tuesday.dinner}<Meal meal={data.tuesday.dinner.meal} />{/if}
 		</p>
 		<p>mercredi</p>
 		<p>
-			{#if data.wednesday.lunch}
-				<a href={resolve('/meal/[id]', { id: data.wednesday.lunch.meal.id })}>
-					{data.wednesday.lunch.meal.description}
-				</a>
-				{#if data.wednesday.lunch.meal.url}
-					<a
-						class="icon fa7-regular--share-square"
-						href={data.wednesday.lunch.meal.url}
-						rel="external"
-						target="_blank"
-						title="externalUrl"
-					>
-					</a>
-				{/if}
-			{/if}
+			{#if data.wednesday.lunch}<Meal meal={data.wednesday.lunch.meal} />{/if}
 		</p>
 		<p>
-			{#if data.wednesday.dinner}
-				<a href={resolve('/meal/[id]', { id: data.wednesday.dinner.meal.id })}>
-					{data.wednesday.dinner.meal.description}
-				</a>
-				{#if data.wednesday.dinner.meal.url}
-					<a
-						class="icon fa7-regular--share-square"
-						href={data.wednesday.dinner.meal.url}
-						rel="external"
-						target="_blank"
-						title="externalUrl"
-					>
-					</a>
-				{/if}
-			{/if}
+			{#if data.wednesday.dinner}<Meal meal={data.wednesday.dinner.meal} />{/if}
 		</p>
 		<p>jeudi</p>
 		<p>
-			{#if data.thursday.lunch}
-				<a href={resolve('/meal/[id]', { id: data.thursday.lunch.meal.id })}>
-					{data.thursday.lunch.meal.description}
-				</a>
-				{#if data.thursday.lunch.meal.url}
-					<a
-						class="icon fa7-regular--share-square"
-						href={data.thursday.lunch.meal.url}
-						rel="external"
-						target="_blank"
-						title="externalUrl"
-					>
-					</a>
-				{/if}
-			{/if}
+			{#if data.thursday.lunch}<Meal meal={data.thursday.lunch.meal} />{/if}
 		</p>
 		<p>
-			{#if data.thursday.dinner}
-				<a href={resolve('/meal/[id]', { id: data.thursday.dinner.meal.id })}>
-					{data.thursday.dinner.meal.description}
-				</a>
-				{#if data.thursday.dinner.meal.url}
-					<a
-						class="icon fa7-regular--share-square"
-						href={data.thursday.dinner.meal.url}
-						rel="external"
-						target="_blank"
-						title="externalUrl"
-					>
-					</a>
-				{/if}
-			{/if}
+			{#if data.thursday.dinner}<Meal meal={data.thursday.dinner.meal} />{/if}
 		</p>
 		<p>vendredi</p>
 		<p>
-			{#if data.friday.lunch}
-				<a href={resolve('/meal/[id]', { id: data.friday.lunch.meal.id })}>
-					{data.friday.lunch.meal.description}
-				</a>
-				{#if data.friday.lunch.meal.url}
-					<a
-						class="icon fa7-regular--share-square"
-						href={data.friday.lunch.meal.url}
-						rel="external"
-						target="_blank"
-						title="externalUrl"
-					>
-					</a>
-				{/if}
-			{/if}
+			{#if data.friday.lunch}<Meal meal={data.friday.lunch.meal} />{/if}
 		</p>
 		<p>
-			{#if data.friday.dinner}
-				<a href={resolve('/meal/[id]', { id: data.friday.dinner.meal.id })}>
-					{data.friday.dinner.meal.description}
-				</a>
-				{#if data.friday.dinner.meal.url}
-					<a
-						class="icon fa7-regular--share-square"
-						href={data.friday.dinner.meal.url}
-						rel="external"
-						target="_blank"
-						title="externalUrl"
-					></a>
-				{/if}
-			{/if}
+			{#if data.friday.dinner}<Meal meal={data.friday.dinner.meal} />{/if}
 		</p>
 		<p>samedi</p>
 		<p>
-			{#if data.saturday.lunch}
-				<a href={resolve('/meal/[id]', { id: data.saturday.lunch.meal.id })}>
-					{data.saturday.lunch.meal.description}
-				</a>
-				{#if data.saturday.lunch.meal.url}
-					<a
-						class="icon fa7-regular--share-square"
-						href={data.saturday.lunch.meal.url}
-						rel="external"
-						target="_blank"
-						title="externalUrl"
-					></a>
-				{/if}
-			{/if}
+			{#if data.saturday.lunch}<Meal meal={data.saturday.lunch.meal} />{/if}
 		</p>
 		<p>
-			{#if data.saturday.dinner}
-				<a href={resolve('/meal/[id]', { id: data.saturday.dinner.meal.id })}>
-					{data.saturday.dinner.meal.description}
-				</a>
-				{#if data.saturday.dinner.meal.url}
-					<a
-						class="icon fa7-regular--share-square"
-						href={data.saturday.dinner.meal.url}
-						rel="external"
-						target="_blank"
-						title="externalUrl"
-					></a>
-				{/if}
-			{/if}
+			{#if data.saturday.dinner}<Meal meal={data.saturday.dinner.meal} />{/if}
 		</p>
 		<p>dimanche</p>
 		<p>
-			{#if data.sunday.lunch}
-				<a href={resolve('/meal/[id]', { id: data.sunday.lunch.meal.id })}>
-					{data.sunday.lunch.meal.description}
-				</a>
-				{#if data.sunday.lunch.meal.url}
-					<a
-						class="icon fa7-regular--share-square"
-						href={data.sunday.lunch.meal.url}
-						rel="external"
-						target="_blank"
-						title="externalUrl"
-					></a>
-				{/if}
-			{/if}
+			{#if data.sunday.lunch}<Meal meal={data.sunday.lunch.meal} />{/if}
 		</p>
 		<p>
-			{#if data.sunday.dinner}
-				<a href={resolve('/meal/[id]', { id: data.sunday.dinner.meal.id })}>
-					{data.sunday.dinner.meal.description}
-				</a>
-				{#if data.sunday.dinner.meal.url}
-					<a
-						class="icon fa7-regular--share-square"
-						href={data.sunday.dinner.meal.url}
-						rel="external"
-						target="_blank"
-						title="externalUrl"
-					></a>
-				{/if}
-			{/if}
+			{#if data.sunday.dinner}<Meal meal={data.sunday.dinner.meal} />{/if}
 		</p>
 	</div>
 	<nav>
@@ -290,11 +100,6 @@
 
 <style>
 	@import '../../../icon-share-square.css';
-	.icon {
-		height: 1rem;
-		width: 1rem;
-		vertical-align: top;
-	}
 	.week {
 		grid-template-columns: 1fr 3fr 3fr;
 	}
