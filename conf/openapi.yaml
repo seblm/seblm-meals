@@ -63,6 +63,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/WeekMeals'
+  /meals/{year}-{month}-{day}:
+    get:
+      tags:
+        - Meal
+      description: Get meals centered around a day
+      operationId: mealsAround
+      parameters:
+        - name: year
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: month
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: day
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: WeekMealsCenteredAroundADay
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeekMealsCenteredAroundADay'
   /suggest:
     get:
       tags:
@@ -203,6 +232,15 @@ components:
           $ref: '#/components/schemas/MealEntry'
         dinner:
           $ref: '#/components/schemas/MealEntry'
+    WeekMealsCenteredAroundADay:
+      required:
+        - days
+      type: object
+      properties:
+        days:
+          type: array
+        items:
+          $ref: '#/components/schemas/WeekDay'
     Meal:
       required:
         - description

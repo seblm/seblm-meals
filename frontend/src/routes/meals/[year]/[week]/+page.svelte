@@ -3,12 +3,18 @@
 	import MealMenu from '$lib/MealMenu.svelte';
 	import Meal from '$lib/meal/Meal.svelte';
 	import { resolve } from '$app/paths';
+	import { currentDay } from '$lib/calendar.svelte';
 
 	let { data }: PageProps = $props();
 </script>
 
 <main class="container" data-sveltekit-preload-data="tap">
-	<MealMenu year={data.now.year} week={data.now.week} />
+	<MealMenu
+		day={currentDay.day}
+		month={currentDay.month}
+		week={data.now.week}
+		year={data.now.year}
+	/>
 	<h2>{data.titles.long}</h2>
 	<div class="grid week">
 		<p>lundi</p>

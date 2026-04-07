@@ -3,7 +3,8 @@ import type {
 	MealStatistics,
 	SuggestionResponse,
 	UnlinkMeal,
-	WeekMeals
+	WeekMeals,
+	WeekMealsCenteredAroundADay
 } from '$lib/model/WeekMeals';
 
 function mealStatisticsReviver(key: string, value: unknown) {
@@ -41,6 +42,12 @@ export async function getMealsStatistics() {
 export async function getWeekMeals(year: number, weekNumber: number) {
 	return await fetch(`/api/meals/${year}/${weekNumber}`).then(
 		(response) => response.json() as unknown as WeekMeals
+	);
+}
+
+export async function getWeekMealsCenteredAroundADay(day: number, month: number, year: number) {
+	return await fetch(`/api/meals/${year}-${month}-${day}`).then(
+		(response) => response.json() as unknown as WeekMealsCenteredAroundADay
 	);
 }
 

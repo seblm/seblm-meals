@@ -2,11 +2,18 @@
 	import { resolve } from '$app/paths';
 
 	interface Props {
-		year: number;
+		day: number;
+		month: number;
 		week: number;
+		year: number;
 	}
 
-	let { year, week }: Props = $props();
+	let { day, month, week, year }: Props = $props();
+
+	const pad = (n: number): string => (n < 10 ? '0' + n : n.toString());
+
+	let dayAsString = $derived(pad(day));
+	let monthAsString = $derived(pad(month));
 </script>
 
 <nav>
@@ -20,6 +27,15 @@
 					seblm-meals
 				</a>
 			</strong>
+			<a
+				href={resolve('/meals/[year]-[month]-[day]', {
+					day: dayAsString,
+					month: monthAsString,
+					year: year.toString()
+				})}
+			>
+				{dayAsString}/{monthAsString}/{year}
+			</a>
 		</li>
 	</ul>
 	<ul>

@@ -24,6 +24,9 @@ class MealsController(cc: ControllerComponents, mealsService: MealsService) exte
   def mealsApi(year: Year, week: Int): Action[AnyContent] = Action.async:
     mealsService.meals(year, week).map(meals => Ok(Json.toJson(meals)))
 
+  def mealsAround(day: Int, month: Int, year: Year): Action[AnyContent] = Action.async:
+    mealsService.meals(day, month, year).map(meals => Ok(Json.toJson(meals)))
+
   private given Reads[LinkOrInsertData] = Json.reads
 
   def linkOrInsertApi(): Action[LinkOrInsertData] = Action.async(parse.json[LinkOrInsertData]): request =>

@@ -2,12 +2,18 @@
 	import MealDate from '$lib/MealDate.svelte';
 	import MealMenu from '$lib/MealMenu.svelte';
 	import type { PageProps } from './$types';
+	import { currentDay } from '$lib/calendar.svelte';
 
 	let { data }: PageProps = $props();
 </script>
 
 <main class="container" data-sveltekit-preload-data="tap">
-	<MealMenu year={2026} week={12} />
+	<MealMenu
+		day={currentDay.day}
+		month={currentDay.month}
+		year={currentDay.year}
+		week={currentDay.weekNumber}
+	/>
 	<h2>
 		{data.meal.description} ({data.count})
 		{#if data.meal.url}

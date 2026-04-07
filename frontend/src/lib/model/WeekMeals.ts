@@ -47,6 +47,10 @@ export interface WeekMeals {
 	sunday: Day;
 }
 
+export interface WeekMealsCenteredAroundADay {
+	days: Array<Day>;
+}
+
 export interface SearchSuggestion {
 	count: number;
 	description: string;

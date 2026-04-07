@@ -23,6 +23,11 @@ class MealsService(clock: Clock, repository: MealRepository)(using ExecutionCont
     val (from, to) = DatesTransformations.range(year, week)
     repository.meals(from, to).map(mealsByWeekDay(year, week, clock))
 
+  def meals(day: Int, month: Int, year: Year): Future[WeekMealsCenteredAroundADay] =
+    val date = LocalDate.of(year.getValue, month, day)
+    val (from, to) = (date.minusDays(3), date.plusDays(3))
+    repository.meals(from.atStartOfDay(), to.plusDays(1).atStartOfDay().minusNanos(1)).map(mealsToDays(from, 7))
+
   def linkOrInsert(mealTime: LocalDateTime, mealDescription: String): Future[MealEntry] =
     repository.linkOrInsert(mealTime, mealDescription)
 
@@ -101,4 +106,16 @@ class MealsService(clock: Clock, repository: MealRepository)(using ExecutionCont
         case (SUNDAY, 20)    => weekMeals.copy(sunday = weekMeals.sunday.copy(dinner = Some(meal)))
         case _               => weekMeals
       }
+    )
+
+  private def mealsToDays(start: LocalDate, len: Int)(meals: Seq[MealEntry]): WeekMealsCenteredAroundADay =
+    val weekDays =
+      Seq.iterate(start, len)(_.plusDays(1)).map(date => WeekDay(reference = date, lunch = None, dinner = None))
+    WeekMealsCenteredAroundADay(
+      meals.foldLeft(weekDays)((days, meal) =>
+        meal.time.getHour match
+          case 12 => days.map(day => if (day.reference == meal.time.toLocalDate) day.copy(lunch = Some(meal)) else day)
+          case 20 => days.map(day => if (day.reference == meal.time.toLocalDate) day.copy(dinner = Some(meal)) else day)
+          case _  => days
+      )
     )

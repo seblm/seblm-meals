@@ -37,6 +37,8 @@ case class WeekMeals(
     sunday.reference.atTime(20, 0) -> sunday.dinner
   )
 
+case class WeekMealsCenteredAroundADay(days: Seq[WeekDay])
+
 case class WeekDay(reference: LocalDate, lunch: Option[MealEntry], dinner: Option[MealEntry])
 
 object WeekMeals:

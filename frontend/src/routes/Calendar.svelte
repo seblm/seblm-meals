@@ -1,12 +1,22 @@
 <script lang="ts">
 	import WeekCalendar from './WeekCalendar.svelte';
 	import { resolve } from '$app/paths';
+	import { currentDay } from '$lib/calendar.svelte';
 </script>
 
 <div class="calendar">
 	<header>
 		<h1>Votre semaine</h1>
-		<h1><a href={resolve('/meals/2026/12')}>seblm-meals</a></h1>
+		<h1>
+			<a
+				href={resolve('/meals/[year]/[week]', {
+					week: currentDay.weekNumber.toString(),
+					year: currentDay.year.toString()
+				})}
+			>
+				seblm-meals
+			</a>
+		</h1>
 	</header>
 	<main class="calendar-content">
 		<WeekCalendar />
