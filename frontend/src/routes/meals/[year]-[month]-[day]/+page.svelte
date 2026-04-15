@@ -14,9 +14,19 @@
 		year={currentDay.year}
 		week={currentDay.weekNumber}
 	/>
-	{#each data.days as day}
-		<p>{day.reference}</p>
-		{#if day.lunch?.meal}<p><Meal meal={day.lunch?.meal} /></p>{/if}
-		{#if day.dinner?.time}<p><Meal meal={day.dinner?.meal} /></p>{/if}
-	{/each}
+	<div class="grid">
+		{#each data.days as day}
+			<p>{day.reference}</p>
+			<p>{#if day.lunch?.meal}<Meal meal={day.lunch?.meal} />{/if}</p>
+			<p>{#if day.dinner?.meal}<Meal meal={day.dinner?.meal} />{/if}</p>
+		{/each}
+	</div>
 </main>
+
+<style>
+	@media (min-width: 768px) {
+		.grid {
+			grid-template-columns: 1fr 3fr 3fr;
+		}
+	}
+</style>
