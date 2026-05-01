@@ -17,8 +17,12 @@
 	<div class="grid">
 		{#each data.days as day}
 			<p>{day.reference}</p>
-			<p>{#if day.lunch?.meal}<Meal meal={day.lunch?.meal} />{/if}</p>
-			<p>{#if day.dinner?.meal}<Meal meal={day.dinner?.meal} />{/if}</p>
+			<p>
+				{#if day.lunch?.meal}<Meal meal={day.lunch?.meal} />{/if}
+			</p>
+			<p>
+				{#if day.dinner?.meal}<Meal meal={day.dinner?.meal} />{/if}
+			</p>
 		{/each}
 	</div>
 </main>
