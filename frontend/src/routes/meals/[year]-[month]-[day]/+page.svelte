@@ -15,7 +15,7 @@
 		week={currentDay.weekNumber}
 	/>
 	<div class="grid">
-		{#each data.days as day}
+		{#each data.days as day (day.reference)}
 			<p>{day.reference}</p>
 			<p>
 				{#if day.lunch?.meal}<Meal meal={day.lunch?.meal} />{/if}
