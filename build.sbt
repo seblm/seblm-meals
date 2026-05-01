@@ -29,6 +29,19 @@ lazy val domain = project
     Test / javaOptions += s"-javaagent:${csrCacheDirectory.value.getAbsolutePath}/https/repo1.maven.org/maven2/org/mockito/mockito-core/$mockitoVersion/mockito-core-$mockitoVersion.jar"
   )
 
+lazy val catseffect = project
+  .settings(
+    scalaVersion := "3.8.3",
+    libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.5.22" % Runtime, // stick to 1.5.22 because of org.playframework:play-logback transitive dependency
+    libraryDependencies += "org.scalameta" %% "munit" % "1.3.0" % Test,
+    libraryDependencies += "org.slf4j" % "slf4j-api" % "2.0.17" % Test,
+    libraryDependencies += "org.tpolecat" %% "skunk-core" % "1.0.0" % Test,
+    libraryDependencies += "org.typelevel" %% "cats-effect" % "3.7.0" % Test,
+    libraryDependencies += "org.typelevel" %% "munit-cats-effect" % "2.2.0" % Test,
+    libraryDependencies += "org.typelevel" %% "otel4s-core-metrics" % "0.16.0" % Test,
+    libraryDependencies += "org.typelevel" %% "otel4s-core-trace" % "0.16.0" % Test,
+  )
+
 libraryDependencies += evolutions
 libraryDependencies += "org.playframework" %% "play" % "3.0.10"
 libraryDependencies += "org.playframework" %% "play-configuration" % "3.0.10"
