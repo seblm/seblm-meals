@@ -31,7 +31,7 @@ jobs:
         working-directory: frontend
       - run: npm run build
         working-directory: frontend
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: frontend
           path: frontend/build
@@ -45,7 +45,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: frontend
           path: frontend/build
@@ -58,7 +58,7 @@ jobs:
       - run: sbt scalafmtCheckAll undeclaredCompileDependenciesTest unusedCompileDependenciesTest test "Docker / stage"
       - uses: scalacenter/sbt-dependency-submission@v3
         if: ${{ github.ref == 'refs/heads/main' }}
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: backend
           path: target/docker/stage
@@ -73,19 +73,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: backend
-      - uses: docker/login-action@v3
+      - uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
       - id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: seblm/seblm-meals
           tags: latest
-      - uses: docker/build-push-action@v6
+      - uses: docker/build-push-action@v7
         with:
           context: .
           push: true
