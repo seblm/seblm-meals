@@ -48,7 +48,7 @@ docker run --rm --tty \
   --volume .:/home/sbtuser/seblm-meals \
   --volume ~/Library/Caches/Coursier:/home/sbtuser/.cache/coursier \
   --user sbtuser --workdir /home/sbtuser/seblm-meals \
-  sbtscala/scala-sbt:eclipse-temurin-25.0.1_8_1.12.10_3.8.3 sbt "Docker / stage"
+  sbtscala/scala-sbt:eclipse-temurin-25.0.1_8_1.12.11_3.8.3 sbt "Docker / stage"
 ```
 
 Build with compose:
@@ -116,7 +116,7 @@ npx sv create frontend
 
 ```shell
 HINT: Run "sv --help" to get the full list of commands, add-ons, and examples to one-shot and skip interactive prompts.
-┌  Welcome to SvelteKit CLI! (v0.15.2)
+┌  Welcome to SvelteKit CLI! (v0.15.3)
 │
 ◇  Which template whould you like?
 │  ● SvelteKit minimal (barebones scaffolding for your new app)
@@ -152,8 +152,6 @@ HINT: Run "sv --help" to get the full list of commands, add-ons, and examples to
 │
 ◆  Project created
 │
-◆  Successfully setup add-ons: prettier, eslint, sveltekit-adapter
-│
 ◇  Which package manager do you want to install dependencies with?
 │  ○ None
 │  ● npm
@@ -162,8 +160,10 @@ HINT: Run "sv --help" to get the full list of commands, add-ons, and examples to
 │  ○ bun
 │  ○ deno
 │
+◆  Successfully setup add-ons: prettier, eslint, sveltekit-adapter
+│
 │  To skip prompts next time, run:
-●  npx sv@0.15.2 create --template minimal --types ts --add prettier eslint sveltekit-adapter="adapter:static" --install npm frontend
+●  npx sv@0.15.3 create --template minimal --types ts --add prettier eslint sveltekit-adapter="adapter:static" --install npm frontend
 │
 ◆  Successfully installed dependencies with npm
 │
