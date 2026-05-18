@@ -116,7 +116,7 @@ npx sv create frontend
 
 ```shell
 HINT: Run "sv --help" to get the full list of commands, add-ons, and examples to one-shot and skip interactive prompts.
-┌  Welcome to SvelteKit CLI! (v0.15.2)
+┌  Welcome to SvelteKit CLI! (v0.15.3)
 │
 ◇  Which template whould you like?
 │  ● SvelteKit minimal (barebones scaffolding for your new app)
@@ -152,8 +152,6 @@ HINT: Run "sv --help" to get the full list of commands, add-ons, and examples to
 │
 ◆  Project created
 │
-◆  Successfully setup add-ons: prettier, eslint, sveltekit-adapter
-│
 ◇  Which package manager do you want to install dependencies with?
 │  ○ None
 │  ● npm
@@ -162,8 +160,10 @@ HINT: Run "sv --help" to get the full list of commands, add-ons, and examples to
 │  ○ bun
 │  ○ deno
 │
+◆  Successfully setup add-ons: prettier, eslint, sveltekit-adapter
+│
 │  To skip prompts next time, run:
-●  npx sv@0.15.2 create --template minimal --types ts --add prettier eslint sveltekit-adapter="adapter:static" --install npm frontend
+●  npx sv@0.15.3 create --template minimal --types ts --add prettier eslint sveltekit-adapter="adapter:static" --install npm frontend
 │
 ◆  Successfully installed dependencies with npm
 │
