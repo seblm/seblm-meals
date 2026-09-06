@@ -12,7 +12,7 @@ lazy val root = (project in file("."))
     routesImport += "meals.application.MealsBinders.given",
     routesImport += "java.time.{LocalDate, LocalDateTime, Year}",
     routesImport += "java.util.UUID",
-    scalaVersion := "3.8.4",
+    scalaVersion := "3.9.0",
     Test / javaOptions += "-Dconfig.file=test/resources/application-test.conf"
   )
   .aggregate(domain)
@@ -24,7 +24,7 @@ lazy val domain = project
     libraryDependencies += "org.mockito" % "mockito-core" % mockitoVersion % Test,
     libraryDependencies += "org.scalatest" %% "scalatest-flatspec" % "3.2.20" % Test,
     libraryDependencies += "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.20" % Test,
-    scalaVersion := "3.8.4",
+    scalaVersion := "3.9.0",
     Test / fork := true,
     Test / javaOptions += s"-javaagent:${csrCacheDirectory.value.getAbsolutePath}/https/repo1.maven.org/maven2/org/mockito/mockito-core/$mockitoVersion/mockito-core-$mockitoVersion.jar"
   )
@@ -39,7 +39,7 @@ libraryDependencies += "com.typesafe.slick" %% "slick" % "3.6.1"
 
 libraryDependencies += "org.postgresql" % "postgresql" % "42.7.13" % Runtime
 
-libraryDependencies += "com.h2database" % "h2" % "2.4.240" % Test
+libraryDependencies += "com.h2database" % "h2" % "2.5.250" % Test
 libraryDependencies += "org.scalatest" %% "scalatest-flatspec" % "3.2.20" % Test
 libraryDependencies += "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.20" % Test
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.2" % Test
