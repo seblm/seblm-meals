@@ -133,7 +133,7 @@ HINT: Run "sv --help" to get the full list of commands, add-ons, and examples to
 │  ◼ eslint (linter - https://eslint.org)
 │  ◻ vitest
 │  ◻ playwright
-│  ◻ tailwindcss
+│  ◼ tailwindcss (css framework - https://tailwindcss.com)
 │  ◼ sveltekit-adapter (deployment - https://svelte.dev/docs/kit/adapters)
 │  ◻ drizzle
 │  ◻ better-auth
@@ -142,6 +142,10 @@ HINT: Run "sv --help" to get the full list of commands, add-ons, and examples to
 │  ◻ storybook
 │  ◻ ai-tools
 │  ◻ experimental
+│
+◇  tailwindcss: Which plugins would you like to add?
+│  ◻ typography
+│  ◻ forms
 │
 ◇  sveltekit-adapter: Which SvelteKit adapter would you like use?
 │  ○ auto
@@ -164,10 +168,10 @@ HINT: Run "sv --help" to get the full list of commands, add-ons, and examples to
 │  ○ nub (not installed)
 │  ○ aube (not installed)
 │
-◆  Successfully setup add-ons: prettier, eslint, sveltekit-adapter
+◆  Successfully setup add-ons: prettier, eslint, tailwindcss, sveltekit-adapter
 │
 │  To skip prompts next time, run:
-●  npx sv@0.17.0 create --template minimal --types ts --add prettier eslint sveltekit-adapter="adapter:static" --install npm frontend
+●  npx sv@0.17.0 create --template minimal --types ts --add prettier eslint tailwindcss="plugins:none" sveltekit-adapter="adapter:static" --install npm frontend
 │
 ◆  Successfully installed dependencies with npm
 │
