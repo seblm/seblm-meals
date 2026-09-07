@@ -193,6 +193,76 @@ HINT: Run "sv --help" to get the full list of commands, add-ons, and examples to
 └  You're all set!
 ```
 
+#### shadcn-svelte
+
+##### init
+
+```shell
+npx shadcn-svelte@latest init
+```
+
+```
+┌   shadcn-svelte  v1.6.1 
+│
+◇  You didn't provide a preset for the design system, how would you like to continue?
+│  ● Choose from a list of pre-configured presets
+│  ○ Create my own preset at shadcn-svelte.com/create
+│  ○ Prompt me for the preset
+│
+◇  Choose from a list of pre-configured presets
+│  ○ Nova - Lucide / Geist
+│  ● Vega - Lucide / Inter (The classic shadcn/ui look.)
+│  ○ Maia - Hugeicons / Figtree
+│  ○ Lyra - Phosphor / JetBrains Mono
+│  ○ Mira - Hugeicons / Inter
+│  ○ Luma - Lucide / Inter
+│  ○ Sera - Lucide / Noto Sans + Playfair Display
+│  ○ Rhea - Lucide / Inter
+│
+◇  Where is your global CSS file? (this file will be overwritten)
+│  src/routes/layout.css
+│
+◇  Configure the import alias for lib:
+│  $lib
+│
+◇  Configure the import alias for components:
+│  $lib/components
+│
+◇  Configure the import alias for ui:
+│  $lib/components/ui
+│
+◇  Configure the import alias for utils:
+│  $lib/utils
+│
+◇  Configure the import alias for hooks:
+│  $lib/hooks
+│
+◇  Config file components.json created
+│
+◇  Alias paths validated
+│
+◇  utils installed at src/lib/utils
+│
+◇  font-inter installed at font-inter
+│
+◇  vega installed at vega
+│
+◇  Updates to your src/routes/layout.css are required. Existing CSS variables may be overwritten. Continue?
+│  ● Yes / ○ No
+│
+◇  Stylesheet updated at src/routes/layout.css
+│
+◆  Successfully installed dependencies
+│
+└  Success! Project initialization completed.
+```
+
+##### add component (example) 
+
+```shell
+npx shadcd-svelte@latest add card
+```
+
 [docker-hub-postgres]: https://hub.docker.com/_/postgres
 [docker-hub-repository]: https://hub.docker.com/r/seblm/seblm-meals
 [openapi.yaml]: conf/openapi.yaml
