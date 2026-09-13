@@ -19,8 +19,9 @@ object WeekMealsReads:
   private given Reads[Meal] =
     ((JsPath \ "id").read[String] and
       (JsPath \ "description").read[String] and
-      (JsPath \ "url").readNullable[String]): (id, description, url) =>
-      Meal(UUID.fromString(id), description, url)
+      (JsPath \ "url").readNullable[String] and
+      (JsPath \ "image").readNullable[String]): (id, description, url, image) =>
+      Meal(UUID.fromString(id), description, url, image)
   private given Reads[MealEntry] =
     ((JsPath \ "meal").read[Meal] and (JsPath \ "time").read[String]): (meal, time) =>
       MealEntry(meal, LocalDateTime.parse(time))

@@ -254,6 +254,8 @@ components:
           format: uuid
         url:
           type: string
+        image:
+          type: string
     MealEntry:
       required:
         - meal

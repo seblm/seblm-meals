@@ -4,13 +4,14 @@ import meals.MealsPlaySpec
 import meals.application.LinkOrInsertDataWrites.given
 import meals.application.UnlinkMealWrites.given
 import meals.domain.WeekMealsReads.given
+import meals.domain.WeekMealsCenteredAroundADayReads.given
 import meals.domain.*
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 
+import java.nio.file.{Files, Paths}
 import java.time.*
-import java.util.UUID
 
 class MealsControllerSpec extends MealsPlaySpec:
 
@@ -18,7 +19,7 @@ class MealsControllerSpec extends MealsPlaySpec:
     Some(Clock.fixed(Instant.parse("2023-01-19T18:54:55.716650Z"), ZoneId.of("Europe/Paris")))
 
   "MealsController" should:
-    "get meals statistics" in:
+    "create, get around a date, get statistics and delete meals" in:
       val pizzaTime = LocalDateTime.parse("2023-01-16T12:00:00")
       val pizza = LinkOrInsertData("pizza", pizzaTime)
       val pastaTime = LocalDateTime.parse("2023-01-17T20:00:00")
@@ -28,16 +29,47 @@ class MealsControllerSpec extends MealsPlaySpec:
         val result = call(mealsComponents.mealsController.linkOrInsertApi(), FakeRequest().withBody(Json.toJson(meal)))
         status(result) must be(CREATED)
 
-      val id = UUID.fromString("7f209aff-2aae-4bf4-ba5d-f7741cfe7c07")
+      val mealsAround = call(mealsComponents.mealsController.mealsAround(17, 1, Year.of(2023)), FakeRequest())
+      val mealsAroundResponse = Json.fromJson[WeekMealsCenteredAroundADay](contentAsJson(mealsAround)).asOpt.value
+      mealsAroundResponse.days must have size 7
+      mealsAroundResponse.days.headOption.value must be(WeekDay(LocalDate.parse("2023-01-14"), None, None))
+      mealsAroundResponse.days.lift(1).value must be(WeekDay(LocalDate.parse("2023-01-15"), None, None))
+      mealsAroundResponse.days.lift(2).value.reference must be(LocalDate.parse("2023-01-16"))
+      val pizzaMealEntry = mealsAroundResponse.days.lift(2).value.lunch.value
+      val pizzaId = pizzaMealEntry.meal.id
+      pizzaMealEntry.time must be(pizzaTime)
+      pizzaMealEntry.meal.description must be("pizza")
+      pizzaMealEntry.meal.url must not be defined
+      pizzaMealEntry.meal.image must not be defined
+      mealsAroundResponse.days.lift(2).value.dinner must not be defined
+      mealsAroundResponse.days.lift(3).value.reference must be(LocalDate.parse("2023-01-17"))
+      mealsAroundResponse.days.lift(3).value.lunch must not be defined
+      val pastaMealEntry = mealsAroundResponse.days.lift(3).value.dinner.value
+      val pastaId = pastaMealEntry.meal.id
+      pastaMealEntry.time must be(pastaTime)
+      pastaMealEntry.meal.description must be("pasta")
+      pastaMealEntry.meal.url must not be defined
+      pastaMealEntry.meal.image must not be defined
+      mealsAroundResponse.days.lift(4).value must be(WeekDay(LocalDate.parse("2023-01-18"), None, None))
+      mealsAroundResponse.days.lift(5).value must be(WeekDay(LocalDate.parse("2023-01-19"), None, None))
+      mealsAroundResponse.days.lift(6).value must be(WeekDay(LocalDate.parse("2023-01-20"), None, None))
+
+      val pastaImage = Paths.get("target", "scala-3.9.0", "classes", "assets", s"$pastaId.webp")
+      Files.createFile(pastaImage)
+
+      val mealsAroundWithImage = call(mealsComponents.mealsController.mealsAround(17, 1, Year.of(2023)), FakeRequest())
+      val mealsAroundResponseWithImage =
+        Json.fromJson[WeekMealsCenteredAroundADay](contentAsJson(mealsAroundWithImage)).asOpt.value
+      mealsAroundResponseWithImage.days.lift(3).value.dinner.value.meal.image.value must be(s"/assets/$pastaId.webp")
+
       val all = call(mealsComponents.mealsController.mealsStatistics(), FakeRequest())
       val allResponse = Json.fromJson[Vector[MealStatistics]](contentAsJson(all)).asOpt.value
-      val allResponseWithoutMealIds =
-        allResponse.map(mealStatistics => mealStatistics.copy(meal = mealStatistics.meal.copy(id = id)))
-      allResponseWithoutMealIds must contain inOrderOnly (
-        MealStatistics(1, pastaTime, pastaTime, Meal(id, "pasta", None)),
-        MealStatistics(1, pizzaTime, pizzaTime, Meal(id, "pizza", None))
+      allResponse must contain inOrderOnly (
+        MealStatistics(1, pastaTime, pastaTime, Meal(pastaId, "pasta", None, Some(s"/assets/$pastaId.webp"))),
+        MealStatistics(1, pizzaTime, pizzaTime, Meal(pizzaId, "pizza", None, None))
       )
 
+      Files.delete(pastaImage)
       Vector(pizza, pasta).foreach: meal =>
         val unlinkRequest = FakeRequest().withMethod("DELETE").withBody(Json.toJson(UnlinkMeal(meal.mealTime)))
         val result = call(mealsComponents.mealsController.unlinkApi(), unlinkRequest)

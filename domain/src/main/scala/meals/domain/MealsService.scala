@@ -14,7 +14,7 @@ class MealsService(clock: Clock, repository: MealRepository)(using ExecutionCont
       .all()
       .map: meals =>
         meals
-          .map((meal, value) => MealStatistics(value.length, value.min, value.max, meal))
+          .map((meal, value) => MealStatistics(value.length, value.min, value.max, addImageIfFileExist(meal)))
           .toSeq
           .sortWith((a, b) => if (a.count == b.count) a.last.isBefore(b.last) else a.count < b.count)
           .reverse
@@ -112,10 +112,20 @@ class MealsService(clock: Clock, repository: MealRepository)(using ExecutionCont
     val weekDays =
       Seq.iterate(start, len)(_.plusDays(1)).map(date => WeekDay(reference = date, lunch = None, dinner = None))
     WeekMealsCenteredAroundADay(
-      meals.foldLeft(weekDays)((days, meal) =>
-        meal.time.getHour match
-          case 12 => days.map(day => if (day.reference == meal.time.toLocalDate) day.copy(lunch = Some(meal)) else day)
-          case 20 => days.map(day => if (day.reference == meal.time.toLocalDate) day.copy(dinner = Some(meal)) else day)
-          case _  => days
-      )
+      meals
+        .map(addImageIfFileExist)
+        .foldLeft(weekDays): (days, meal) =>
+          meal.time.getHour match
+            case 12 =>
+              days.map(day => if (day.reference == meal.time.toLocalDate) day.copy(lunch = Some(meal)) else day)
+            case 20 =>
+              days.map(day => if (day.reference == meal.time.toLocalDate) day.copy(dinner = Some(meal)) else day)
+            case _ => days
     )
+
+  private def addImageIfFileExist(mealEntry: MealEntry): MealEntry =
+    mealEntry.copy(meal = addImageIfFileExist(mealEntry.meal))
+
+  private def addImageIfFileExist(meal: Meal): Meal =
+    val image = s"assets/${meal.id}.webp"
+    meal.copy(image = Option(Thread.currentThread().getContextClassLoader.getResource(image)).map(_ => s"/$image"))

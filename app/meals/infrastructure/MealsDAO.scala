@@ -31,7 +31,7 @@ class MealsDAO(dbConfig1: DatabaseConfig[JdbcProfile])(using ExecutionContext)
     def url = column[Option[String]]("url")
 
     def * = (id, description, url) <> (
-      (id, description, url) => Meal(id, description, url),
+      (id, description, url) => Meal(id, description, url, None),
       meal => Some((meal.id, meal.description, meal.url))
     )
 
@@ -68,7 +68,7 @@ class MealsDAO(dbConfig1: DatabaseConfig[JdbcProfile])(using ExecutionContext)
     for
       existingMeal <- db.run(meals.filter(_.description === mealDescription).take(1).result.headOption)
       meal <- existingMeal.fold {
-        val newMeal = Meal(UUID.randomUUID(), mealDescription, None)
+        val newMeal = Meal(UUID.randomUUID(), mealDescription, None, None)
         insert(newMeal).map(const(newMeal))
       }(Future.successful)
       newMeal <- link(meal, mealTime)

@@ -28,7 +28,8 @@ class MealsServiceSpec extends AnyFlatSpec with Eventually with ScalaFutures:
             meal = Meal(
               id = UUID.fromString("8ffaf9c5-f9a4-4d7d-8358-d65f17882a2a"),
               description = "saucisson brioché salade",
-              url = Some("https://seblm.github.io")
+              url = Some("https://seblm.github.io"),
+              image = None
             ),
             time = LocalDateTime.parse("2020-02-27T12:00")
           ),
@@ -36,7 +37,8 @@ class MealsServiceSpec extends AnyFlatSpec with Eventually with ScalaFutures:
             meal = Meal(
               id = UUID.fromString("050aacbd-4de9-4d56-abbc-2e64d613e9f8"),
               description = "chou-fleur pomme de terre lardons",
-              url = None
+              url = None,
+              image = None
             ),
             time = LocalDateTime.parse("2020-02-28T20:00")
           )
@@ -85,7 +87,8 @@ class MealsServiceSpec extends AnyFlatSpec with Eventually with ScalaFutures:
               meal = Meal(
                 id = UUID.fromString("40cd80f6-bb5a-4b87-bcd9-3f475f6e3e4d"),
                 description = "galettes de blé noir",
-                url = None
+                url = None,
+                image = None
               ),
               time = LocalDateTime.parse("2020-03-02T12:00")
             ),
@@ -93,7 +96,8 @@ class MealsServiceSpec extends AnyFlatSpec with Eventually with ScalaFutures:
               meal = Meal(
                 id = UUID.fromString("ca73207d-f879-4ebf-9965-70ee732d136c"),
                 description = "chipolatas pâtes",
-                url = None
+                url = None,
+                image = None
               ),
               time = LocalDateTime.parse("2020-03-03T20:00")
             ),
@@ -101,7 +105,8 @@ class MealsServiceSpec extends AnyFlatSpec with Eventually with ScalaFutures:
               meal = Meal(
                 id = UUID.fromString("ca82f285-a88a-4e95-927a-a126f0de92d7"),
                 description = "ratatouille riz",
-                url = None
+                url = None,
+                image = None
               ),
               time = LocalDateTime.parse("2020-03-04T20:00")
             ),
@@ -109,7 +114,8 @@ class MealsServiceSpec extends AnyFlatSpec with Eventually with ScalaFutures:
               meal = Meal(
                 id = UUID.fromString("5480e229-6a56-4eb1-8271-d00dba2e72e0"),
                 description = "lentilles saucisses (Morteau, Montbelliard) carottes",
-                url = None
+                url = None,
+                image = None
               ),
               time = LocalDateTime.parse("2020-03-07T12:00")
             ),
@@ -117,7 +123,8 @@ class MealsServiceSpec extends AnyFlatSpec with Eventually with ScalaFutures:
               meal = Meal(
                 id = UUID.fromString("28389f39-3772-4ac2-b992-565af57160c2"),
                 description = "quenelles riz sauce tomate",
-                url = None
+                url = None,
+                image = None
               ),
               time = LocalDateTime.parse("2020-03-08T12:00")
             )
@@ -293,7 +300,7 @@ object MealsServiceSpec:
 
     private def toAllResponseMap(line: String): (Meal, Seq[LocalDateTime]) = line.split("->") match
       case Array(description, dates) =>
-        Meal(UUID.randomUUID(), description.trim(), None) -> dates
+        Meal(UUID.randomUUID(), description.trim(), None, None) -> dates
           .split(",")
           .toIndexedSeq
           .map(x => LocalDateTime.parse(x.trim))

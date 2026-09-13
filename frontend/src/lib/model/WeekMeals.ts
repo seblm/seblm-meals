@@ -18,6 +18,7 @@ export interface Meal {
 	id: string;
 	description: string;
 	url?: string;
+	image?: string;
 }
 
 export interface MealStatistics {

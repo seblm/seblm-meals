@@ -10,7 +10,7 @@
 </script>
 
 <div class="meal-card">
-	<img src="/assets/{meal.id}.webp" alt={meal.description} />
+	{#if meal.image}<img src={meal.image} alt={meal.description} />{/if}
 	<div class="footer">
 		<a href={resolve('/meal/[id]', { id: meal.id })}>{meal.description}</a>
 		{#if meal.url}
