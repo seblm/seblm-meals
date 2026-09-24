@@ -1,9 +1,7 @@
 <script lang="ts">
+	import { ModeWatcher } from 'mode-watcher';
 	let { children } = $props();
 </script>
 
-<svelte:head>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.1.1/css/pico.min.css" />
-</svelte:head>
-
+<ModeWatcher />
 {@render children?.()}
