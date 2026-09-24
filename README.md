@@ -116,7 +116,7 @@ npx sv create frontend
 
 ```shell
 HINT: Run "sv --help" to get the full list of commands, add-ons, and examples to one-shot and skip interactive prompts.
-┌  Welcome to SvelteKit CLI! (v0.17.0)
+┌  Welcome to SvelteKit CLI! (v0.17.1)
 │
 ◇  Which template would you like?
 │  ● SvelteKit minimal (barebones scaffolding for your new app)
@@ -157,21 +157,17 @@ HINT: Run "sv --help" to get the full list of commands, add-ons, and examples to
 │
 ◆  Project created
 │
-◇  Which package manager do you want to install dependencies with?
+◇  Detected package managers. Which one should we use to install dependencies?
 │  ○ None
 │  ● npm
 │  ○ yarn
 │  ○ pnpm
 │  ○ deno
-│  ○ pnpm-rush (not installed)
-│  ○ bun (not installed)
-│  ○ nub (not installed)
-│  ○ aube (not installed)
 │
 ◆  Successfully setup add-ons: prettier, eslint, tailwindcss, sveltekit-adapter
 │
 │  To skip prompts next time, run:
-●  npx sv@0.17.0 create --template minimal --types ts --add prettier eslint tailwindcss="plugins:none" sveltekit-adapter="adapter:static" --install npm frontend
+●  npx sv@0.17.1 create --template minimal --types ts --add prettier eslint tailwindcss="plugins:none" sveltekit-adapter="adapter:static" --install npm frontend
 │
 ◆  Successfully installed dependencies with npm
 │
@@ -202,7 +198,7 @@ npx shadcn-svelte@latest init
 ```
 
 ```
-┌   shadcn-svelte  v1.6.1 
+┌   shadcn-svelte  v1.7.0 
 │
 ◇  You didn't provide a preset for the design system, how would you like to continue?
 │  ● Choose from a list of pre-configured presets
