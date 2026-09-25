@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
-	import * as Drawer from "$lib/components/ui/drawer";
+	import * as Drawer from '$lib/components/ui/drawer';
 	import * as Card from '$lib/components/ui/card';
 	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
@@ -13,16 +13,25 @@
 </script>
 
 <div class="min-h-screen bg-background">
-	<Button size="icon" class="fixed top-4 left-4 z-0 rounded-full h-14 w-14 bg-background/60 backdrop-blur-xl shadow-lg">
+	<Button
+		size="icon"
+		class="fixed top-4 left-4 z-0 h-14 w-14 rounded-full bg-background/60 shadow-lg backdrop-blur-xl"
+	>
 		<ChevronLeft />
 	</Button>
-	<Button size="icon" class="fixed top-4 right-4 z-50 rounded-full h-14 w-14 bg-background/60 backdrop-blur-xl shadow-lg">
+	<Button
+		size="icon"
+		class="fixed top-4 right-4 z-50 h-14 w-14 rounded-full bg-background/60 shadow-lg backdrop-blur-xl"
+	>
 		<ChevronRight />
 	</Button>
-	<Button size="icon" class="fixed bottom-4 right-4 z-50 rounded-full h-14 w-14 bg-primary shadow-xl">
+	<Button
+		size="icon"
+		class="fixed right-4 bottom-4 z-50 h-14 w-14 rounded-full bg-primary shadow-xl"
+	>
 		<ListIndentIncrease />
 	</Button>
-	<main class="px-4 pt-20 pb-24 space-y-10" data-sveltekit-preload-data="tap">
+	<main class="space-y-10 px-4 pt-20 pb-24" data-sveltekit-preload-data="tap">
 		{#each data.days as day (day.reference)}
 			<section>
 				<h2 class="mb-4 text-xl font-bold">{day.reference}</h2>
@@ -30,7 +39,7 @@
 					{#each [day.lunch, day.dinner] as mealEntry}
 						<Card.Root>
 							{#if mealEntry?.meal.image}
-								<img src="{mealEntry?.meal.image}" alt={mealEntry?.meal.description} />
+								<img src={mealEntry?.meal.image} alt={mealEntry?.meal.description} />
 							{/if}
 							<Card.Header>
 								{#if mealEntry?.meal.description}
@@ -46,11 +55,16 @@
 											</Drawer.Trigger>
 											<Drawer.Content>
 												<Drawer.Header>
-													<Drawer.Title>Are you sure you want to remove {mealEntry?.meal.description}?</Drawer.Title>
+													<Drawer.Title
+														>Are you sure you want to remove {mealEntry?.meal
+															.description}?</Drawer.Title
+													>
 												</Drawer.Header>
 												<Drawer.Footer>
 													<Button>OK</Button>
-													<Drawer.Close class={buttonVariants({ variant: "outline" })}>Cancel</Drawer.Close>
+													<Drawer.Close class={buttonVariants({ variant: 'outline' })}
+														>Cancel</Drawer.Close
+													>
 												</Drawer.Footer>
 											</Drawer.Content>
 										</Drawer.Root>

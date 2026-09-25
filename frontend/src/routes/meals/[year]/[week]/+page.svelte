@@ -16,7 +16,7 @@
 		year={data.now.year}
 	/>
 	<h2>{data.titles.long}</h2>
-	<div class="grid week">
+	<div class="week grid">
 		<p>lundi</p>
 		<p>
 			{#if data.monday.lunch}<Meal meal={data.monday.lunch.meal} />{/if}

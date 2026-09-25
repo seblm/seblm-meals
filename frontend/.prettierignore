@@ -6,4 +6,6 @@ bun.lock
 bun.lockb
 
 # Miscellaneous
+/src/lib/components/ui
+/src/lib/utils.ts
 /static/
