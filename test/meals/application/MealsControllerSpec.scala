@@ -3,9 +3,9 @@ package meals.application
 import meals.MealsPlaySpec
 import meals.application.LinkOrInsertDataWrites.given
 import meals.application.UnlinkMealWrites.given
-import meals.domain.WeekMealsReads.given
-import meals.domain.WeekMealsCenteredAroundADayReads.given
 import meals.domain.*
+import meals.domain.WeekMealsCenteredAroundADayReads.given
+import meals.domain.WeekMealsReads.given
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
