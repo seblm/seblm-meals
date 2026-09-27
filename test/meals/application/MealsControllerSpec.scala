@@ -6,12 +6,14 @@ import meals.application.UnlinkMealWrites.given
 import meals.domain.*
 import meals.domain.WeekMealsCenteredAroundADayReads.given
 import meals.domain.WeekMealsReads.given
+import org.scalatest.TryValues.given
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 
-import java.nio.file.{Files, Paths}
+import java.nio.file.{FileAlreadyExistsException, Files, Paths}
 import java.time.*
+import scala.util.Try
 
 class MealsControllerSpec extends MealsPlaySpec:
 
@@ -54,8 +56,13 @@ class MealsControllerSpec extends MealsPlaySpec:
       mealsAroundResponse.days.lift(5).value must be(WeekDay(LocalDate.parse("2023-01-19"), None, None))
       mealsAroundResponse.days.lift(6).value must be(WeekDay(LocalDate.parse("2023-01-20"), None, None))
 
-      val pastaImage = Paths.get("target", "scala-3.9.0", "classes", "assets", s"$pastaId.webp")
-      Files.createFile(pastaImage)
+      val assetsDirectory = Paths.get("target", "scala-3.9.0", "classes", "assets")
+      Try(Files.createDirectory(assetsDirectory))
+        .recover:
+          case _: FileAlreadyExistsException => assetsDirectory
+        .success
+      val pastaImage = assetsDirectory.resolve(s"$pastaId.webp")
+      Try(Files.createFile(pastaImage)).success
 
       val mealsAroundWithImage = call(mealsComponents.mealsController.mealsAround(17, 1, Year.of(2023)), FakeRequest())
       val mealsAroundResponseWithImage =
