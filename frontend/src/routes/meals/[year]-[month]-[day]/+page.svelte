@@ -42,14 +42,14 @@
 			<section>
 				<h2 class="mb-4 text-xl font-bold">{day.reference}</h2>
 				<div class="grid grid-cols-2 gap-4">
-					{#each [day.lunch, day.dinner] as mealEntry}
+					{#each [day.lunch, day.dinner] as mealEntry, index (index)}
 						<Card.Root>
 							{#if mealEntry?.meal.image}
-								<img src={mealEntry?.meal.image} alt={mealEntry?.meal.description} />
+								<img src={mealEntry.meal.image} alt={mealEntry?.meal.description} />
 							{/if}
 							<Card.Header>
 								{#if mealEntry?.meal.description}
-									<Card.Title>{mealEntry?.meal.description}</Card.Title>
+									<Card.Title>{mealEntry.meal.description}</Card.Title>
 								{/if}
 								{#if mealEntry}
 									<Card.Action>
@@ -62,11 +62,11 @@
 											<Drawer.Content>
 												<Drawer.Header>
 													<Drawer.Title>
-														Are you sure you want to remove {mealEntry?.meal.description}?
+														Are you sure you want to remove {mealEntry.meal.description}?
 													</Drawer.Title>
 												</Drawer.Header>
 												<Drawer.Footer>
-													<Button onclick={() => unlink(mealEntry?.time)}>OK</Button>
+													<Button onclick={() => unlink(mealEntry.time)}>OK</Button>
 													<Drawer.Close class={buttonVariants({ variant: 'outline' })}>
 														Cancel
 													</Drawer.Close>
