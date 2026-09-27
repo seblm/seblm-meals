@@ -1,8 +1,10 @@
 <script lang="ts">
+	import { invalidateAll } from '$app/navigation';
 	import type { PageProps } from './$types';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Drawer from '$lib/components/ui/drawer';
 	import * as Card from '$lib/components/ui/card';
+	import { unlinkWithTime } from '$lib/utils/api';
 	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import ListIndentIncrease from '@lucide/svelte/icons/list-indent-increase';
@@ -10,6 +12,10 @@
 	import Trash from '@lucide/svelte/icons/trash';
 
 	let { data }: PageProps = $props();
+
+	async function unlink(time: string) {
+		return unlinkWithTime(time).then(() => invalidateAll());
+	}
 </script>
 
 <div class="min-h-screen bg-background">
@@ -49,22 +55,21 @@
 									<Card.Action>
 										<Drawer.Root>
 											<Drawer.Trigger>
-												<Button size="icon" variant="secondary" class="rounded-full">
+												<Button size="icon" variant="destructive" class="rounded-full">
 													<Trash class="h-4 w-4" />
 												</Button>
 											</Drawer.Trigger>
 											<Drawer.Content>
 												<Drawer.Header>
-													<Drawer.Title
-														>Are you sure you want to remove {mealEntry?.meal
-															.description}?</Drawer.Title
-													>
+													<Drawer.Title>
+														Are you sure you want to remove {mealEntry?.meal.description}?
+													</Drawer.Title>
 												</Drawer.Header>
 												<Drawer.Footer>
-													<Button>OK</Button>
-													<Drawer.Close class={buttonVariants({ variant: 'outline' })}
-														>Cancel</Drawer.Close
-													>
+													<Button onclick={() => unlink(mealEntry?.time)}>OK</Button>
+													<Drawer.Close class={buttonVariants({ variant: 'outline' })}>
+														Cancel
+													</Drawer.Close>
 												</Drawer.Footer>
 											</Drawer.Content>
 										</Drawer.Root>

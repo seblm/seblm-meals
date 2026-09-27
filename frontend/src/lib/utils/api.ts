@@ -66,7 +66,7 @@ export async function getSuggestions(
 }
 
 export async function linkOrInsert(mealDescription: string, day: string, isLunch: boolean) {
-	const mealTime = getMealTime(day, isLunch);
+	const mealTime = `${getMealTime(day, isLunch)}.000Z`;
 
 	const link: LinkOrInsert = {
 		mealDescription,
@@ -82,7 +82,11 @@ export async function linkOrInsert(mealDescription: string, day: string, isLunch
 }
 
 export async function unlink(day: string, isLunch: boolean) {
-	const mealTime = getMealTime(day, isLunch);
+	return unlinkWithTime(getMealTime(day, isLunch));
+}
+
+export async function unlinkWithTime(time: string) {
+	const mealTime = `${time}.000Z`;
 	const unlink: UnlinkMeal = {
 		mealTime
 	};
@@ -96,4 +100,4 @@ export async function unlink(day: string, isLunch: boolean) {
 }
 
 const getMealTime = (day: string, isLunch: boolean): string =>
-	`${day}T${isLunch ? '12' : '20'}:00:00.000Z`;
+	`${day}T${isLunch ? '12' : '20'}:00:00`;
