@@ -18,7 +18,7 @@ lazy val root = (project in file("."))
   .aggregate(domain)
   .dependsOn(domain)
 
-val mockitoVersion = "5.23.0"
+val mockitoVersion = "5.24.0"
 lazy val domain = project
   .settings(
     libraryDependencies += "org.mockito" % "mockito-core" % mockitoVersion % Test,
@@ -39,7 +39,7 @@ libraryDependencies += "com.typesafe.slick" %% "slick" % "3.6.1"
 
 libraryDependencies += "org.postgresql" % "postgresql" % "42.7.13" % Runtime
 
-libraryDependencies += "com.h2database" % "h2" % "2.5.250" % Test
+libraryDependencies += "com.h2database" % "h2" % "2.5.252" % Test
 libraryDependencies += "org.scalatest" %% "scalatest-flatspec" % "3.2.20" % Test
 libraryDependencies += "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.20" % Test
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.2" % Test
