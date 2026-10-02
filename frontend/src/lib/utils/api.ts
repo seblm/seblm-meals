@@ -5,7 +5,7 @@ import type {
 	UnlinkMeal,
 	WeekMeals,
 	WeekMealsCenteredAroundADay
-} from '$lib/model/WeekMeals';
+} from '#lib/model/WeekMeals.ts';
 
 function mealStatisticsReviver(key: string, value: unknown) {
 	if (key === 'first' || key === 'last') {
@@ -39,7 +39,7 @@ export async function getMealsStatistics() {
 		);
 }
 
-export async function getWeekMeals(year: number, weekNumber: number) {
+export async function getWeekMeals(year: number, weekNumber: number): Promise<WeekMeals> {
 	return await fetch(`/api/meals/${year}/${weekNumber}`).then(
 		(response) => response.json() as unknown as WeekMeals
 	);

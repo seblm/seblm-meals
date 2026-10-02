@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { SearchSuggestion } from '$lib/model/WeekMeals';
+	import type { SearchSuggestion } from '#lib/model/WeekMeals.ts';
 
 	interface Props {
 		onclick: () => void;

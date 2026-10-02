@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { Day, SuggestionResponse, WeekMeals } from '$lib/model/WeekMeals';
-	import { date } from '$lib/stores';
-	import { getSuggestions, getWeekMeals, linkOrInsert, unlink } from '$lib/utils/api';
-	import { clickOutside } from '$lib/utils/ClickOutside';
-	import { getDayName } from '$lib/utils/functions';
+	import type { Day, SuggestionResponse, WeekMeals } from '#lib/model/WeekMeals.ts';
+	import { date } from '#lib/stores.ts';
+	import { getSuggestions, getWeekMeals, linkOrInsert, unlink } from '#lib/utils/api.ts';
+	import { clickOutside } from '#lib/utils/ClickOutside.ts';
+	import { getDayName } from '#lib/utils/functions.ts';
 	import { getWeek, getYear } from 'date-fns';
 	import { addWeeks } from 'date-fns/fp';
 	import { onDestroy, onMount } from 'svelte';
@@ -38,9 +38,7 @@
 		}
 	});
 
-	const unsubscribe = date.subscribe((d) => {
-		selectedDate = d;
-	});
+	const unsubscribe = date.subscribe((d) => (selectedDate = d));
 
 	onMount(() => {
 		updateWeekMeals();
@@ -130,7 +128,7 @@
 			isLunch,
 			mealDescription
 		};
-		getSuggestions(ref, mealDescription, isLunch).then((response) => {
+		getSuggestions(ref, mealDescription, isLunch).then((response: SuggestionResponse) => {
 			suggestions.input = recordKey;
 			suggestions.suggestions = response;
 		});

@@ -1,8 +1,8 @@
 <script lang="ts">
-	import MealDate from '$lib/MealDate.svelte';
-	import MealMenu from '$lib/MealMenu.svelte';
+	import MealDate from '#lib/MealDate.svelte';
+	import MealMenu from '#lib/MealMenu.svelte';
 	import type { PageProps } from './$types';
-	import { currentDay } from '$lib/calendar.svelte';
+	import { currentDay } from '#lib/calendar.svelte.ts';
 
 	let { data }: PageProps = $props();
 </script>

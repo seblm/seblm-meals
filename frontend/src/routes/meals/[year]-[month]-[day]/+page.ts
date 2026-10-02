@@ -1,6 +1,6 @@
 import type { PageLoad } from './$types';
-import { changeDay } from '$lib/calendar.svelte';
-import { getWeekMealsCenteredAroundADay } from '$lib/utils/api';
+import { changeDay } from '#lib/calendar.svelte.ts';
+import { getWeekMealsCenteredAroundADay } from '#lib/utils/api.ts';
 
 export const load: PageLoad = ({ params }) => {
 	const day = parseInt(params.day);

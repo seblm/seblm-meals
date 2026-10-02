@@ -1,3 +1,3 @@
-import { writable } from 'svelte/store';
+import { type Writable, writable } from 'svelte/store';
 
-export const date = writable(new Date());
+export const date: Writable<Date> = writable(new Date());

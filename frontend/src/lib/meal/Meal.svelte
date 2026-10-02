@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Meal } from '$lib/model/WeekMeals';
+	import type { Meal } from '#lib/model/WeekMeals.ts';
 	import { resolve } from '$app/paths';
 
 	interface Props {
