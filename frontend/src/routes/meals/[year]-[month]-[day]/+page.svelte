@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import type { PageProps } from './$types';
-	import { Button } from '$lib/components/ui/button';
-	import Meal2 from '$lib/meal/Meal2.svelte';
-	import { unlinkWithTime } from '$lib/utils/api';
+	import { Button } from '#lib/components/ui/button';
+	import Meal2 from '#lib/meal/Meal2.svelte';
+	import { unlinkWithTime } from '#lib/utils/api';
 	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import ListIndentIncrease from '@lucide/svelte/icons/list-indent-increase';

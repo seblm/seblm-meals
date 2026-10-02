@@ -5,7 +5,7 @@ import type {
 	UnlinkMeal,
 	WeekMeals,
 	WeekMealsCenteredAroundADay
-} from '$lib/model/WeekMeals';
+} from '#lib/model/WeekMeals';
 
 function mealStatisticsReviver(key: string, value: unknown) {
 	if (key === 'first' || key === 'last') {

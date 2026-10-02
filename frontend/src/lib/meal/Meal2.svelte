@@ -1,9 +1,9 @@
 <script lang="ts">
     import type { PageProps } from './$types';
     import { resolve } from '$app/paths';
-    import { Button, buttonVariants } from '$lib/components/ui/button';
-    import * as Drawer from '$lib/components/ui/drawer';
-    import * as Card from '$lib/components/ui/card';
+    import { Button, buttonVariants } from '#lib/components/ui/button';
+    import * as Drawer from '#lib/components/ui/drawer';
+    import * as Card from '#lib/components/ui/card';
     import Plus from '@lucide/svelte/icons/plus';
     import Trash from '@lucide/svelte/icons/trash';
 

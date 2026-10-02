@@ -1,7 +1,7 @@
 <script lang="ts">
 	import WeekCalendar from './WeekCalendar.svelte';
 	import { resolve } from '$app/paths';
-	import { currentDay } from '$lib/calendar.svelte';
+	import { currentDay } from '#lib/calendar.svelte';
 </script>
 
 <div class="calendar">

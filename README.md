@@ -116,12 +116,13 @@ npx sv create frontend
 
 ```shell
 HINT: Run "sv --help" to get the full list of commands, add-ons, and examples to one-shot and skip interactive prompts.
-┌  Welcome to SvelteKit CLI! (v0.17.1)
+┌  Welcome to SvelteKit CLI! (v1.0.1)
 │
 ◇  Which template would you like?
 │  ● SvelteKit minimal (barebones scaffolding for your new app)
 │  ○ SvelteKit demo
 │  ○ Svelte library
+│  ○ sv community add-on
 │
 ◇  Add type checking with TypeScript?
 │  ● Yes, using TypeScript syntax
@@ -134,6 +135,7 @@ HINT: Run "sv --help" to get the full list of commands, add-ons, and examples to
 │  ◻ vitest
 │  ◻ playwright
 │  ◼ tailwindcss (css framework - https://tailwindcss.com)
+│  ◻ enhanced-img
 │  ◼ sveltekit-adapter (deployment - https://svelte.dev/docs/kit/adapters)
 │  ◻ drizzle
 │  ◻ better-auth
@@ -167,7 +169,7 @@ HINT: Run "sv --help" to get the full list of commands, add-ons, and examples to
 ◆  Successfully setup add-ons: prettier, eslint, tailwindcss, sveltekit-adapter
 │
 │  To skip prompts next time, run:
-●  npx sv@0.17.1 create --template minimal --types ts --add prettier eslint tailwindcss="plugins:none" sveltekit-adapter="adapter:static" --install npm frontend
+●  npx sv@1.0.1 create --template minimal --types ts --add prettier eslint tailwindcss="plugins:none" sveltekit-adapter="adapter:static" --install npm frontend
 │
 ◆  Successfully installed dependencies with npm
 │
@@ -219,19 +221,19 @@ npx shadcn-svelte@latest init
 │  src/routes/layout.css
 │
 ◇  Configure the import alias for lib:
-│  $lib
+│  #lib
 │
 ◇  Configure the import alias for components:
-│  $lib/components
+│  #lib/components
 │
 ◇  Configure the import alias for ui:
-│  $lib/components/ui
+│  #lib/components/ui
 │
 ◇  Configure the import alias for utils:
-│  $lib/utils
+│  #lib/utils
 │
 ◇  Configure the import alias for hooks:
-│  $lib/hooks
+│  #lib/hooks
 │
 ◇  Config file components.json created
 │

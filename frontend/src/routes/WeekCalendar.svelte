@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { Day, SuggestionResponse, WeekMeals } from '$lib/model/WeekMeals';
-	import { date } from '$lib/stores';
-	import { getSuggestions, getWeekMeals, linkOrInsert, unlink } from '$lib/utils/api';
-	import { clickOutside } from '$lib/utils/ClickOutside';
-	import { getDayName } from '$lib/utils/functions';
+	import type { Day, SuggestionResponse, WeekMeals } from '#lib/model/WeekMeals';
+	import { date } from '#lib/stores';
+	import { getSuggestions, getWeekMeals, linkOrInsert, unlink } from '#lib/utils/api';
+	import { clickOutside } from '#lib/utils/ClickOutside';
+	import { getDayName } from '#lib/utils/functions';
 	import { getWeek, getYear } from 'date-fns';
 	import { addWeeks } from 'date-fns/fp';
 	import { onDestroy, onMount } from 'svelte';

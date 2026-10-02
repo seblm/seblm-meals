@@ -1,6 +1,6 @@
 import type { PageLoad } from './$types';
-import { getWeekMeals } from '$lib/utils/api';
-import type { WeekMeals } from '$lib/model/WeekMeals';
+import { getWeekMeals } from '#lib/utils/api';
+import type { WeekMeals } from '#lib/model/WeekMeals';
 
 export const load: PageLoad = ({ params }) => {
 	const year = parseInt(params.year);

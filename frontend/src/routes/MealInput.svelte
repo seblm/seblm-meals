@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import type { SuggestionResponse } from '$lib/model/WeekMeals';
+	import type { SuggestionResponse } from '#lib/model/WeekMeals';
 	import MealInputSpecialSuggestionItem from './MealInputSpecialSuggestionItem.svelte';
 	import MealInputSuggestionItem from './MealInputSuggestionItem.svelte';
 	import type { FormEventHandler } from 'svelte/elements';
