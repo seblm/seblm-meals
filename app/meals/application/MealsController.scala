@@ -41,9 +41,9 @@ class MealsController(cc: ControllerComponents, mealsService: MealsService) exte
     case mealSuggest: MealSuggest =>
       Json.obj(
         "count" -> JsNumber(mealSuggest.count),
-        "description" -> JsString(mealSuggest.description),
         "descriptionLabel" -> JsString(mealSuggest.descriptionLabel),
-        "lastused" -> JsNumber(mealSuggest.lastused)
+        "lastUsed" -> JsNumber(mealSuggest.lastUsed),
+        "meal" -> mealSuggest.meal
       )
 
   private given Writes[SuggestResponse] =

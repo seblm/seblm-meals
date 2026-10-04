@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import type { SuggestionResponse } from '#lib/model/WeekMeals.ts';
+	import type { SuggestResponse } from '#lib/model/WeekMeals.ts';
 	import MealInputSpecialSuggestionItem from './MealInputSpecialSuggestionItem.svelte';
 	import MealInputSuggestionItem from './MealInputSuggestionItem.svelte';
 	import type { FormEventHandler } from 'svelte/elements';
@@ -9,7 +9,7 @@
 		id: string | undefined;
 		value: string;
 		url: string | undefined;
-		suggestions: SuggestionResponse | null;
+		suggestions: SuggestResponse | null;
 		oninput: FormEventHandler<HTMLInputElement>;
 		onEnterPressed: () => void;
 		onSelectSuggestion: (description: string) => void;
@@ -47,21 +47,21 @@
 		{#if yearAgo}
 			<MealInputSpecialSuggestionItem
 				suggestion={yearAgo}
-				onclick={() => onSelectSuggestion(yearAgo.description)}
+				onclick={() => onSelectSuggestion(yearAgo.meal.description)}
 				lastUsed="Il y a 1 an"
 			/>
 		{/if}
 		{#if monthAgo}
 			<MealInputSpecialSuggestionItem
 				suggestion={monthAgo}
-				onclick={() => onSelectSuggestion(monthAgo.description)}
+				onclick={() => onSelectSuggestion(monthAgo.meal.description)}
 				lastUsed="Il y a 1 mois"
 			/>
 		{/if}
-		{#each mostRecents ?? [] as suggestion (suggestion.description)}
+		{#each mostRecents ?? [] as suggestion (suggestion.meal.description)}
 			<MealInputSuggestionItem
 				{suggestion}
-				onclick={() => onSelectSuggestion(suggestion.description)}
+				onclick={() => onSelectSuggestion(suggestion.meal.description)}
 			/>
 		{/each}
 	</ul>

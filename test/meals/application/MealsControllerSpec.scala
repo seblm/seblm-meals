@@ -4,9 +4,11 @@ import meals.MealsPlaySpec
 import meals.application.LinkOrInsertDataWrites.given
 import meals.application.UnlinkMealWrites.given
 import meals.domain.*
+import meals.domain.SuggestResponseReads.given
 import meals.domain.WeekMealsCenteredAroundADayReads.given
 import meals.domain.WeekMealsReads.given
 import org.scalatest.TryValues.given
+import org.scalatest.LoneElement.given
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
@@ -21,7 +23,7 @@ class MealsControllerSpec extends MealsPlaySpec:
     Some(Clock.fixed(Instant.parse("2023-01-19T18:54:55.716650Z"), ZoneId.of("Europe/Paris")))
 
   "MealsController" should:
-    "create, get around a date, get statistics and delete meals" in:
+    "create, get around a date, suggest, get statistics and delete meals" in:
       val pizzaTime = LocalDateTime.parse("2023-01-16T12:00:00")
       val pizza = LinkOrInsertData("pizza", pizzaTime)
       val pastaTime = LocalDateTime.parse("2023-01-17T20:00:00")
@@ -68,6 +70,16 @@ class MealsControllerSpec extends MealsPlaySpec:
       val mealsAroundResponseWithImage =
         Json.fromJson[WeekMealsCenteredAroundADay](contentAsJson(mealsAroundWithImage)).asOpt.value
       mealsAroundResponseWithImage.days.lift(3).value.dinner.value.meal.image.value must be(s"/assets/$pastaId.webp")
+
+      val suggestions = call(mealsComponents.mealsController.suggest(pastaTime.plusWeeks(1), None), FakeRequest())
+      val suggestionsResponse = Json.fromJson[SuggestResponse](contentAsJson(suggestions)).asOpt.value
+      suggestionsResponse.mostRecents.loneElement.count must be(1)
+      suggestionsResponse.mostRecents.loneElement.descriptionLabel must be("pasta")
+      suggestionsResponse.mostRecents.loneElement.lastUsed must be(7)
+      suggestionsResponse.mostRecents.loneElement.meal.description must be("pasta")
+      suggestionsResponse.mostRecents.loneElement.meal.id must be(pastaId)
+      suggestionsResponse.mostRecents.loneElement.meal.image.value must be(s"/assets/$pastaId.webp")
+      suggestionsResponse.mostRecents.loneElement.meal.url must not be defined
 
       val all = call(mealsComponents.mealsController.mealsStatistics(), FakeRequest())
       val allResponse = Json.fromJson[Vector[MealStatistics]](contentAsJson(all)).asOpt.value

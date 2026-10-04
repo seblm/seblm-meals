@@ -1,16 +1,16 @@
 <script lang="ts">
-	import type { SearchSuggestion } from '#lib/model/WeekMeals.ts';
+	import type { MealSuggest } from '#lib/model/WeekMeals.ts';
 
 	interface Props {
 		lastUsed: string;
 		onclick: () => void;
-		suggestion: SearchSuggestion;
+		suggestion: MealSuggest;
 	}
 	let { lastUsed, onclick, suggestion }: Props = $props();
 </script>
 
 <li {onclick}>
-	<span title={suggestion.description}>{@html suggestion.descriptionLabel} </span>
+	<span title={suggestion.meal.description}>{@html suggestion.descriptionLabel} </span>
 	<span> ({suggestion.count})</span>
 	<div class="spacer"></div>
 	<span>{lastUsed}</span>

@@ -52,17 +52,17 @@ export interface WeekMealsCenteredAroundADay {
 	days: Array<Day>;
 }
 
-export interface SearchSuggestion {
+export interface MealSuggest {
 	count: number;
-	description: string;
 	descriptionLabel: string;
-	lastused: number;
+	lastUsed: number;
+	meal: Meal;
 }
 
-export interface SuggestionResponse {
-	mostRecents: SearchSuggestion[];
-	fourWeeksAgo?: SearchSuggestion;
-	fiftyTwoWeeksAgo?: SearchSuggestion;
+export interface SuggestResponse {
+	mostRecents: MealSuggest[];
+	fourWeeksAgo?: MealSuggest;
+	fiftyTwoWeeksAgo?: MealSuggest;
 }
 
 export interface LinkOrInsert {

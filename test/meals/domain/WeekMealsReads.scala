@@ -2,6 +2,7 @@ package meals.domain
 
 import play.api.libs.functional.syntax.*
 import play.api.libs.json.{JsPath, Reads}
+import meals.domain.MealReads.given
 
 import java.time.{LocalDate, LocalDateTime, Year}
 import java.util.UUID
@@ -16,12 +17,6 @@ object WeekMealsReads:
       (JsPath \ "week").read[Int] and
       (JsPath \ "isActive").read[Boolean]): (year, week, isActive) =>
       WeekReference(Year.of(year), week, isActive)
-  private given Reads[Meal] =
-    ((JsPath \ "id").read[String] and
-      (JsPath \ "description").read[String] and
-      (JsPath \ "url").readNullable[String] and
-      (JsPath \ "image").readNullable[String]): (id, description, url, image) =>
-      Meal(UUID.fromString(id), description, url, image)
   private given Reads[MealEntry] =
     ((JsPath \ "meal").read[Meal] and (JsPath \ "time").read[String]): (meal, time) =>
       MealEntry(meal, LocalDateTime.parse(time))

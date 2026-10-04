@@ -280,19 +280,19 @@ components:
     MealSuggest:
       required:
         - count
-        - description
         - descriptionLabel
-        - lastused
+        - lastUsed
+        - meal
       type: object
       properties:
         count:
           type: integer
-        description:
-          type: string
         descriptionLabel:
           type: string
-        lastused:
+        lastUsed:
           type: integer
+        meal:
+          $ref: '#/components/schemas/Meal'
     LinkOrInsertData:
       required:
         - mealDescription

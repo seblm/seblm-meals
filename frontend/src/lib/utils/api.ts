@@ -1,7 +1,7 @@
 import type {
 	LinkOrInsert,
 	MealStatistics,
-	SuggestionResponse,
+	SuggestResponse,
 	UnlinkMeal,
 	WeekMeals,
 	WeekMealsCenteredAroundADay
@@ -55,7 +55,7 @@ export async function getSuggestions(
 	refDate: string,
 	search: string,
 	isLunch: boolean
-): Promise<SuggestionResponse> {
+): Promise<SuggestResponse> {
 	return await fetch(
 		`/api/suggest?reference=${refDate}%20${isLunch ? '12:00' : '20:00'}${
 			search.length > 0 ? '&search=' + search : ''

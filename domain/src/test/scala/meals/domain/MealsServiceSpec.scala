@@ -12,13 +12,14 @@ import java.time.*
 import java.util.UUID
 import scala.concurrent.ExecutionContext.global
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.matching.Regex
 
 class MealsServiceSpec extends AnyFlatSpec with Eventually with ScalaFutures:
 
   given ExecutionContext = global
   override given patienceConfig: PatienceConfig = PatienceConfig(timeout = scaled(Span(300, Millis)))
 
-  "Meals" should "be displayed for each day of current week" in new WithRepositoryAndService() {
+  "Meals" should "be displayed for each day of current week" in new WithRepositoryAndService:
     private val from = LocalDateTime.parse("2020-02-24T00:00")
     private val to = LocalDateTime.parse("2020-03-01T23:59:59.999999999")
     when(mealRepository.meals(from, to)).thenReturn(
@@ -45,7 +46,7 @@ class MealsServiceSpec extends AnyFlatSpec with Eventually with ScalaFutures:
         )
       )
     )
-    whenReady(mealsService.meals(Year.of(2020), 9)) { weekMeals =>
+    whenReady(mealsService.meals(Year.of(2020), 9)): weekMeals =>
       weekMeals.titles.short shouldBe "2020 semaine n°09"
       weekMeals.titles.long shouldBe s"Semaine n°09 - du lundi 24 février au dimanche 1 mars 2020"
       weekMeals.previous.year shouldBe Year.of(2020)
@@ -73,10 +74,8 @@ class MealsServiceSpec extends AnyFlatSpec with Eventually with ScalaFutures:
       weekMeals.saturday.dinner should not be defined
       weekMeals.sunday.lunch should not be defined
       weekMeals.sunday.dinner should not be defined
-    }
-  }
 
-  it should "be displayed for each day of next week" in new WithRepositoryAndService {
+  it should "be displayed for each day of next week" in new WithRepositoryAndService:
     private val from = LocalDateTime.parse("2020-03-02T00:00")
     private val to = LocalDateTime.parse("2020-03-08T23:59:59.999999999")
     when(mealRepository.meals(from, to)).thenReturn(
@@ -132,7 +131,7 @@ class MealsServiceSpec extends AnyFlatSpec with Eventually with ScalaFutures:
         )
     )
 
-    whenReady(mealsService.meals(Year.of(2020), 10)) { weekMeals =>
+    whenReady(mealsService.meals(Year.of(2020), 10)): weekMeals =>
       weekMeals.titles.short shouldBe "2020 semaine n°10"
       weekMeals.titles.long shouldBe s"Semaine n°10 - du lundi 2 au dimanche 8 mars 2020"
       weekMeals.previous.year shouldBe Year.of(2020)
@@ -158,125 +157,116 @@ class MealsServiceSpec extends AnyFlatSpec with Eventually with ScalaFutures:
       weekMeals.saturday.dinner should not be defined
       weekMeals.sunday.lunch.value.meal.description shouldBe "quenelles riz sauce tomate"
       weekMeals.sunday.dinner should not be defined
-    }
-  }
 
-  it should "suggest meals ordered by most recent" in new WithRepositoryAndService {
+  private val saladeTomatesConcombres =
+    Meal(UUID.fromString("a09a765d-d51f-46ff-9a23-2b347b413497"), "salade tomates concombres", None, None)
+  private val ratatouille = Meal(UUID.fromString("cd066029-e73f-4cae-939e-34492211b2fb"), "ratatouille", None, None)
+  private val patesSauceTomate =
+    Meal(UUID.fromString("735f0bb1-9091-4a52-bd78-e0bd0b16b175"), "pâtes sauce tomate", None, None)
+
+  it should "suggest meals ordered by most recent" in new WithRepositoryAndService:
     when(mealRepository.all()).thenReturn(
       MealsServiceSpec
         .AllResponse(
           Seq(
-            "salade tomates concombres -> 2020-02-17T12:00, 2020-02-18T12:00",
-            "tomates farcies           -> 2020-02-17T20:00",
-            "pâtes sauce tomate        -> 2020-02-19T12:00",
-            "ratatouille               -> 2020-02-20T12:00"
+            "[a09a765d-d51f-46ff-9a23-2b347b413497] salade tomates concombres -> 2020-02-17T12:00, 2020-02-18T12:00",
+            "[4dfe570e-ea35-4d83-b68a-898508a120b2] tomates farcies           -> 2020-02-17T20:00",
+            "[735f0bb1-9091-4a52-bd78-e0bd0b16b175] pâtes sauce tomate        -> 2020-02-19T12:00",
+            "[cd066029-e73f-4cae-939e-34492211b2fb] ratatouille               -> 2020-02-20T12:00"
           )
         )
         .toFuture
     )
 
-    whenReady(mealsService.suggest(reference, None)) { suggests =>
+    whenReady(mealsService.suggest(reference, None)): suggests =>
       suggests.mostRecents should contain inOrderOnly (
-        MealSuggest(2, "salade tomates concombres", "salade tomates concombres", 11),
-        MealSuggest(1, "ratatouille", "ratatouille", 9),
-        MealSuggest(1, "pâtes sauce tomate", "pâtes sauce tomate", 10)
+        MealSuggest(2, "salade tomates concombres", 11, saladeTomatesConcombres),
+        MealSuggest(1, "ratatouille", 9, ratatouille),
+        MealSuggest(1, "pâtes sauce tomate", 10, patesSauceTomate)
       )
-    }
-  }
 
-  it should "suggest highlighted meals filtered by a search" in new WithRepositoryAndService {
+  it should "suggest highlighted meals filtered by a search" in new WithRepositoryAndService:
     when(mealRepository.all()).thenReturn(
       MealsServiceSpec
         .AllResponse(
           Seq(
-            "salade tomates concombres -> 2020-02-17T12:00, 2020-02-18T12:00",
-            "tomates farcies           -> 2020-02-17T20:00",
-            "pâtes sauce tomate        -> 2020-02-19T12:00",
-            "ratatouille               -> 2020-02-20T12:00"
+            "[a09a765d-d51f-46ff-9a23-2b347b413497] salade tomates concombres -> 2020-02-17T12:00, 2020-02-18T12:00",
+            "[4dfe570e-ea35-4d83-b68a-898508a120b2] tomates farcies           -> 2020-02-17T20:00",
+            "[735f0bb1-9091-4a52-bd78-e0bd0b16b175] pâtes sauce tomate        -> 2020-02-19T12:00",
+            "[cd066029-e73f-4cae-939e-34492211b2fb] ratatouille               -> 2020-02-20T12:00"
           )
         )
         .toFuture
     )
 
-    whenReady(mealsService.suggest(reference, Some("omat"))) { suggests =>
+    whenReady(mealsService.suggest(reference, Some("omat"))): suggests =>
       suggests.mostRecents should contain inOrderOnly (
-        MealSuggest(2, "salade tomates concombres", "salade t<strong>omat</strong>es concombres", 11),
-        MealSuggest(1, "pâtes sauce tomate", "pâtes sauce t<strong>omat</strong>e", 10)
+        MealSuggest(2, "salade t<strong>omat</strong>es concombres", 11, saladeTomatesConcombres),
+        MealSuggest(1, "pâtes sauce t<strong>omat</strong>e", 10, patesSauceTomate)
       )
-    }
-  }
 
-  it should "suggest case insensitive meals" in new WithRepositoryAndService {
+  it should "suggest case insensitive meals" in new WithRepositoryAndService:
     when(mealRepository.all()).thenReturn(
       MealsServiceSpec
         .AllResponse(
           Seq(
-            "salade tomates concombres -> 2020-02-17T12:00, 2020-02-18T12:00",
-            "tomates farcies           -> 2020-02-17T20:00",
-            "pâtes sauce tomate        -> 2020-02-19T12:00",
-            "ratatouille               -> 2020-02-20T12:00"
+            "[a09a765d-d51f-46ff-9a23-2b347b413497] salade tomates concombres -> 2020-02-17T12:00, 2020-02-18T12:00",
+            "[4dfe570e-ea35-4d83-b68a-898508a120b2] tomates farcies           -> 2020-02-17T20:00",
+            "[735f0bb1-9091-4a52-bd78-e0bd0b16b175] pâtes sauce tomate        -> 2020-02-19T12:00",
+            "[cd066029-e73f-4cae-939e-34492211b2fb] ratatouille               -> 2020-02-20T12:00"
           )
         )
         .toFuture
     )
 
-    whenReady(mealsService.suggest(reference, Some("OMaT"))) { suggests =>
+    whenReady(mealsService.suggest(reference, Some("OMaT"))): suggests =>
       suggests.mostRecents should contain inOrderOnly (
-        MealSuggest(2, "salade tomates concombres", "salade t<strong>omat</strong>es concombres", 11),
-        MealSuggest(1, "pâtes sauce tomate", "pâtes sauce t<strong>omat</strong>e", 10)
+        MealSuggest(2, "salade t<strong>omat</strong>es concombres", 11, saladeTomatesConcombres),
+        MealSuggest(1, "pâtes sauce t<strong>omat</strong>e", 10, patesSauceTomate)
       )
-    }
-  }
 
-  it should "suggest four weeks ago meal" in new WithRepositoryAndService {
+  it should "suggest four weeks ago meal" in new WithRepositoryAndService:
     when(mealRepository.all()).thenReturn(
       MealsServiceSpec
         .AllResponse(
           Seq(
-            "salade tomates concombres -> 2020-02-01T12:00, 2020-02-18T12:00",
-            "tomates farcies           -> 2020-02-17T20:00",
-            "pâtes sauce tomate        -> 2020-02-19T12:00",
-            "ratatouille               -> 2020-02-20T12:00"
+            "[a09a765d-d51f-46ff-9a23-2b347b413497] salade tomates concombres -> 2020-02-01T12:00, 2020-02-18T12:00",
+            "[4dfe570e-ea35-4d83-b68a-898508a120b2] tomates farcies           -> 2020-02-17T20:00",
+            "[735f0bb1-9091-4a52-bd78-e0bd0b16b175] pâtes sauce tomate        -> 2020-02-19T12:00",
+            "[cd066029-e73f-4cae-939e-34492211b2fb] ratatouille               -> 2020-02-20T12:00"
           )
         )
         .toFuture
     )
 
-    whenReady(mealsService.suggest(reference, None)) { suggests =>
-      suggests.fourWeeksAgo.value should be(
-        MealSuggest(2, "salade tomates concombres", "salade tomates concombres", 11)
-      )
+    whenReady(mealsService.suggest(reference, None)): suggests =>
+      suggests.fourWeeksAgo.value should be(MealSuggest(2, "salade tomates concombres", 11, saladeTomatesConcombres))
       suggests.mostRecents should contain inOrderOnly (
-        MealSuggest(1, "ratatouille", "ratatouille", 9),
-        MealSuggest(1, "pâtes sauce tomate", "pâtes sauce tomate", 10)
+        MealSuggest(1, "ratatouille", 9, ratatouille),
+        MealSuggest(1, "pâtes sauce tomate", 10, patesSauceTomate)
       )
-    }
-  }
 
-  it should "suggest fifty two weeks ago meal" in new WithRepositoryAndService {
+  it should "suggest fifty two weeks ago meal" in new WithRepositoryAndService:
     when(mealRepository.all()).thenReturn(
       MealsServiceSpec
         .AllResponse(
           Seq(
-            "salade tomates concombres -> 2019-03-02T12:00, 2020-02-18T12:00",
-            "tomates farcies           -> 2020-02-17T20:00",
-            "pâtes sauce tomate        -> 2020-02-19T12:00",
-            "ratatouille               -> 2020-02-20T12:00"
+            "[a09a765d-d51f-46ff-9a23-2b347b413497] salade tomates concombres -> 2019-03-02T12:00, 2020-02-18T12:00",
+            "[4dfe570e-ea35-4d83-b68a-898508a120b2] tomates farcies           -> 2020-02-17T20:00",
+            "[735f0bb1-9091-4a52-bd78-e0bd0b16b175] pâtes sauce tomate        -> 2020-02-19T12:00",
+            "[cd066029-e73f-4cae-939e-34492211b2fb] ratatouille               -> 2020-02-20T12:00"
           )
         )
         .toFuture
     )
 
-    whenReady(mealsService.suggest(reference, None)) { suggests =>
-      suggests.fiftyTwoWeeksAgo.value should be(
-        MealSuggest(2, "salade tomates concombres", "salade tomates concombres", 11)
-      )
+    whenReady(mealsService.suggest(reference, None)): suggests =>
+      suggests.fiftyTwoWeeksAgo.value should
+        be(MealSuggest(2, "salade tomates concombres", 11, saladeTomatesConcombres))
       suggests.mostRecents should contain inOrderOnly (
-        MealSuggest(1, "ratatouille", "ratatouille", 9),
-        MealSuggest(1, "pâtes sauce tomate", "pâtes sauce tomate", 10)
+        MealSuggest(1, "ratatouille", 9, ratatouille),
+        MealSuggest(1, "pâtes sauce tomate", 10, patesSauceTomate)
       )
-    }
-  }
 
   private trait WithRepositoryAndService:
     val mealRepository: MealRepository = mock(classOf[MealRepository])
@@ -285,6 +275,8 @@ class MealsServiceSpec extends AnyFlatSpec with Eventually with ScalaFutures:
     val reference: LocalDateTime = clock.instant().atZone(clock.getZone).toLocalDateTime
 
 object MealsServiceSpec:
+
+  private val lineToTuple: Regex = "\\[([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})] (.+) -> (.+)".r
 
   case class AllResponse(all: Seq[String])
 
@@ -298,9 +290,7 @@ object MealsServiceSpec:
       case last :: Nil  => Map(toAllResponseMap(last))
       case head :: tail => Map(toAllResponseMap(head)) ++ toAllResponseMap(AllResponse(tail))
 
-    private def toAllResponseMap(line: String): (Meal, Seq[LocalDateTime]) = line.split("->") match
-      case Array(description, dates) =>
-        Meal(UUID.randomUUID(), description.trim(), None, None) -> dates
-          .split(",")
-          .toIndexedSeq
-          .map(x => LocalDateTime.parse(x.trim))
+    private def toAllResponseMap(line: String): (Meal, Seq[LocalDateTime]) = line match
+      case lineToTuple(uuid, description, dates) =>
+        Meal(UUID.fromString(uuid), description.trim(), None, None) ->
+          dates.split(",").toIndexedSeq.map(x => LocalDateTime.parse(x.trim))

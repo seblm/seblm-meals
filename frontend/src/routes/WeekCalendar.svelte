@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Day, SuggestionResponse, WeekMeals } from '#lib/model/WeekMeals.ts';
+	import type { Day, SuggestResponse, WeekMeals } from '#lib/model/WeekMeals.ts';
 	import { date } from '#lib/stores.ts';
 	import { getSuggestions, getWeekMeals, linkOrInsert, unlink } from '#lib/utils/api.ts';
 	import { clickOutside } from '#lib/utils/ClickOutside.ts';
@@ -22,7 +22,7 @@
 
 	interface InputSuggestions {
 		input: string;
-		suggestions: SuggestionResponse;
+		suggestions: SuggestResponse;
 	}
 
 	let selectedDate: Date;
@@ -128,7 +128,7 @@
 			isLunch,
 			mealDescription
 		};
-		getSuggestions(ref, mealDescription, isLunch).then((response: SuggestionResponse) => {
+		getSuggestions(ref, mealDescription, isLunch).then((response: SuggestResponse) => {
 			suggestions.input = recordKey;
 			suggestions.suggestions = response;
 		});
