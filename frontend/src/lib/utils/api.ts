@@ -57,12 +57,8 @@ export async function getSuggestions(
 	isLunch: boolean
 ): Promise<SuggestResponse> {
 	return await fetch(
-		`/api/suggest?reference=${refDate}%20${isLunch ? '12:00' : '20:00'}${
-			search.length > 0 ? '&search=' + search : ''
-		}`
-	).then((response) => {
-		return response.json();
-	});
+		`/api/suggest?reference=${refDate}%20${isLunch ? '12:00' : '20:00'}${search.length > 0 ? '&search=' + search : ''}`
+	).then((response) => response.json());
 }
 
 export async function linkOrInsert(mealDescription: string, day: string, isLunch: boolean) {
