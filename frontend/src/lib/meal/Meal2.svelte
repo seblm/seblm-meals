@@ -15,11 +15,17 @@
 </script>
 
 {#snippet mealEntry(mealEntry: MealEntry)}
-	{#if mealEntry?.meal.image}
-		<img src={mealEntry.meal.image} alt={mealEntry?.meal.description} />
+	{#if mealEntry.meal.image}
+		<img src={mealEntry.meal.image} alt={mealEntry.meal.description} />
 	{/if}
 	<Card.Header>
-		<Card.Title>{mealEntry.meal.description}</Card.Title>
+		<Card.Title>
+			{#if mealEntry.meal.url}
+				<a href={mealEntry.meal.url} target="_blank">{mealEntry.meal.description}</a>
+			{:else}
+				{mealEntry.meal.description}
+			{/if}
+		</Card.Title>
 		<Card.Action>
 			<Drawer.Root>
 				<Drawer.Trigger>

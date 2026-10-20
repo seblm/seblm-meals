@@ -27,7 +27,10 @@
 </script>
 
 <div class="flex h-dvh flex-col overflow-hidden bg-background">
-	<main class="flex-1 overflow-y-auto px-4 pt-4 pb-6 mx-auto max-w-2xl space-y-10" data-sveltekit-preload-data="tap">
+	<main
+		class="mx-auto max-w-2xl flex-1 space-y-10 overflow-y-auto px-4 pt-4 pb-6"
+		data-sveltekit-preload-data="tap"
+	>
 		<h2 class="text-xl font-bold">
 			Add {#if data.isLunch}lunch{:else}dinner{/if} meal for {data.day}
 		</h2>
