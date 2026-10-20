@@ -20,7 +20,7 @@
 	<Card.Header>
 		<Card.Title>
 			{#if special}<strong>{special}</strong><br />{/if}
-			{mealSuggest.meal.description}<br />
+			{@html mealSuggest.descriptionLabel}<br />
 			used {mealSuggest.count} time{#if mealSuggest.count > 1}s{/if}<br />
 			since {mealSuggest.lastUsed} days
 		</Card.Title>
