@@ -4,6 +4,7 @@
 	import MealAdd from '#lib/meal/MealAdd.svelte';
 	import { getSuggestions, linkOrInsert } from '#lib/utils/api.ts';
 	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
+	import Plus from '@lucide/svelte/icons/plus';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
@@ -23,6 +24,10 @@
 
 	async function link(mealDescription: string): Promise<void> {
 		return linkOrInsert(mealDescription, data.day, data.isLunch).then(() => history.back());
+	}
+
+	async function onclick() {
+		return linkOrInsert(query, data.day, data.isLunch).then(() => history.back());
 	}
 </script>
 
@@ -56,6 +61,14 @@
 			<div class="flex-1">
 				<Input {oninput} placeholder="Search..." value={query} class="h-12 w-full" />
 			</div>
+			<Button
+				class="h-12 w-12 shrink-0 rounded-full bg-primary shadow-md"
+				disabled={query.length == 0}
+				{onclick}
+				size="icon"
+			>
+				<Plus />
+			</Button>
 		</div>
 	</footer>
 </div>
