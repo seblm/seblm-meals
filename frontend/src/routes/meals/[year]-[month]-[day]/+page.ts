@@ -7,6 +7,10 @@ export const load: PageLoad = ({ params }) => {
 	const month = parseInt(params.month);
 	const year = parseInt(params.year);
 	changeDay({ day, month, year });
+	const reference = `${params.year}-${params.month}-${params.day}`;
 
-	return getWeekMealsCenteredAroundADay(day, month, year);
+	return getWeekMealsCenteredAroundADay(day, month, year).then((weekMealsCenteredAroundADay) => ({
+		reference,
+		weekMealsCenteredAroundADay
+	}));
 };
