@@ -20,26 +20,31 @@
 </script>
 
 <div class="flex h-dvh flex-col overflow-hidden bg-background">
-	<main class="flex-1 space-y-10 overflow-y-auto px-4 pt-4 pb-6" data-sveltekit-preload-data="tap">
-		{#each data.weekMealsCenteredAroundADay.days as day (day.reference)}
-			<section>
-				<h2 class="mb-4 text-xl font-bold">{day.reference}</h2>
-				<div class="grid grid-cols-2 gap-4">
-					{#each [day.lunch, day.dinner] as mealEntry, index (index)}
-						<Meal2
-							mealEntryOrLink={mealEntry ??
-								resolve('/meals/[year]-[month]-[day]/[slot]', {
-									day: day.reference.slice(8, 10),
-									month: day.reference.slice(5, 7),
-									slot: index === 0 ? 'lunch' : 'dinner',
-									year: day.reference.slice(0, 4)
-								})}
-							unlink={(time: string) => unlink(time)}
-						/>
-					{/each}
-				</div>
-			</section>
-		{/each}
+	<main
+		class="mx-auto w-full max-w-4xl flex-1 overflow-y-auto px-4 pt-4 pb-6"
+		data-sveltekit-preload-data="tap"
+	>
+		<div class="grid gap-10 xl:grid-cols-2 xl:gap-x-8 xl:gap-y-10">
+			{#each data.weekMealsCenteredAroundADay.days as day (day.reference)}
+				<section>
+					<h2 class="mb-4 text-xl font-bold">{day.reference}</h2>
+					<div class="grid grid-cols-2 gap-4">
+						{#each [day.lunch, day.dinner] as mealEntry, index (index)}
+							<Meal2
+								mealEntryOrLink={mealEntry ??
+									resolve('/meals/[year]-[month]-[day]/[slot]', {
+										day: day.reference.slice(8, 10),
+										month: day.reference.slice(5, 7),
+										slot: index === 0 ? 'lunch' : 'dinner',
+										year: day.reference.slice(0, 4)
+									})}
+								unlink={(time: string) => unlink(time)}
+							/>
+						{/each}
+					</div>
+				</section>
+			{/each}
+		</div>
 	</main>
 	<footer class="z-50 shrink-0 border-t bg-background/95 p-4 backdrop-blur-md">
 		<div class="mx-auto flex max-w-2xl items-center gap-3">

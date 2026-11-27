@@ -20,30 +20,39 @@
 </script>
 
 <div class="flex h-dvh flex-col overflow-hidden bg-background">
-	<main class="flex-1 space-y-10 overflow-y-auto px-4 pt-4 pb-6" data-sveltekit-preload-data="tap">
+	<main
+		class="mx-auto w-full max-w-4xl flex-1 overflow-y-auto px-4 pt-4 pb-6"
+		data-sveltekit-preload-data="tap"
+	>
 		<h2 class="mb-4 text-xl font-bold">Today {data.reference}</h2>
-		<p>Lunch</p>
-		<Meal2
-			mealEntryOrLink={data.lunch ??
-				resolve('/meals/[year]-[month]-[day]/[slot]', {
-					day,
-					month,
-					slot: 'lunch',
-					year
-				})}
-			unlink={(time: string) => unlink(time)}
-		/>
-		<p>Dinner</p>
-		<Meal2
-			mealEntryOrLink={data.dinner ??
-				resolve('/meals/[year]-[month]-[day]/[slot]', {
-					day: data.reference.slice(8, 10),
-					month: data.reference.slice(5, 7),
-					slot: 'dinner',
-					year: data.reference.slice(0, 4)
-				})}
-			unlink={(time: string) => unlink(time)}
-		/>
+		<div class="grid gap-4 sm:grid-cols-2">
+			<div>
+				<p class="mb-2">Lunch</p>
+				<Meal2
+					mealEntryOrLink={data.lunch ??
+						resolve('/meals/[year]-[month]-[day]/[slot]', {
+							day,
+							month,
+							slot: 'lunch',
+							year
+						})}
+					unlink={(time: string) => unlink(time)}
+				/>
+			</div>
+			<div>
+				<p class="mb-2">Dinner</p>
+				<Meal2
+					mealEntryOrLink={data.dinner ??
+						resolve('/meals/[year]-[month]-[day]/[slot]', {
+							day: data.reference.slice(8, 10),
+							month: data.reference.slice(5, 7),
+							slot: 'dinner',
+							year: data.reference.slice(0, 4)
+						})}
+					unlink={(time: string) => unlink(time)}
+				/>
+			</div>
+		</div>
 	</main>
 	<footer class="z-50 shrink-0 border-t bg-background/95 p-4 backdrop-blur-md">
 		<div class="mx-auto flex max-w-2xl items-center gap-3">

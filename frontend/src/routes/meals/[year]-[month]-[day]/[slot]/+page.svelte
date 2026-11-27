@@ -33,7 +33,7 @@
 
 <div class="flex h-dvh flex-col overflow-hidden bg-background">
 	<main
-		class="max-w-2xl flex-1 space-y-10 overflow-y-auto px-4 pt-4 pb-6"
+		class="mx-auto w-full max-w-2xl flex-1 space-y-10 overflow-y-auto px-4 pt-4 pb-6"
 		data-sveltekit-preload-data="tap"
 	>
 		<h2 class="text-xl font-bold">

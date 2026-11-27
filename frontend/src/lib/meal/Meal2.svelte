@@ -16,7 +16,11 @@
 
 {#snippet mealEntry(mealEntry: MealEntry)}
 	{#if mealEntry.meal.image}
-		<img src={mealEntry.meal.image} alt={mealEntry.meal.description} />
+		<img
+			class="aspect-video w-full object-cover"
+			src={mealEntry.meal.image}
+			alt={mealEntry.meal.description}
+		/>
 	{/if}
 	<Card.Header>
 		<Card.Title>
