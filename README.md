@@ -26,6 +26,23 @@ There is an [openapi specification][openapi.yaml]. You can have a look with [Swa
 
 [![Swagger UI visualization of openapi specification](docs/swagger-ui.png)][swagger-ui-demo]
 
+## Deployment
+
+Every push is deployed to [Clever Cloud]. Here are the defined components:
+
+1. A PostgreSQL Add-on
+2. A _Java or Scala + Play! 2_ with these environment variables defined:
+   ```
+   APPLICATION_DOMAIN_NAME=seblm-meals.cleverapps.io
+   APPLICATION_SECRET=***
+   CC_JAVA_VERSION=25
+   CC_PRE_BUILD_HOOK=cd frontend && npm ci && npm run build
+   PORT=8080
+   ```
+
+The `CC_PRE_BUILD_HOOK` can be run because a `mise.toml` has been put at the root of this project that defines a Node.js
+install requirement.
+
 ## How to build and run
 
 Build frontend files:
@@ -34,7 +51,7 @@ Build frontend files:
 docker run --rm --tty \
   --volume ./frontend:/home/node/seblm-meals \
   --user node --workdir /home/node/seblm-meals \
-  node:24-alpine npm install
+  node:24-alpine npm ci
 docker run --rm --tty \
   --volume ./frontend:/home/node/seblm-meals \
   --user node --workdir /home/node/seblm-meals \
@@ -261,6 +278,7 @@ npx shadcn-svelte@latest init
 npx shadcd-svelte@latest add card
 ```
 
+[Clever Cloud]: https://www.clever-cloud.com
 [docker-hub-postgres]: https://hub.docker.com/_/postgres
 [docker-hub-repository]: https://hub.docker.com/r/seblm/seblm-meals
 [openapi.yaml]: conf/openapi.yaml
