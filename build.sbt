@@ -18,6 +18,8 @@ lazy val root = (project in file("."))
   .aggregate(domain)
   .dependsOn(domain)
 
+Compile / doc / sources := Seq.empty
+
 val mockitoVersion = "5.24.0"
 lazy val domain = project
   .settings(
